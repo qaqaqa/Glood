@@ -1,0 +1,58 @@
+PODS:
+  - AFNetworking (2.6.3):
+    - AFNetworking/NSURLConnection (= 2.6.3)
+    - AFNetworking/NSURLSession (= 2.6.3)
+    - AFNetworking/Reachability (= 2.6.3)
+    - AFNetworking/Security (= 2.6.3)
+    - AFNetworking/Serialization (= 2.6.3)
+    - AFNetworking/UIKit (= 2.6.3)
+  - AFNetworking/NSURLConnection (2.6.3):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/NSURLSession (2.6.3):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (2.6.3)
+  - AFNetworking/Security (2.6.3)
+  - AFNetworking/Serialization (2.6.3)
+  - AFNetworking/UIKit (2.6.3):
+    - AFNetworking/NSURLConnection
+    - AFNetworking/NSURLSession
+  - BFKit (1.9.2)
+  - Blindside (1.3.1)
+  - Bugly (2.3.1)
+  - KSDeferred (0.3.3)
+  - SDWebImage (3.8.1):
+    - SDWebImage/Core (= 3.8.1)
+  - SDWebImage/Core (3.8.1)
+  - SignalR-ObjC (2.0.2):
+    - SignalR-ObjC/Core (= 2.0.2)
+  - SignalR-ObjC/Core (2.0.2):
+    - AFNetworking (~> 2.0)
+    - SocketRocket (~> 0.4)
+  - SocketRocket (0.5.1)
+
+DEPENDENCIES:
+  - AFNetworking (~> 2.0)
+  - BFKit
+  - Blindside (~> 1.3.0)
+  - Bugly (~> 2.1)
+  - KSDeferred (~> 0.3.0)
+  - SDWebImage (~> 3.8.1)
+  - SignalR-ObjC (~> 2.0)
+
+SPEC CHECKSUMS:
+  AFNetworking: cb8d14a848e831097108418f5d49217339d4eb60
+  BFKit: c8f1a85a04f8d350089da8693806a472d475d1f8
+  Blindside: 5e32e80fa301ddff70c3f5735cb44467cf3195ff
+  Bugly: c8ece2fa5bdcb404abdd0e07131e8129f580d893
+  KSDeferred: 1d90bddfff8b387a49deeb6579e63e170f4f2ce2
+  SDWebImage: 35f9627a3e44b4f292a8a8ce6a531fa488239b91
+  SignalR-ObjC: 3913aa201f436cf21226e0016ca6c7e94265921a
+  SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
+
+PODFILE CHECKSUM: 441d68158db1453947f712ea460cdb7b3e719921
+
+COCOAPODS: 1.0.1

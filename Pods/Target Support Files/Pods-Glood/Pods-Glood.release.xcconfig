@@ -1,0 +1,9 @@
+FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/Bugly"
+GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
+HEADER_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/AFNetworking" "${PODS_ROOT}/Headers/Public/BFKit" "${PODS_ROOT}/Headers/Public/Blindside" "${PODS_ROOT}/Headers/Public/Bugly" "${PODS_ROOT}/Headers/Public/KSDeferred" "${PODS_ROOT}/Headers/Public/SDWebImage" "${PODS_ROOT}/Headers/Public/SignalR-ObjC" "${PODS_ROOT}/Headers/Public/SocketRocket"
+LIBRARY_SEARCH_PATHS = $(inherited) "$PODS_CONFIGURATION_BUILD_DIR/AFNetworking" "$PODS_CONFIGURATION_BUILD_DIR/BFKit" "$PODS_CONFIGURATION_BUILD_DIR/Blindside" "$PODS_CONFIGURATION_BUILD_DIR/KSDeferred" "$PODS_CONFIGURATION_BUILD_DIR/SDWebImage" "$PODS_CONFIGURATION_BUILD_DIR/SignalR-ObjC" "$PODS_CONFIGURATION_BUILD_DIR/SocketRocket"
+OTHER_CFLAGS = $(inherited) -isystem "${PODS_ROOT}/Headers/Public" -isystem "${PODS_ROOT}/Headers/Public/AFNetworking" -isystem "${PODS_ROOT}/Headers/Public/BFKit" -isystem "${PODS_ROOT}/Headers/Public/Blindside" -isystem "${PODS_ROOT}/Headers/Public/Bugly" -isystem "${PODS_ROOT}/Headers/Public/KSDeferred" -isystem "${PODS_ROOT}/Headers/Public/SDWebImage" -isystem "${PODS_ROOT}/Headers/Public/SignalR-ObjC" -isystem "${PODS_ROOT}/Headers/Public/SocketRocket"
+OTHER_LDFLAGS = $(inherited) -ObjC -l"AFNetworking" -l"BFKit" -l"Blindside" -l"KSDeferred" -l"SDWebImage" -l"SignalR-ObjC" -l"SocketRocket" -l"icucore" -l"z" -framework "Accelerate" -framework "AudioToolbox" -framework "Bugly" -framework "CFNetwork" -framework "CoreGraphics" -framework "CoreImage" -framework "Foundation" -framework "ImageIO" -framework "MobileCoreServices" -framework "QuartzCore" -framework "Security" -framework "SystemConfiguration" -framework "UIKit" -weak_framework "LocalAuthentication"
+PODS_BUILD_DIR = $BUILD_DIR
+PODS_CONFIGURATION_BUILD_DIR = $PODS_BUILD_DIR/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)
+PODS_ROOT = ${SRCROOT}/Pods
