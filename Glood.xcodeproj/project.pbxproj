@@ -131,6 +131,7 @@
 		CC3BE5731E10D6850034214B /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC3BE5721E10D6850034214B /* QuartzCore.framework */; };
 		CC7925531E1103A300CD2BF3 /* Mic+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = CC7925501E1103A300CD2BF3 /* Mic+CoreDataProperties.m */; };
 		CC7925541E1103A300CD2BF3 /* Mic.m in Sources */ = {isa = PBXBuildFile; fileRef = CC7925521E1103A300CD2BF3 /* Mic.m */; };
+		CCC01A651E163B46008A1F5D /* CommonClass.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC01A641E163B46008A1F5D /* CommonClass.m */; };
 		CCE61ABC1E135CFA002E3A7F /* RecordingSignal001@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = CCE61AB41E135CFA002E3A7F /* RecordingSignal001@3x.png */; };
 		CCE61ABD1E135CFA002E3A7F /* RecordingSignal002@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = CCE61AB51E135CFA002E3A7F /* RecordingSignal002@3x.png */; };
 		CCE61ABE1E135CFA002E3A7F /* RecordingSignal003@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = CCE61AB61E135CFA002E3A7F /* RecordingSignal003@3x.png */; };
@@ -388,6 +389,8 @@
 		CC7925501E1103A300CD2BF3 /* Mic+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Mic+CoreDataProperties.m"; sourceTree = "<group>"; };
 		CC7925511E1103A300CD2BF3 /* Mic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mic.h; sourceTree = "<group>"; };
 		CC7925521E1103A300CD2BF3 /* Mic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Mic.m; sourceTree = "<group>"; };
+		CCC01A631E163B46008A1F5D /* CommonClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonClass.h; sourceTree = "<group>"; };
+		CCC01A641E163B46008A1F5D /* CommonClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommonClass.m; sourceTree = "<group>"; };
 		CCE61AB41E135CFA002E3A7F /* RecordingSignal001@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "RecordingSignal001@3x.png"; sourceTree = "<group>"; };
 		CCE61AB51E135CFA002E3A7F /* RecordingSignal002@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "RecordingSignal002@3x.png"; sourceTree = "<group>"; };
 		CCE61AB61E135CFA002E3A7F /* RecordingSignal003@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "RecordingSignal003@3x.png"; sourceTree = "<group>"; };
@@ -572,6 +575,8 @@
 				CC3BE41D1E10D3D90034214B /* RecordAudio.m */,
 				CC3BE41E1E10D3D90034214B /* UserInfomationData.h */,
 				CC3BE41F1E10D3D90034214B /* UserInfomationData.m */,
+				CCC01A631E163B46008A1F5D /* CommonClass.h */,
+				CCC01A641E163B46008A1F5D /* CommonClass.m */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -1219,6 +1224,7 @@
 				CC258BEB1E10D24700491916 /* ViewController.m in Sources */,
 				CC258BE81E10D24700491916 /* AppDelegate.m in Sources */,
 				CC3BE5051E10D3E60034214B /* MASConstraintMaker.m in Sources */,
+				CCC01A651E163B46008A1F5D /* CommonClass.m in Sources */,
 				CC3BE5671E10D4510034214B /* FeedbackViewController.m in Sources */,
 				CC3BE54C1E10D3E70034214B /* LoginView.m in Sources */,
 				CC3BE50B1E10D3E60034214B /* View+MASAdditions.m in Sources */,

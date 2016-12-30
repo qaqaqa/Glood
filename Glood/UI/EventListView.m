@@ -10,6 +10,7 @@
 #import "Define.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "UserInfomationData.h"
+#import "CommonClass.h"
 
 @implementation EventListView
 
@@ -94,7 +95,8 @@
     }
     else{
         self.eventListTabelViewCell.eventImageView.frame = CGRectMake(0, 0, 105, 54);
-        [self.eventListTabelViewCell.eventImageView sd_setImageWithURL:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:indexPath.row-1] objectForKey:@"image_url"] placeholderImage:[UIImage imageNamed:@"event_background.jpg"]];
+//        [self.eventListTabelViewCell.eventImageView sd_setImageWithURL:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:indexPath.row-1] objectForKey:@"image_url"] placeholderImage:[UIImage imageNamed:@"event_background.jpg"]];
+        [self.eventListTabelViewCell.eventImageView sd_setImageWithURL:[CommonClass showImage:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:indexPath.row-1] objectForKey:@"image_url"] x1:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:indexPath.row-1] objectForKey:@"image_crop_info"] objectForKey:@"x1"] y1:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:indexPath.row-1] objectForKey:@"image_crop_info"] objectForKey:@"y1"] x2:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:indexPath.row-1] objectForKey:@"image_crop_info"] objectForKey:@"x2"] y2:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:indexPath.row-1] objectForKey:@"image_crop_info"] objectForKey:@"y2"] width:[NSString stringWithFormat:@"%f",self.eventListTabelViewCell.eventImageView.frame.size.width*2]] placeholderImage:[UIImage imageNamed:@"event_background.jpg"]];
         self.eventListTabelViewCell.eventNameLabel.frame = CGRectMake(105+20, 0, SCREEN_WIDTH*150/320, self.eventListTabelViewCell.eventImageView.frame.size.height);
         self.eventListTabelViewCell.eventNameLabel.text = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:indexPath.row-1] objectForKey:@"name"];
         self.eventListTabelViewCell.redImageView.frame = CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*14/320)-5, (54-14)/2, SCREEN_WIDTH*14/320, SCREEN_WIDTH*14/320);
