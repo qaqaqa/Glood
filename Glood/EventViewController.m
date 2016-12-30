@@ -532,8 +532,10 @@
 #pragma mark ========= 从列表中进入聊天室 =========
 - (void)eventListJoinRoom:(NSInteger)index
 {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"recordOrExchangeChatRoomStopAnimation" object:self];
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+    userInfomationData.refushStr = @"no";
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"recordOrExchangeChatRoomStopAnimation" object:self];
+    
     [[NSUserDefaults standardUserDefaults] setInteger:index-1 forKey:@"currentIndex"];
     if ([userInfomationData.isEnterMicList isEqualToString:@"false"])
     {
@@ -563,7 +565,6 @@
     else
     {
         [self exchangeChatRoom];
-        userInfomationData.refushStr = @"no";
         //  查询数据
         NSString *roomId = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
         NSArray *result = [[NSArray alloc] initWithArray:[self.myAppDelegate selectCoreDataroomId:roomId]];
@@ -971,6 +972,7 @@
     AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeAudio];
     NSLog(@"*-*-*--*hahhah--- %ld",(long)authStatus);
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+    userInfomationData.refushStr = @"no";
     if ((authStatus ==AVAuthorizationStatusRestricted || authStatus ==AVAuthorizationStatusDenied)) {
         [self.soundingRecoringImageView setHidden:NO];
     }

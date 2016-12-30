@@ -463,6 +463,7 @@
 #pragma mark ======== 在聊天室内，发送消息 =========
 - (void)sendMessageInRoom:(NSString *)messgae roomId:(NSString *)roomIdContent messageType:(NSInteger)messageType
 {
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"sendMessageScu" object:self];
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
     NSLog(@"-*-/-*-*-*- ----  %@",messgae);
         [userInfomationData.chat invoke:@"sendMessageInRoom" withArgs:@[messgae,roomIdContent,[NSNumber numberWithInteger:messageType]] completionHandler:^(id response, NSError *error) {
@@ -472,7 +473,7 @@
                 NSLog(@"xxxxxxxxxxx----%@",error.description);
                 return;
             }
-//            [[NSNotificationCenter defaultCenter] postNotificationName:@"sendMessageScu" object:self];
+            
             [ShowMessage showMessage:@"消息发送成功"];
             NSLog(@"发送消息-*-*-*-*-*-*-*-*-*-*  %@",response);
         }];

@@ -212,7 +212,7 @@
 - (void)beginRefreshingxx
 {
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
-    userInfomationData.micMockListPageIndex ++;
+    
     NSLog(@"begin Refreshing");
     [ShowMessage showMessage:@"begin"];
     userInfomationData.refushStr = @"yes";
@@ -221,11 +221,13 @@
     NSLog(@"-*-*-*-*xxxxxdfsd---------- %@------ %hhu",mic.fromUserName,[self.myAppDelegate selectCoreDataroomId:roomId refreshMessageId:mic.messageId]);
     if ([self.myAppDelegate selectCoreDataroomId:roomId refreshMessageId:mic.messageId]) {
         //从本地数据库加载
+        userInfomationData.micMockListPageIndex ++;
         [self getMicHistoryListMock];
     }
     else{
         
         //从服务器拉取
+        userInfomationData.micMockListPageIndex ++;
         [userInfomationData.commonService getMessageInRoom:mic.messageId roomId:roomId];
     }
     
@@ -261,11 +263,11 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     self.micTableViewCell = [tableView dequeueReusableCellWithIdentifier:@"MicTableViewCell"];
-    if (self.micTableViewCell == nil)
-    {
+//    if (self.micTableViewCell == nil)
+//    {
         self.micTableViewCell = [[MicTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"MicTableViewCell" index:indexPath.row];
         [self.micTableViewCell setSelectionStyle:UITableViewCellSelectionStyleNone];
-    }
+//    }
     //语音时间计算
     Mic *mic = self.historyMicListArr[[self.historyMicListArr count] - indexPath.row-1];
     __block float timeF = [mic.time floatValue];
@@ -279,7 +281,6 @@
     if (timeF>=20) {
         timeF = 6.5;
     }
-    NSLog(@"xxxxxxxxxxxxxxxxx------ %ld--%@---%@",(long)indexPath.row,mic.time,mic.messageId);
     self.micTableViewCell.bgImageView.layer.cornerRadius = (SCREEN_WIDTH*35/320)/2;
     self.micTableViewCell.bgImageView.layer.masksToBounds = YES;
     self.micTableViewCell.bgImageView.tag = bgImageViewTag+indexPath.row;
@@ -401,7 +402,6 @@
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
     UIButton *button = (UIButton *)sender;
     float time;
-    NSLog(@"xxxxxxxxx---------x----  %lu",[self.historyMicListArr count] -1- (button.tag-headImageButtonTag));
     Mic *mic = self.historyMicListArr[[self.historyMicListArr count] -1- (button.tag-headImageButtonTag)];
     time = [mic.time floatValue];
     if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"isSelectShield"] integerValue] == 0) {
@@ -506,8 +506,6 @@
     NSArray *result = [[NSArray alloc] initWithArray:[self.myAppDelegate selectCoreDataroomId:self.currentRoomId]];
     for (NSInteger i = 0; i < [result count]; i++) {
         [self.historyMicListArr addObject:[result objectAtIndex:i]];
-        Mic *mic = result[i];
-        NSLog(@"-*-*-*-*-------- %ld----%@",i,mic.messageId);
     }
     
     

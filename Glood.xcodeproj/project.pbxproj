@@ -14,7 +14,6 @@
 		CC258BEE1E10D24700491916 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC258BEC1E10D24700491916 /* Main.storyboard */; };
 		CC258BF11E10D24700491916 /* Glood.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CC258BEF1E10D24700491916 /* Glood.xcdatamodeld */; };
 		CC258BF31E10D24700491916 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CC258BF21E10D24700491916 /* Assets.xcassets */; };
-		CC258BF61E10D24700491916 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC258BF41E10D24700491916 /* LaunchScreen.storyboard */; };
 		CC258C011E10D24700491916 /* GloodTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CC258C001E10D24700491916 /* GloodTests.m */; };
 		CC258C0C1E10D24700491916 /* GloodUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = CC258C0B1E10D24700491916 /* GloodUITests.m */; };
 		CC3BE4201E10D3D90034214B /* RecordAudio.m in Sources */ = {isa = PBXBuildFile; fileRef = CC3BE41D1E10D3D90034214B /* RecordAudio.m */; };
@@ -172,7 +171,6 @@
 		CC258BED1E10D24700491916 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		CC258BF01E10D24700491916 /* Glood.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Glood.xcdatamodel; sourceTree = "<group>"; };
 		CC258BF21E10D24700491916 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		CC258BF51E10D24700491916 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CC258BF71E10D24700491916 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CC258BFC1E10D24700491916 /* GloodTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GloodTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC258C001E10D24700491916 /* GloodTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GloodTests.m; sourceTree = "<group>"; };
@@ -518,7 +516,6 @@
 				CC3BE55F1E10D4510034214B /* FeedbackViewController.m */,
 				CC258BEC1E10D24700491916 /* Main.storyboard */,
 				CC258BF21E10D24700491916 /* Assets.xcassets */,
-				CC258BF41E10D24700491916 /* LaunchScreen.storyboard */,
 				CC258BF71E10D24700491916 /* Info.plist */,
 				CC258BEF1E10D24700491916 /* Glood.xcdatamodeld */,
 				CC258BE31E10D24700491916 /* Supporting Files */,
@@ -1101,7 +1098,6 @@
 				CC3BE5331E10D3E70034214B /* feedback.png in Resources */,
 				CC3BE5221E10D3E70034214B /* zbar-helpicons.png in Resources */,
 				CC3BE53F1E10D3E70034214B /* setting.png in Resources */,
-				CC258BF61E10D24700491916 /* LaunchScreen.storyboard in Resources */,
 				CC3BE5311E10D3E70034214B /* event_background.jpg in Resources */,
 				CCE61ABE1E135CFA002E3A7F /* RecordingSignal003@3x.png in Resources */,
 				CC3BE5391E10D3E70034214B /* menu.png in Resources */,
@@ -1322,14 +1318,6 @@
 			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
-		CC258BF41E10D24700491916 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				CC258BF51E10D24700491916 /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
@@ -1435,6 +1423,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.sparxo.vambie;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -1456,6 +1445,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.sparxo.vambie;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
