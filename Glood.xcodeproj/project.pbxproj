@@ -129,6 +129,10 @@
 		CC3BE56F1E10D6520034214B /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC3BE56E1E10D6520034214B /* CoreMedia.framework */; };
 		CC3BE5711E10D6610034214B /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CC3BE5701E10D6610034214B /* libiconv.tbd */; };
 		CC3BE5731E10D6850034214B /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC3BE5721E10D6850034214B /* QuartzCore.framework */; };
+		CC5A1C211E1B95F70005963F /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC5A1C1D1E1B95F70005963F /* Bolts.framework */; };
+		CC5A1C221E1B95F70005963F /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC5A1C1E1E1B95F70005963F /* FBSDKCoreKit.framework */; };
+		CC5A1C231E1B95F70005963F /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC5A1C1F1E1B95F70005963F /* FBSDKLoginKit.framework */; };
+		CC5A1C241E1B95F70005963F /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC5A1C201E1B95F70005963F /* FBSDKShareKit.framework */; };
 		CC7925531E1103A300CD2BF3 /* Mic+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = CC7925501E1103A300CD2BF3 /* Mic+CoreDataProperties.m */; };
 		CC7925541E1103A300CD2BF3 /* Mic.m in Sources */ = {isa = PBXBuildFile; fileRef = CC7925521E1103A300CD2BF3 /* Mic.m */; };
 		CCC01A651E163B46008A1F5D /* CommonClass.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC01A641E163B46008A1F5D /* CommonClass.m */; };
@@ -385,6 +389,10 @@
 		CC3BE56E1E10D6520034214B /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		CC3BE5701E10D6610034214B /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
 		CC3BE5721E10D6850034214B /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		CC5A1C1D1E1B95F70005963F /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
+		CC5A1C1E1E1B95F70005963F /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
+		CC5A1C1F1E1B95F70005963F /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
+		CC5A1C201E1B95F70005963F /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKShareKit.framework; sourceTree = "<group>"; };
 		CC79254F1E1103A300CD2BF3 /* Mic+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Mic+CoreDataProperties.h"; sourceTree = "<group>"; };
 		CC7925501E1103A300CD2BF3 /* Mic+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Mic+CoreDataProperties.m"; sourceTree = "<group>"; };
 		CC7925511E1103A300CD2BF3 /* Mic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mic.h; sourceTree = "<group>"; };
@@ -413,13 +421,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				CC3BE5731E10D6850034214B /* QuartzCore.framework in Frameworks */,
+				CC5A1C221E1B95F70005963F /* FBSDKCoreKit.framework in Frameworks */,
 				CC3BE5711E10D6610034214B /* libiconv.tbd in Frameworks */,
 				CC3BE56F1E10D6520034214B /* CoreMedia.framework in Frameworks */,
 				CC3BE56D1E10D64B0034214B /* CoreVideo.framework in Frameworks */,
 				CC3BE56B1E10D6440034214B /* CoreGraphics.framework in Frameworks */,
 				CC3BE5691E10D63E0034214B /* AVFoundation.framework in Frameworks */,
+				CC5A1C231E1B95F70005963F /* FBSDKLoginKit.framework in Frameworks */,
 				59CB923B232BD5E66224C869 /* libPods-Glood.a in Frameworks */,
 				CC3BE51C1E10D3E70034214B /* libopencore-amrwb.a in Frameworks */,
+				CC5A1C241E1B95F70005963F /* FBSDKShareKit.framework in Frameworks */,
+				CC5A1C211E1B95F70005963F /* Bolts.framework in Frameworks */,
 				CC3BE51F1E10D3E70034214B /* libzbar.a in Frameworks */,
 				CC3BE51B1E10D3E70034214B /* libopencore-amrnb.a in Frameworks */,
 			);
@@ -598,6 +610,10 @@
 		CC3BE42A1E10D3E60034214B /* Framework */ = {
 			isa = PBXGroup;
 			children = (
+				CC5A1C1D1E1B95F70005963F /* Bolts.framework */,
+				CC5A1C1E1E1B95F70005963F /* FBSDKCoreKit.framework */,
+				CC5A1C1F1E1B95F70005963F /* FBSDKLoginKit.framework */,
+				CC5A1C201E1B95F70005963F /* FBSDKShareKit.framework */,
 				CC3BE42B1E10D3E60034214B /* DACircularProgress */,
 				CC3BE4301E10D3E60034214B /* JTMaterialSwitch */,
 				CC3BE4331E10D3E60034214B /* KKPagedFlowView */,
@@ -1419,6 +1435,10 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				DEVELOPMENT_TEAM = LT4WYE8BSE;
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Glood/Framework",
+				);
 				INFOPLIST_FILE = Glood/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1426,6 +1446,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Glood/Framework/VoiceConvert/lib",
 					"$(PROJECT_DIR)/Glood/Framework/ZBarSDK",
+					"~/Documents/FacebookSDK",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.sparxo.vambie;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1441,6 +1462,10 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				DEVELOPMENT_TEAM = LT4WYE8BSE;
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Glood/Framework",
+				);
 				INFOPLIST_FILE = Glood/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1448,6 +1473,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Glood/Framework/VoiceConvert/lib",
 					"$(PROJECT_DIR)/Glood/Framework/ZBarSDK",
+					"~/Documents/FacebookSDK",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.sparxo.vambie;
 				PRODUCT_NAME = "$(TARGET_NAME)";

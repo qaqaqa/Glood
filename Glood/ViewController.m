@@ -15,7 +15,9 @@
 #import "ShowMessage.h"
 #import "UserInfomationData.h"
 #import "AddATicketViewController.h"
-@interface ViewController ()
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKLoginKit/FBSDKLoginKit.h>
+@interface ViewController ()<FBSDKLoginButtonDelegate >
 
 @end
 
@@ -32,6 +34,7 @@
     [bgImageView setImage:[UIImage imageNamed:@"bg"]];
     [self.view addSubview:bgImageView];
     
+    //facebook第三方登陆，服务器登陆
     UIButton *facebookButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*50/320, 200, SCREEN_WIDTH*220/320, 50)];
     [facebookButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [facebookButton setTitle:@"sign in with facebook" forState:UIControlStateNormal];
@@ -41,13 +44,43 @@
     [self.view addSubview:facebookButton];
     
     //    self.commonService = [[CommonService alloc] init];
+    
+    //facebook第三方登陆 sdK登陆
+//    FBSDKLoginButton *loginButton = [[FBSDKLoginButton alloc] init];
+//    // Optional: Place the button in the center of your view.
+//    loginButton.readPermissions =
+//    @[@"public_profile", @"email", @"user_friends"];
+//    loginButton.delegate = self;
+//    loginButton.center = self.view.center;
+//    [self.view addSubview:loginButton];
 }
 
+- (void)loginButton:(FBSDKLoginButton *)loginButton didCompleteWithResult:(FBSDKLoginManagerLoginResult *)result
+                error:(NSError *)error;
+{
+    NSLog(@"xxxxx---xxxxx---- %@---%@",result.token,error);
+    if ([FBSDKAccessToken currentAccessToken]) {
+        [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:nil]
+         startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+             if (!error) {
+                 NSLog(@"fetched user:%@", result);
+             }
+         }];
+    }
+}
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
+    NSLog(@"xxxx-*-------  %@",[[NSUserDefaults standardUserDefaults] objectForKey:Exchange_OAUTH2_TOKEN]);
+    if (![CommonService isBlankString:[[NSUserDefaults standardUserDefaults] objectForKey:Exchange_OAUTH2_TOKEN]]) {
+        //又置换后的token，则直接登陆
+        [MMProgressHUD showWithTitle:@"正在连接聊天服务器" status:NSLocalizedString(@"Please wating", nil)];
+        UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+        [userInfomationData.commonService connectionSignlar];
+    }
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(getEventList)name:@"getEventList"object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(exchangeToken)name:@"exchangeToken"object:nil];
     //    EventViewController *eventVC = [[EventViewController alloc] initWithNibName:nil bundle:nil];
     //   [self.navigationController pushViewController:eventVC animated:YES];
 }
@@ -56,7 +89,8 @@
 {
     [super viewWillDisappear:YES];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"getEventList" object:nil];
-    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"exchangeToken" object:nil];
+    [MMProgressHUD dismiss];
 }
 
 - (void)getEventList
@@ -87,8 +121,32 @@
         
     }
 }
+#pragma  mark ==========  点击连接facebook SDK登陆 ==========
+- (void)onSignInBtnClick:(id)sender
+{
+    FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];
+    [login
+     logInWithReadPermissions: @[@"public_profile", @"email", @"user_friends"]
+     fromViewController:self
+     handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+         NSLog(@"xxxxx-*-*-*------  %@--- %@",result.token.userID,result.token.tokenString );
+         if (error) {
+             NSLog(@"Process error");
+         } else if (result.isCancelled) {
+             NSLog(@"Cancelled");
+         } else {
+             NSLog(@"Logged in");
+             
+             //置换token
+             [[NSUserDefaults standardUserDefaults] setObject:result.token.tokenString forKey:FACEBOOK_OAUTH2_TOKEN];
+             [self exchangeToken];
+         }
+     }];
+}
 
-#pragma  mark ==========  点击连接facebook ==========
+
+#pragma  mark ==========  点击连接facebook 服务器登陆==========
+/*
 - (void)onSignInBtnClick:(id)sender
 {
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
@@ -125,6 +183,7 @@
     //    EventViewController *eventVC = [[EventViewController alloc] initWithNibName:nil bundle:nil];
     //    [self.navigationController pushViewController:eventVC animated:YES];
 }
+ */
 
 - (void)cleanCacheAndCookie{
     //清除cookies
@@ -241,8 +300,10 @@
         [userInfomationData.commonService connectionSignlar];
         return value;
     } error:^id(NSError *error) {
-        NSLog(@"置换token失败--- %@",error);
+        NSLog(@"置换token失败--- %@",error.description);
         [MMProgressHUD dismissWithError:@"置换token失败，请重新尝试" afterDelay:2.0f];
+        //如果报账号不存在，则调用外部登陆
+        
         return error;
     }];
 }

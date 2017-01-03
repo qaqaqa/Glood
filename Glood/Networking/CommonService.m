@@ -115,7 +115,25 @@
         [requestDeferred resolveWithValue:responseObject];
             NSLog(@"%@ JSON: %@", endpoint, responseObject);
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"Error: %@", error);
+        NSData *errorData = error.userInfo[AFNetworkingOperationFailingURLResponseDataErrorKey];
+        NSDictionary *serializedData = [NSJSONSerialization JSONObjectWithData: errorData options:kNilOptions error:nil];
+        NSLog(@"errorheiheihiehiehi--%@",serializedData);
+        if ([[[serializedData objectForKey:@"error"] objectForKey:@"message"] isEqualToString:@"NotRegisterExternalAccount"]) {
+            //调用外部注册
+            UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+            [MMProgressHUD showWithTitle:@"外部账号注册中" status:NSLocalizedString(@"Please wating", nil)];
+            [[userInfomationData.commonService signup_external:[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_TOKEN] provider:@"Facebook"] then:^id(id value) {
+                NSLog(@"调用外部注册成功");
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"exchangeToken" object:self];
+                return value;
+            } error:^id(NSError *error) {
+                NSLog(@"调用外部注册失败--- %@",error);
+                [MMProgressHUD dismissWithError:@"外部注册失败，请重新尝试" afterDelay:2.0f];
+                return error;
+            }];
+        }
+
+        NSLog(@"Errorxxxxxxxxx: %@hahha%@", error.description,operation);
     }];
     
     return requestDeferred.promise;

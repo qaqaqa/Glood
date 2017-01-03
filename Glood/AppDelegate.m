@@ -14,6 +14,7 @@
 #import "Node.h"
 #import "Define.h"
 #import <Bugly/Bugly.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 
 @interface AppDelegate ()
@@ -31,6 +32,9 @@
     // Override point for customization after application launch.
     
     [Bugly startWithAppId:@"900016269"];
+    
+    [[FBSDKApplicationDelegate sharedInstance] application:application
+                             didFinishLaunchingWithOptions:launchOptions];
     
     self.isEnterGroundStr = @"no";
     self.commonService = [[CommonService alloc] init];
@@ -72,6 +76,19 @@
     userInfomationData.isGetMicListMutableArr = [[NSMutableArray alloc] initWithCapacity:10];
     
     return YES;
+}
+
+- (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url
+            options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
+    
+    BOOL handled = [[FBSDKApplicationDelegate sharedInstance] application:application
+                                                                  openURL:url
+                                                        sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
+                                                               annotation:options[UIApplicationOpenURLOptionsAnnotationKey]
+                    ];
+    // 在此添加任意自定义逻辑。
+    return handled;
 }
 
 - (void)listenNetWorkingPort{
@@ -121,6 +138,7 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    [FBSDKAppEvents activateApp];
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
     if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"closed"] && [self.isEnterGroundStr isEqualToString:@"yes"]) {
         self.isEnterGroundStr = @"no";

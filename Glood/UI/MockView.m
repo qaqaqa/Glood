@@ -359,37 +359,37 @@
 - (void)recordOrExchangeChatRoomStopAnimation
 {
     if (self.upHeadButtonTag != 0) {
-        UIImageView *find_bgImageView1 = (UIImageView *)[self viewWithTag:self.upHeadButtonTag-headImageButtonTag+bgImageViewTag];
-        UIImageView *find_circleOneImageView1 = (UIImageView *)[self viewWithTag:self.upHeadButtonTag-headImageButtonTag+circleOneImageViewTag];
-        UIImageView *find_circleTwoImageView1 = (UIImageView *)[self viewWithTag:self.upHeadButtonTag-headImageButtonTag+circleTwoImageViewTag];
-        UIButton *find_headImageButtonView1 = (UIButton *)[self viewWithTag:self.upHeadButtonTag-headImageButtonTag+headImageButtonTag];
-        dispatch_time_t popTime1 = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.0 * NSEC_PER_SEC));
-        dispatch_after(popTime1, dispatch_get_main_queue(), ^(void){
-            [UIView animateWithDuration:0.0 animations:^{
-                find_headImageButtonView1.transform = CGAffineTransformIdentity;
-            } completion:^(BOOL finished) {
-            }];
-            [UIView animateWithDuration:0.0 animations:^{
-                [find_bgImageView1 setImage:[UIImage imageNamed:@"background.png"]];
-                find_circleTwoImageView1.alpha=0.5;
-                find_circleTwoImageView1.transform = CGAffineTransformIdentity;
-                find_circleOneImageView1.alpha=0.5;
-                find_circleOneImageView1.transform = CGAffineTransformIdentity;
-            } completion:^(BOOL finished) {
-                self.upHeadButtonTag = 0;
-                
-            }];
-        });
-        
-        NSLog(@"sdfsd*--*-*-*------  %ld",(long)self.upHeadButtonTag);
 //        UIImageView *find_bgImageView1 = (UIImageView *)[self viewWithTag:self.upHeadButtonTag-headImageButtonTag+bgImageViewTag];
 //        UIImageView *find_circleOneImageView1 = (UIImageView *)[self viewWithTag:self.upHeadButtonTag-headImageButtonTag+circleOneImageViewTag];
 //        UIImageView *find_circleTwoImageView1 = (UIImageView *)[self viewWithTag:self.upHeadButtonTag-headImageButtonTag+circleTwoImageViewTag];
 //        UIButton *find_headImageButtonView1 = (UIButton *)[self viewWithTag:self.upHeadButtonTag-headImageButtonTag+headImageButtonTag];
-//        [find_bgImageView1 setImage:[UIImage imageNamed:@"background.png"]];
-//        find_circleTwoImageView1.transform = CGAffineTransformIdentity;
-//        find_circleOneImageView1.transform = CGAffineTransformIdentity;
-//        find_headImageButtonView1.transform = CGAffineTransformIdentity;
+//        dispatch_time_t popTime1 = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.0 * NSEC_PER_SEC));
+//        dispatch_after(popTime1, dispatch_get_main_queue(), ^(void){
+//            [UIView animateWithDuration:0.0 animations:^{
+//                find_headImageButtonView1.transform = CGAffineTransformIdentity;
+//            } completion:^(BOOL finished) {
+//            }];
+//            [UIView animateWithDuration:0.0 animations:^{
+//                [find_bgImageView1 setImage:[UIImage imageNamed:@"background.png"]];
+//                find_circleTwoImageView1.alpha=0.5;
+//                find_circleTwoImageView1.transform = CGAffineTransformIdentity;
+//                find_circleOneImageView1.alpha=0.5;
+//                find_circleOneImageView1.transform = CGAffineTransformIdentity;
+//            } completion:^(BOOL finished) {
+//                self.upHeadButtonTag = 0;
+//                
+//            }];
+//        });
+        
+        NSLog(@"sdfsd*--*-*-*------  %ld",(long)self.upHeadButtonTag);
+        UIImageView *find_bgImageView1 = (UIImageView *)[self viewWithTag:self.upHeadButtonTag-headImageButtonTag+bgImageViewTag];
+        UIImageView *find_circleOneImageView1 = (UIImageView *)[self viewWithTag:self.upHeadButtonTag-headImageButtonTag+circleOneImageViewTag];
+        UIImageView *find_circleTwoImageView1 = (UIImageView *)[self viewWithTag:self.upHeadButtonTag-headImageButtonTag+circleTwoImageViewTag];
+        UIButton *find_headImageButtonView1 = (UIButton *)[self viewWithTag:self.upHeadButtonTag-headImageButtonTag+headImageButtonTag];
+        [find_bgImageView1 setImage:[UIImage imageNamed:@"background.png"]];
+        find_circleTwoImageView1.transform = CGAffineTransformIdentity;
+        find_circleOneImageView1.transform = CGAffineTransformIdentity;
+        find_headImageButtonView1.transform = CGAffineTransformIdentity;
         self.upHeadButtonTag = 0;
     }
 

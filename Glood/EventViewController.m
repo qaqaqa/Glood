@@ -746,6 +746,7 @@
         if (![TimeOfBootCount valueForKey:@"time"]) {
             [TimeOfBootCount setValue:@"sd" forKey:@"time"];
             NSLog(@"第一次启动");
+            [self.mockBgView setHidden:YES];
             [[AVAudioSession sharedInstance] requestRecordPermission:^(BOOL granted) {
                 [self.myAppDelegate deletePreLoadingMessage];
                 

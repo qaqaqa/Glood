@@ -15,8 +15,11 @@
 #import "JTMaterialSwitch.h"
 #import "UserInfomationData.h"
 #import "ViewController.h"
+#import <FBSDKLoginKit/FBSDKLoginKit.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
-@interface SettingsViewController ()
+
+@interface SettingsViewController ()<FBSDKLoginButtonDelegate>
 
 @property (retain, nonatomic) UIView *cehuaView;
 @property (retain, nonatomic) JTMaterialSwitch *jtSwitch;;
@@ -75,6 +78,8 @@
 
 - (void)onlogoutBtnClick:(id)sender
 {
+    FBSDKLoginManager *_loginManager;
+    [_loginManager logOut];
     UserInfomationData * userInfomationData = [UserInfomationData shareInstance];
     [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:Exchange_OAUTH2_TOKEN];
     [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:FACEBOOK_OAUTH2_USERID];
