@@ -43,10 +43,11 @@
     [self.view addSubview:self.bgScrollView];
     
     UIImageView *topImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT*120/568)];
-    [topImageView sd_setImageWithURL:[CommonClass showImage:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"image_url"] x1:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"image_crop_info"] objectForKey:@"x1"] y1:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"image_crop_info"] objectForKey:@"y1"] x2:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"image_crop_info"] objectForKey:@"x2"] y2:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"image_crop_info"] objectForKey:@"y2"] width:[NSString stringWithFormat:@"%f",topImageView.frame.size.width*2]] placeholderImage:[UIImage imageNamed:@"event_background.jpg"]];
+    [topImageView sd_setImageWithURL:[CommonClass showImage:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"image_url"] x1:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"image_crop_info"] objectForKey:@"x1"] y1:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"image_crop_info"] objectForKey:@"y1"] x2:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"image_crop_info"] objectForKey:@"x2"] y2:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"image_crop_info"] objectForKey:@"y2"] width:[NSString stringWithFormat:@"%.f",topImageView.frame.size.width*2]] placeholderImage:[UIImage imageNamed:@"event_background.jpg"]];
+    
     [self.bgScrollView addSubview:topImageView];
     
-    UILabel *monthLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*15/320, topImageView.frame.size.height+topImageView.frame.origin.y+SCREEN_WIDTH*10/320, SCREEN_WIDTH*60/320, SCREEN_HEIGHT*30/568)];
+    UILabel *monthLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*10/320, topImageView.frame.size.height+topImageView.frame.origin.y+SCREEN_WIDTH*10/320, SCREEN_WIDTH*60/320, SCREEN_HEIGHT*30/568)];
     monthLabel.textAlignment = NSTextAlignmentRight;
     monthLabel.text = [NSString stringWithFormat:@"%@",monthStr];
 //    monthLabel.font = [UIFont boldSystemFontOfSize:13];
@@ -60,14 +61,14 @@
     dayLabel.font = [UIFont fontWithName:@"ProximaNova-Bold" size:35];
     [self.bgScrollView addSubview:dayLabel];
     
-    CGSize eventNameSize = [[NSString stringWithFormat:@"%@",[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"name"]] sizeWithFont:[UIFont fontWithName:@"ProximaNova-Regular" size:23] constrainedToSize:CGSizeMake(SCREEN_WIDTH*220/320, 50) lineBreakMode:NSLineBreakByWordWrapping];
-    UILabel *eventNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(monthLabel.frame.origin.x+monthLabel.frame.size.width+5, monthLabel.frame.origin.y+2, SCREEN_WIDTH*220/320, eventNameSize.height)];
+    CGSize eventNameSize = [[NSString stringWithFormat:@"%@",[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"name"]] sizeWithFont:[UIFont fontWithName:@"ProximaNova-Regular" size:28] constrainedToSize:CGSizeMake(SCREEN_WIDTH*220/320, 60) lineBreakMode:NSLineBreakByWordWrapping];
+    UILabel *eventNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(monthLabel.frame.origin.x+monthLabel.frame.size.width+15, monthLabel.frame.origin.y+2, SCREEN_WIDTH*220/320, eventNameSize.height)];
     eventNameLabel.textAlignment = NSTextAlignmentLeft;
     eventNameLabel.numberOfLines = 0;
     eventNameLabel.lineBreakMode = NSLineBreakByWordWrapping;
     eventNameLabel.text = [NSString stringWithFormat:@"%@",[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"name"]];
 //    eventNameLabel.font = [UIFont boldSystemFontOfSize:16];
-    eventNameLabel.font = [UIFont fontWithName:@"ProximaNova-Regular" size:23];
+    eventNameLabel.font = [UIFont fontWithName:@"ProximaNova-Regular" size:25];
     [self.bgScrollView addSubview:eventNameLabel];
     
     UIImageView *timelogoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(dayLabel.frame.origin.x+(SCREEN_WIDTH*12/320), dayLabel.frame.origin.y+dayLabel.frame.size.height+(SCREEN_WIDTH*10/320), SCREEN_WIDTH*15/320, SCREEN_WIDTH*15/320)];
@@ -83,7 +84,7 @@
     [addresslogoImageView setImage:[UIImage imageNamed:@"addressicon"]];
     [self.bgScrollView addSubview:addresslogoImageView];
     
-    CGSize addressSize = [[NSString stringWithFormat:@"%@",[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"address"]] sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(SCREEN_WIDTH*200/320, 40) lineBreakMode:NSLineBreakByWordWrapping];
+    CGSize addressSize = [[NSString stringWithFormat:@"%@",[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"location"]] sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(SCREEN_WIDTH*200/320, 100) lineBreakMode:NSLineBreakByWordWrapping];
     UILabel *addressLabel = [[UILabel alloc] initWithFrame:CGRectMake(addresslogoImageView.frame.size.width+addresslogoImageView.frame.origin.x+5, addresslogoImageView.frame.origin.y, SCREEN_WIDTH*200/320, addressSize.height)];
     addressLabel.numberOfLines = 0;
     addressLabel.lineBreakMode = NSLineBreakByWordWrapping;
@@ -161,17 +162,31 @@
 -(NSString *)getLocalTimeFormateUTCDate:(NSString *)utcDate
 {
     NSLog(@"UTC=========%@",utcDate);
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+//    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     //输入格式
-    [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZ"];
-    NSTimeZone *localTimeZone = [NSTimeZone localTimeZone];
-    [dateFormatter setTimeZone:localTimeZone];
+//    [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZ"];
+//    NSTimeZone *localTimeZone = [NSTimeZone localTimeZone];
+//    [dateFormatter setTimeZone:localTimeZone];
     
-    NSDate *dateFormatted = [dateFormatter dateFromString:utcDate];
+//    NSDate *dateFormatted = [dateFormatter dateFromString:utcDate];
     //输出格式
-    [dateFormatter setDateFormat:@"HH:mm a"];
-    NSString *dateString = [dateFormatter stringFromDate:dateFormatted];
-    NSLog(@"UTC=========%@",dateString);
+//    [dateFormatter setDateFormat:@"HH:mm a"];
+//    NSString *dateString = [dateFormatter stringFromDate:dateFormatted];
+//    NSLog(@"UTC=========%@",dateString);
+    NSArray *arr = [[NSArray alloc] init];
+    arr = [utcDate componentsSeparatedByString:@"T"];
+    NSString *dateString;
+    if ([arr count] >= 2) {
+        if ([[[arr objectAtIndex:1] substringWithRange:NSMakeRange(0,2)] integerValue] > 12) {
+            dateString = [NSString stringWithFormat:@"%@ pm",[[arr objectAtIndex:1] substringWithRange:NSMakeRange(0,5)]];
+        }
+        else
+        {
+            dateString = [NSString stringWithFormat:@"%@ am",[[arr objectAtIndex:1] substringWithRange:NSMakeRange(0,5)]];
+        }
+        
+    }
+    NSLog(@"hahahahhahahahah -----  %@",dateString);
     return dateString;
 }
 
@@ -184,13 +199,26 @@
     dateString = [dateString stringByReplacingOccurrencesOfString:@"PM"withString:@"pm"];
     NSString *hh = [dateString substringWithRange:NSMakeRange(0,2)];
     NSString *newHH=hh;
-    if ([hh integerValue]>12) {
+    NSLog(@"newhh:%@",newHH);
+    if ([newHH integerValue]>12) {
         newHH=[NSString stringWithFormat:@"%li",[hh integerValue]-12];
     }
-    if ([newHH integerValue]<10) {
-       newHH = [newHH stringByReplacingOccurrencesOfString:@"0"withString:@""];
+    if ([[newHH substringWithRange:NSMakeRange(0,1)] integerValue] == 0) {
+       newHH = [hh stringByReplacingOccurrencesOfString:@"0"withString:@""];
+    }
+    if([newHH integerValue] == 00)
+    {
+        newHH = @"12";
     }
     dateString = [dateString stringByReplacingOccurrencesOfString:hh withString:newHH];
+    
+    NSArray *arr = [[NSArray alloc] init];
+    arr = [dateString componentsSeparatedByString:@":"];
+    NSString *newMM = [arr objectAtIndex:1];
+    if ([[arr objectAtIndex:1] integerValue]<10 && [[arr objectAtIndex:1] integerValue] != 00 && [[[arr objectAtIndex:1] substringWithRange:NSMakeRange(0,1)] integerValue] != 0) {
+        newMM = [NSString stringWithFormat:@"0%@",[arr objectAtIndex:1]];
+    }
+    dateString = [NSString stringWithFormat:@"%@:%@",[arr objectAtIndex:0],newMM];
     NSLog(@"sfsdfs-------   %@",dateString);
     return dateString;
 }

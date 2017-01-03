@@ -384,7 +384,7 @@
             NSError *error = nil;
             
             NSArray *result = [self.myAppDelegate.managedObjectContext executeFetchRequest:request error:&error];
-//            NSLog(@"xxxxcx---commonservice-%@===%@ --%lu--- %@",roomId,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID],(unsigned long)[result count],messageIdStr);
+            NSLog(@"xxxxcx---commonservice-%@===%@ --%lu---",roomId,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID],(unsigned long)[result count]);
             
             for (NSInteger i = 0; i < [result count]; i ++) {
                 
@@ -405,7 +405,7 @@
         
         //活动列表后的未读消息小红点标记
         
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:[NSString stringWithFormat:@"%@%@",@"red",[msg objectForKey:@"room_id"]]];
+//        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:[NSString stringWithFormat:@"%@%@",@"red",[msg objectForKey:@"room_id"]]];
         if ([userInfomationData.isEnterMicList isEqualToString:@"true"] && [[msg objectForKey:@"room_id"] isEqualToString:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"]]) {
             [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
             
@@ -493,18 +493,18 @@
                 return;
             }
             NSLog(@"xxxxjxjxjxlll----- %lu",[response count]);
+            
             for (NSInteger i = 0;i < [response count] ; i ++) {
                 NSArray *arr = [[NSArray alloc] init];
                 arr = [[[response objectAtIndex:i] objectForKey:@"content"] componentsSeparatedByString:@","];
                 if ([[[response objectAtIndex:i] objectForKey:@"message_type"] isEqualToString:@"Audio"] && [arr count]==2) {
                     [self.myAppDelegate insertCoreData:[[response objectAtIndex:i] objectForKey:@"user_id"] avatarImage:[[response objectAtIndex:i] objectForKey:@"user_avatar"] roomId:[[response objectAtIndex:i] objectForKey:@"room_id"] time:[NSNumber numberWithFloat:[[arr objectAtIndex:0] floatValue]] message:[arr objectAtIndex:1] messageId:[[response objectAtIndex:i] objectForKey:@"id"] fromUserName:[[response objectAtIndex:i] objectForKey:@"user_name"]];
                     [self.myAppDelegate insertCoraData:[[response objectAtIndex:i] objectForKey:@"room_id"] lastMessageId:[[response objectAtIndex:[response count]-1] objectForKey:@"id"] beginMessageId:[[response objectAtIndex:0] objectForKey:@"id"]];
-//                    [userInfomationData.historyMicArr insertObject:[self processDictionaryIsNSNull:[response objectAtIndex:i]] atIndex:0];
                     userInfomationData.inRoomMessageForRoomIdStr = [[response objectAtIndex:i] objectForKey:@"room_id"];
+                    
+                    NSLog(@"*-*---xxxxx-----messageid:%@",[[response objectAtIndex:0] objectForKey:@"id"]);
                 }
             }
-            
-//            [[NSUserDefaults standardUserDefaults] setObject:userInfomationData.historyMicArr forKey:roomIdContent];
             
                 if ([userInfomationData.isEnterMicList isEqualToString:@"true"]) {
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];

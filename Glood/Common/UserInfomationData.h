@@ -46,4 +46,6 @@
 
 @property (assign, nonatomic) NSInteger micMockListPageIndex;
 
+@property (strong, nonatomic) NSString *currtentRoomIdStr;  //用户当前所在哪个聊天室
+
 @end

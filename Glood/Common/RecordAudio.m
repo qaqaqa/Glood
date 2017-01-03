@@ -11,6 +11,7 @@
 #import "VoiceConverter.h"
 #import "ShowMessage.h"
 #import "MMProgressHUD.h"
+#import "AppDelegate.h"
 
 @import AVFoundation;
 @import AudioToolbox;
@@ -23,6 +24,8 @@
     NSData *wavdata;
     NSString *pathForFile;
 }
+
+@property (strong, nonatomic) AppDelegate *myAppDelegate;
 
 @end
 
@@ -83,9 +86,16 @@
         
         
     }else
+        self.myAppDelegate = [UIApplication sharedApplication].delegate;
+        [self performSelector:@selector(cancelTimer) withObject:nil afterDelay:0.5f];
         [ShowMessage showMessage:@"发送的语音有问题"];
     return nil;
     
+}
+
+- (void)cancelTimer
+{
+    [self.myAppDelegate deletePreLoadingMessage];
 }
 
 - (NSString *)stopRecoringCancel

@@ -49,5 +49,11 @@
 //删除数据库一条消息（预加载的消息）
 - (void)deletePreLoadingMessage;
 
+//删除数据库中包含messageId等于“99999999999999999”的所有消息
+- (void)deleteAllPreLoadingMessage;
+
+//查询数据库，找出每个房间最大的messageId
+- (NSString *)largeMessageIdFromDB:(NSString *)roomId;
+
 @end
 

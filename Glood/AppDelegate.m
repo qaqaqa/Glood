@@ -70,6 +70,7 @@
     [self performSelector:@selector(listenNetWorkingPort) withObject:nil afterDelay:0.35f];
     
     userInfomationData.isGetMicListMutableArr = [[NSMutableArray alloc] initWithCapacity:10];
+    
     return YES;
 }
 
@@ -227,6 +228,10 @@
     NSArray *result = [self.managedObjectContext executeFetchRequest:request error:&error];
     
     if ([result count] == 0) {
+        UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+        if (![userInfomationData.currtentRoomIdStr isEqualToString:roomIdx]) {
+            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:[NSString stringWithFormat:@"%@%@",@"red",roomIdx]];
+        }
         //  创建实体描述对象
         NSEntityDescription *description = [NSEntityDescription entityForName:@"Mic" inManagedObjectContext:self.managedObjectContext];
         //  1.先创建一个模型对象
@@ -421,6 +426,63 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
     }
     
+}
+
+#pragma mark ====== 删除数据库中包含messageId等于“99999999999999999”的所有消息======
+- (void)deleteAllPreLoadingMessage
+{
+    //  查询数据
+    //  1.NSFetchRequst对象
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Mic"];
+    //  2.设置排序
+    //  2.1创建排序描述对象
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"messageId" ascending:NO];
+    request.sortDescriptors = @[sortDescriptor];
+    NSString *roomId = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"messageId = %@",@"99999999999999999"]];
+    request.fetchOffset=0;
+    request.fetchLimit=100;
+    request.predicate = predicate;
+    
+    //  执行这个查询请求
+    NSError *error = nil;
+    
+    NSArray *result = [self.managedObjectContext executeFetchRequest:request error:&error];
+    NSLog(@"xxxxcx---appdelegate-%@===%@ --%lu",roomId,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID],(unsigned long)[result count]);
+    if ([result count] != 0) {
+        [self.managedObjectContext deleteObject:[result objectAtIndex:0]];
+        [self saveContext];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
+    }
+    
+}
+
+#pragma mark ====== 查询数据库，找出每个房间最大的messageId======
+- (NSString *)largeMessageIdFromDB:(NSString *)roomId
+{
+    NSString *largeMessageId;
+    //  查询数据
+    //  1.NSFetchRequst对象
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Mic"];
+    //  2.设置排序
+    //  2.1创建排序描述对象
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"messageId" ascending:NO];
+    request.sortDescriptors = @[sortDescriptor];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"roomId = %@",roomId]];
+    request.fetchOffset=0;
+    request.fetchLimit=1;
+    request.predicate = predicate;
+    
+    //  执行这个查询请求
+    NSError *error = nil;
+    
+    NSArray *result = [self.managedObjectContext executeFetchRequest:request error:&error];
+    if ([result count] != 0) {
+        Mic *mic = result[0];
+        largeMessageId = mic.messageId;
+    }
+    NSLog(@"消息列表中最大的messageId：%@",largeMessageId);
+    return largeMessageId;
 }
 
 
