@@ -57,6 +57,7 @@
 @property (assign, nonatomic) double cgAffineTransformMakeScale;//动画系数
 @property (retain, nonatomic) UIView *cehuaView;
 @property (retain, nonatomic) EventListView *eventListView;
+@property (retain, nonatomic) UIButton *rightButton;
 
 @property (retain, nonatomic) UIView *mockBgView;
 
@@ -167,10 +168,10 @@
     self.navtitleLabel.textColor = [UIColor colorWithRed:115/255.0 green:113/255.0 blue:114/255.0 alpha:1.0];
     [self.view addSubview:self.navtitleLabel];
     
-    UIButton *rightButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*54/320), SCREEN_HEIGHT*10/568, SCREEN_WIDTH*34/320, SCREEN_HEIGHT*36/568)];
-    [rightButton setImage:[UIImage imageNamed:@"down"] forState:UIControlStateNormal];
-    [rightButton addTarget:self action:@selector(onRightBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:rightButton];
+    self.rightButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*54/320), SCREEN_HEIGHT*10/568, SCREEN_WIDTH*34/320, SCREEN_HEIGHT*36/568)];
+    [self.rightButton setImage:[UIImage imageNamed:@"down"] forState:UIControlStateNormal];
+    [self.rightButton addTarget:self action:@selector(onRightBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.rightButton];
     
     if ([userInfomationData.pushEventVCTypeStr isEqualToString:@"QR"]) {
 //        userInfomationData.historyMicArr = [[NSMutableArray alloc] initWithCapacity:10];
@@ -248,12 +249,14 @@
 - (void)onRightBtnClick:(id)sender
 {
     NSLog(@"rigth");
+    self.rightButton.userInteractionEnabled = NO;
     self.eventListView = [[EventListView alloc] initWithFrame:CGRectMake(0, -SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT)];
     self.eventListView.delegate = self;
     [self.view addSubview:self.eventListView];
     [UIView animateWithDuration:0.5 animations:^{
         self.eventListView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
     } completion:^(BOOL finished) {
+        self.rightButton.userInteractionEnabled = YES;
     }];
 }
 
