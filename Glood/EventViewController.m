@@ -863,6 +863,7 @@
     }
     [self.gcdView setHidden:YES];
     [self.gcdLabel setHidden:YES];
+    [self.mockBgView setHidden:YES];
 }
 
 #pragma mark ========== 手指移开，取消录音 ============

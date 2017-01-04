@@ -12,7 +12,7 @@
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "CommonClass.h"
 
-@interface InfoViewController ()
+@interface InfoViewController ()<UIWebViewDelegate>
 
 @end
 
@@ -102,6 +102,7 @@
     
     UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*15/320, addressLabel.frame.size.height+addressLabel.frame.origin.y+25, SCREEN_WIDTH*290/320, (SCREEN_HEIGHT*(568-250)/568)-addressSize.height-25)];
     [webView setBackgroundColor:[UIColor clearColor]];
+    webView.delegate = self;
     [webView setOpaque:NO];
     [webView loadHTMLString:[NSString stringWithFormat:@"%@",[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"long_description"]] baseURL:nil];
     [self.bgScrollView addSubview:webView];
@@ -127,6 +128,16 @@
     }
     
 //    self.bgScrollView.contentSize = CGSizeMake(SCREEN_WIDTH, (SCREEN_HEIGHT*250/568)+contentSize.height);
+}
+
+-(BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType;
+{
+    NSURL *requestString = [request URL];
+    if ( ( [ [ requestString scheme ] isEqualToString: @"http" ] || [ [ requestString scheme ] isEqualToString: @"https" ] || [ [ requestString scheme ] isEqualToString: @"mailto" ])
+        && ( navigationType == UIWebViewNavigationTypeLinkClicked ) ) {
+        return ![ [ UIApplication sharedApplication ] openURL: requestString ];
+    }
+    return YES;
 }
 
 - (void)onCancelBtnClick:(id)sender
