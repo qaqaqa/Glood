@@ -28,6 +28,8 @@
 
 + (BOOL) isBlankString:(NSString *)string;
 
++ (id) processDictionaryIsNSNull:(id)obj;
+
 //检查网络
 + (BOOL)NetWorkIsOK;
 

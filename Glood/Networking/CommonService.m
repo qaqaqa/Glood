@@ -163,7 +163,7 @@
     [manager.requestSerializer setValue:[NSString stringWithFormat:@"Bearer %@",[[NSUserDefaults standardUserDefaults] objectForKey:Exchange_OAUTH2_TOKEN]] forHTTPHeaderField:@"authorization"];
     [manager GET:urlString parameters:params success:^(AFHTTPRequestOperation *operation, NSArray * responseObject) {
         [requestDeferred resolveWithValue:responseObject];
-        NSLog(@"json: ----%@", responseObject);
+        NSLog(@"json获取所有活动: ----%@", responseObject);
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Error: %@----%@", error.description,operation);
     }];
@@ -303,6 +303,7 @@
 #pragma mark ======== 连接signlar服务后，先让用户进入聊天室 =========
 - (void)joinChatRoom
 {
+    if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"open"]) {
         [self.chat invoke:@"join" withArgs:@[] completionHandler:^(id response, NSError *error) {
             if (error) {
                 //加入聊天室失败，继续尝试加入
@@ -313,12 +314,12 @@
             if (response == NULL) {
                 return;
             }
-                UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
-                userInfomationData.userDic = [[NSDictionary alloc] init];
-                userInfomationData.userDic = response;
-                
-                [MMProgressHUD dismiss];
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"getEventList" object:self];
+            UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+            userInfomationData.userDic = [[NSDictionary alloc] init];
+            userInfomationData.userDic = response;
+            
+            [MMProgressHUD dismiss];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"getEventList" object:self];
             if ([self.reConnectionTag isEqualToString:@"reConnetion"]) {
                 [self getMessageInRoom:@"" roomId:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"]];
                 dispatch_async(dispatch_get_global_queue(0,0), ^{
@@ -331,11 +332,17 @@
             }
             
             
-                NSLog(@"join-*-*-*-*-*-*-*-*-*-*  %@",response);
+            NSLog(@"join-*-*-*-*-*-*-*-*-*-*  %@",response);
             [[NSUserDefaults standardUserDefaults] setObject:[response objectForKey:@"avatar"] forKey:USER_AVATAR_URL];
             [[NSUserDefaults standardUserDefaults] setObject:[[[response objectForKey:@"connected_clients"] objectAtIndex:0] objectForKey:@"user_name"] forKey:USER_NAME];
             [[NSUserDefaults standardUserDefaults] setObject:[response objectForKey:@"current_client_id"] forKey:USER_CLIENT_ID];
         }];
+    }
+    else
+    {
+        [ShowMessage showMessage:@"已断开聊天室"];
+    }
+    
 }
 
 #pragma mark ======== 断线重连 =========
@@ -440,9 +447,10 @@
 #pragma mark ======== 扫描后，加入聊天室 =========
 - (void)joinRoom:(NSString *)roomId
 {
-    UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
-    userInfomationData.QRRoomId = roomId;
-//    if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"open"]) {
+    if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"open"]) {
+        UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+        userInfomationData.QRRoomId = roomId;
+        //    if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"open"]) {
         [userInfomationData.chat invoke:@"joinRoom" withArgs:@[roomId] completionHandler:^(id response, NSError *error) {
             if (error) {
                 NSLog(@"加入聊天室失败--- %@",error.description);
@@ -466,28 +474,36 @@
                 NSLog(@"拉取活动失败--- %@",error);
                 return error;
             }];
-//            if ([response integerValue] == 1) {
-//                [MMProgressHUD dismiss];
-//                [[NSNotificationCenter defaultCenter] postNotificationName:@"joinRoom" object:self];
-//            }
+            //            if ([response integerValue] == 1) {
+            //                [MMProgressHUD dismiss];
+            //                [[NSNotificationCenter defaultCenter] postNotificationName:@"joinRoom" object:self];
+            //            }
         }];
-//    }
-//    else{
-//        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"ERROR" message:@"network error" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-//        [alertView show];
-//    }
+        //    }
+        //    else{
+        //        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"ERROR" message:@"network error" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        //        [alertView show];
+        //    }
+    }
+    else
+    {
+        [ShowMessage showMessage:@"已断开聊天室"];
+    }
+    
 }
 
 #pragma mark ======== 在聊天室内，发送消息 =========
 - (void)sendMessageInRoom:(NSString *)messgae roomId:(NSString *)roomIdContent messageType:(NSInteger)messageType
 {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"sendMessageScu" object:self];
-    UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
-    NSLog(@"-*-/-*-*-*- ----  %@",messgae);
+    if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"open"]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"sendMessageScu" object:self];
+        UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+        NSLog(@"-*-/-*-*-*- ----  %@",messgae);
         [userInfomationData.chat invoke:@"sendMessageInRoom" withArgs:@[messgae,roomIdContent,[NSNumber numberWithInteger:messageType]] completionHandler:^(id response, NSError *error) {
             if (error) {
                 [self.myAppDelegate deletePreLoadingMessage];
                 [ShowMessage showMessage:@"消息发送失败"];
+                [self.myAppDelegate deleteAllPreLoadingMessage];
                 NSLog(@"xxxxxxxxxxx----%@",error.description);
                 return;
             }
@@ -495,12 +511,19 @@
             [ShowMessage showMessage:@"消息发送成功"];
             NSLog(@"发送消息-*-*-*-*-*-*-*-*-*-*  %@",response);
         }];
+    }
+    else
+    {
+        [ShowMessage showMessage:@"已断开聊天室"];
+    }
+    
 }
 
 #pragma mark ======== 进入聊天室时，获取历史消息 =========
 - (void)getMessageInRoom:(NSString *)lastMessageId roomId:(NSString *)roomIdContent
 {
-    UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+    if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"open"]) {
+        UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
         NSLog(@"***-------  %@",roomIdContent);
         [userInfomationData.chat invoke:@"getMessagesInRoom" withArgs:@[roomIdContent,@"Audio",lastMessageId,@"20"] completionHandler:^(id response, NSError *error) {
             if (error) {
@@ -524,34 +547,47 @@
                 }
             }
             
-                if ([userInfomationData.isEnterMicList isEqualToString:@"true"]) {
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
-                }
-                else
-                {
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryList" object:self];
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
-                }
+            if ([userInfomationData.isEnterMicList isEqualToString:@"true"]) {
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
+            }
+            else
+            {
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryList" object:self];
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
+            }
             
         }];
+    }
+    else
+    {
+        [ShowMessage showMessage:@"已断开聊天室"];
+    }
+    
 }
 
 #pragma mark ======== 反馈意见 =========
 - (void)sendFeedback:(NSString *)feedbackContent
 {
-    UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
-    [userInfomationData.chat invoke:@"sendFeedback" withArgs:@[feedbackContent] completionHandler:^(id response, NSError *error) {
-        if (error) {
-            [ShowMessage showMessage:@"反馈发送失败"];
-            NSLog(@"xxxxxxxxxxx----%@",error.description);
-            return;
-        }
-        if (response == NULL) {
-            return;
-        }
-        [ShowMessage showMessage:@"反馈发送成功"];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"sendFeedbackScu" object:self];
-    }];
+    if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"open"]) {
+        UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+        [userInfomationData.chat invoke:@"sendFeedback" withArgs:@[feedbackContent] completionHandler:^(id response, NSError *error) {
+            if (error) {
+                [ShowMessage showMessage:@"反馈发送失败"];
+                NSLog(@"xxxxxxxxxxx----%@",error.description);
+                return;
+            }
+            if (response == NULL) {
+                return;
+            }
+            [ShowMessage showMessage:@"反馈发送成功"];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"sendFeedbackScu" object:self];
+        }];
+    }
+    else
+    {
+        [ShowMessage showMessage:@"已断开聊天室"];
+    }
+    
 }
 
 #pragma mark - Fetched results controller
@@ -604,7 +640,7 @@
 
 
 #pragma mark ============    替换dictionary中的<null>为@“”    ===========
-- (id) processDictionaryIsNSNull:(id)obj{
++ (id) processDictionaryIsNSNull:(id)obj{
     const NSString *blank = @"";
     
     if ([obj isKindOfClass:[NSDictionary class]]) {

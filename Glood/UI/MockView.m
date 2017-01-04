@@ -74,6 +74,11 @@
         //        [self.topImageView sd_setImageWithURL:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"image_url"] placeholderImage:[UIImage imageNamed:@"event_background.jpg"]];
         [topBgView addSubview:self.topImageView];
         
+//        UIImageView *alpheImageView = [[UIImageView alloc] init];
+//        alpheImageView.frame  = CGRectMake(0, 0, self.topImageView.frame.size.width, self.topImageView.frame.size.height);
+//        [alpheImageView setImage:[UIImage imageNamed:@"alphe.png"]];
+//        [topBgView addSubview:alpheImageView];
+        
         self.monthLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*15/320, self.topImageView.frame.size.height+self.topImageView.frame.origin.y+SCREEN_WIDTH*10/320, SCREEN_WIDTH*40/320, SCREEN_HEIGHT*25/568)];
         self.monthLabel.textAlignment = NSTextAlignmentLeft;
         //        monthLabel.text = [NSString stringWithFormat:@"%@",monthStr];
@@ -341,7 +346,7 @@
                                @"user_id":userInfomationData.shieldUserId,
                                @"room_id":userInfomationData.shieldRoomId,
                                } atIndex:0];
-    [[NSUserDefaults standardUserDefaults] setObject:mutableArr forKey:@"Shield"];
+    [[NSUserDefaults standardUserDefaults] setObject:[CommonService processDictionaryIsNSNull:mutableArr] forKey:@"Shield"];
     [self getMicHistoryListMock];
     NSLog(@"Yes");
     [self hiddenShieldView];
@@ -400,7 +405,7 @@
 - (void)startRecordAudio
 {
     NSString *roomId = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
-    [self.myAppDelegate insertCoreData:[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID] avatarImage:[[NSUserDefaults standardUserDefaults] objectForKey:USER_AVATAR_URL] roomId:roomId time:@0 message:@"100" messageId:@"99999999999999999" fromUserName:[[NSUserDefaults standardUserDefaults] objectForKey:USER_NAME]];
+    [self.myAppDelegate insertCoreDataxx:[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID] avatarImage:[[NSUserDefaults standardUserDefaults] objectForKey:USER_AVATAR_URL] roomId:roomId time:@0 message:@"100" messageId:@"99999999999999999" fromUserName:[[NSUserDefaults standardUserDefaults] objectForKey:USER_NAME]];
     NSLog(@"xxxxcx---mockview-%@===%@",roomId,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID]);
     [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
 

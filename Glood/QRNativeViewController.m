@@ -21,7 +21,7 @@
 #define VIEW_HEIGHT [UIScreen mainScreen].bounds.size.height
 
 static const char *kScanQRCodeQueueName = "ScanQRCodeQueue";
-@interface QRNativeViewController () <AVCaptureMetadataOutputObjectsDelegate>{
+@interface QRNativeViewController () <AVCaptureMetadataOutputObjectsDelegate,UIAlertViewDelegate>{
     //设置扫描画面
     UIView *_scanView;
     NSTimer *_timer;
@@ -45,7 +45,41 @@ static const char *kScanQRCodeQueueName = "ScanQRCodeQueue";
     AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
     if ([self isCameraAvailable] && authStatus != AVAuthorizationStatusDenied) {
         //初始化扫描界面
+        // 获取 AVCaptureDevice 实例
+        NSError * error;
+        AVCaptureDevice *captureDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+        // 初始化输入流
+        AVCaptureDeviceInput *input = [AVCaptureDeviceInput deviceInputWithDevice:captureDevice error:&error];
+        if (!input) {
+            NSLog(@"%@", [error localizedDescription]);
+            return;
+        }
+        // 创建会话
+        _captureSession = [[AVCaptureSession alloc] init];
+        //提高图片质量为1080P，提高识别效果
+        _captureSession.sessionPreset = AVCaptureSessionPreset1920x1080;
+        // 添加输入流
+        [_captureSession addInput:input];
+        // 初始化输出流
+        AVCaptureMetadataOutput *captureMetadataOutput = [[AVCaptureMetadataOutput alloc] init];
+        //设置扫描范围
+        captureMetadataOutput.rectOfInterest =CGRectMake((_scanCropView.frame.origin.y-10)/VIEW_HEIGHT, (_scanCropView.frame.origin.x-10)/VIEW_WIDTH, (_scanCropView.frame.size.width+10)/VIEW_HEIGHT, (_scanCropView.frame.size.height+10)/VIEW_WIDTH);
+        // 添加输出流
+        [_captureSession addOutput:captureMetadataOutput];
         
+        // 创建dispatch queue.
+        dispatch_queue_t dispatchQueue;
+        dispatchQueue = dispatch_queue_create(kScanQRCodeQueueName, NULL);
+        [captureMetadataOutput setMetadataObjectsDelegate:self queue:dispatchQueue];
+        // 设置元数据类型 AVMetadataObjectTypeQRCode
+        [captureMetadataOutput setMetadataObjectTypes:[NSArray arrayWithObject:AVMetadataObjectTypeQRCode]];
+        
+        // 创建输出对象
+        _videoPreviewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:_captureSession];
+        [_videoPreviewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
+        
+        [_videoPreviewLayer setFrame:_scanView.layer.bounds];
+        [_scanView.layer insertSublayer:_videoPreviewLayer atIndex:0];
         
         [self startReading];
         //启动定时器
@@ -79,6 +113,7 @@ static const char *kScanQRCodeQueueName = "ScanQRCodeQueue";
     [super viewWillDisappear:animated];
     
     [self stopTimer];
+    _captureSession = nil;
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"joinRoom" object:nil];
     
@@ -102,6 +137,9 @@ static const char *kScanQRCodeQueueName = "ScanQRCodeQueue";
             
             //            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"prefs:root=Privacy&path=CAMERA"]];
         }
+    }
+    else if (alertView.tag == 20000102) {
+        [self startReading];
     }
 }
 
@@ -134,41 +172,7 @@ static const char *kScanQRCodeQueueName = "ScanQRCodeQueue";
 
 - (BOOL)startReading
 {
-    // 获取 AVCaptureDevice 实例
-    NSError * error;
-    AVCaptureDevice *captureDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
-    // 初始化输入流
-    AVCaptureDeviceInput *input = [AVCaptureDeviceInput deviceInputWithDevice:captureDevice error:&error];
-    if (!input) {
-        NSLog(@"%@", [error localizedDescription]);
-        return NO;
-    }
-    // 创建会话
-    _captureSession = [[AVCaptureSession alloc] init];
-    //提高图片质量为1080P，提高识别效果
-    _captureSession.sessionPreset = AVCaptureSessionPreset1920x1080;
-    // 添加输入流
-    [_captureSession addInput:input];
-    // 初始化输出流
-    AVCaptureMetadataOutput *captureMetadataOutput = [[AVCaptureMetadataOutput alloc] init];
-    //设置扫描范围
-    captureMetadataOutput.rectOfInterest =CGRectMake((_scanCropView.frame.origin.y-10)/VIEW_HEIGHT, (_scanCropView.frame.origin.x-10)/VIEW_WIDTH, (_scanCropView.frame.size.width+10)/VIEW_HEIGHT, (_scanCropView.frame.size.height+10)/VIEW_WIDTH);
-    // 添加输出流
-    [_captureSession addOutput:captureMetadataOutput];
     
-    // 创建dispatch queue.
-    dispatch_queue_t dispatchQueue;
-    dispatchQueue = dispatch_queue_create(kScanQRCodeQueueName, NULL);
-    [captureMetadataOutput setMetadataObjectsDelegate:self queue:dispatchQueue];
-    // 设置元数据类型 AVMetadataObjectTypeQRCode
-    [captureMetadataOutput setMetadataObjectTypes:[NSArray arrayWithObject:AVMetadataObjectTypeQRCode]];
-    
-    // 创建输出对象
-    _videoPreviewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:_captureSession];
-    [_videoPreviewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
-    
-    [_videoPreviewLayer setFrame:_scanView.layer.bounds];
-    [_scanView.layer insertSublayer:_videoPreviewLayer atIndex:0];
     // 开始会话
     [_captureSession startRunning];
     
@@ -179,7 +183,7 @@ static const char *kScanQRCodeQueueName = "ScanQRCodeQueue";
 {
     // 停止会话
     [_captureSession stopRunning];
-    _captureSession = nil;
+    
 }
 
 
@@ -253,19 +257,25 @@ static const char *kScanQRCodeQueueName = "ScanQRCodeQueue";
             }
             else{
                 NSLog(@"不支持老版本扫描");
-                UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:nil message:[NSString stringWithFormat:@"二维码有毛病"] preferredStyle:UIAlertControllerStyleAlert];
-                UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-                }];
-                [alertVC addAction:action];
-                [self presentViewController:alertVC animated:YES completion:^{
-                    
-                }];
+//                UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:nil message:[NSString stringWithFormat:@"二维码有毛病"] preferredStyle:UIAlertControllerStyleAlert];
+//                UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+//                }];
+//                [alertVC addAction:action];
+//                [self presentViewController:alertVC animated:YES completion:^{
+//                    
+//                }];
+                NSLog(@"不支持老版本扫描");
+                [self stopReading];
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:@"QR code error" delegate:self cancelButtonTitle:@"try again" otherButtonTitles:nil, nil];
+                alertView.tag = 20000102;
+                [alertView show];
             }
         });
     
     }
     return;
 }
+
 - (void)createTimer
 {
     _timer=[NSTimer scheduledTimerWithTimeInterval:2.2 target:self selector:@selector(moveUpAndDownLine) userInfo:nil repeats:YES];

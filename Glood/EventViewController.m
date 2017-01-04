@@ -49,6 +49,7 @@
 @property (retain, nonatomic) UIButton *soundingRecoringButton;
 @property (retain, nonatomic) UIImageView *soundingRecoringImageView; //长按手势时，检查麦克风权限是否开启
 @property (retain, nonatomic) UIImageView *micTopImageView;
+@property (retain, nonatomic) UIImageView *alpheImageView;
 @property (retain, nonatomic) UIImageView *micPlayerStatesImageView;
 @property (retain, nonatomic) UIButton *micShieldButton;
 @property (strong, nonatomic) NSMutableArray *dataArr;//活动list
@@ -75,7 +76,7 @@
     self.dataArr = [userInfomationData.eventDic objectForKey:@"result"];
 //    self.commonService = [[CommonService alloc] init];
     [userInfomationData.commonService clearData];
-    [[NSUserDefaults standardUserDefaults] setObject:self.dataArr forKey:@"eventList"];
+    [[NSUserDefaults standardUserDefaults] setObject:[CommonService processDictionaryIsNSNull:self.dataArr] forKey:@"eventList"];
     userInfomationData.isEnterMicList = @"false";
     self.cgAffineTransformMakeScale = 1.0;
     [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"]];
@@ -86,6 +87,10 @@
     [bgImageView setImage:[UIImage imageNamed:@"bg"]];
     [self.view addSubview:bgImageView];
     
+//    UIImageView *bgImageView1 = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+//    [bgImageView1 setImage:[UIImage imageNamed:@"alphe"]];
+//    [self.view addSubview:bgImageView1];
+    
     UIView *commonNavView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT*50/568)];
     commonNavView.backgroundColor = [UIColor clearColor];
     [self.view addSubview:commonNavView];
@@ -93,6 +98,12 @@
     self.micTopImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, commonNavView.frame.size.height+commonNavView.frame.origin.y+10, SCREEN_WIDTH, SCREEN_HEIGHT*110/568)];
     self.micTopImageView.alpha = 0;
     [self.view addSubview:self.micTopImageView];
+    
+    self.alpheImageView = [[UIImageView alloc] init];
+    self.alpheImageView.frame  = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+    [self.alpheImageView setImage:[UIImage imageNamed:@"alphe.png"]];
+    self.alpheImageView.alpha = 0;
+    [self.view addSubview:self.alpheImageView];
     
     [self.mockView removeFromSuperview];
     self.mockView = [[MockView alloc] init];
@@ -602,6 +613,7 @@
         self.mockView.alpha = 0;
         self.navtitleLabel.text = @"Communities";
         self.micTopImageView.alpha = 0;
+        self.alpheImageView.alpha = 0;
         self.micShieldButton.alpha = 0;
         self.micPlayerStatesImageView.alpha = 0;
         self.mockView.lastBgView.alpha = 1;
@@ -972,7 +984,7 @@
     if ([CommonService isBlankString:userInfomationData.QRRoomId]) {
         [self.mockView.topImageView sd_setImageWithURL:[CommonClass showImage:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"image_url"] x1:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"image_crop_info"] objectForKey:@"x1"] y1:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"image_crop_info"] objectForKey:@"y1"] x2:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"image_crop_info"] objectForKey:@"x2"] y2:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"image_crop_info"] objectForKey:@"y2"] width:[NSString stringWithFormat:@"%.f",self.mockView.topImageView.frame.size.width*2]] placeholderImage:[UIImage imageNamed:@"event_background.jpg"]];
         self.mockView.eventNameLabel.text = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"name"];
-        currentDateStr = [self getLocalDateFormateUTCDate:[[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"schedules"] objectAtIndex:0] objectForKey:@"begin_time_local"]];
+        currentDateStr = [self getLocalDateFormateUTCDate:[[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"schedules"] objectAtIndex:0] objectForKey:@"begin_time_utc"]];
         [self.micTopImageView sd_setImageWithURL:[CommonClass showImage:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"image_url"] x1:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"image_crop_info"] objectForKey:@"x1"] y1:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"image_crop_info"] objectForKey:@"y1"] x2:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"image_crop_info"] objectForKey:@"x2"] y2:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"image_crop_info"] objectForKey:@"y2"] width:[NSString stringWithFormat:@"%.f",self.micTopImageView.frame.size.width*2]] placeholderImage:[UIImage imageNamed:@"event_background.jpg"]];
         
         //消除活动列表后面未读消息的小红掉标记
@@ -988,7 +1000,7 @@
                 [self.mockView.topImageView sd_setImageWithURL:[CommonClass showImage:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"image_url"] x1:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"image_crop_info"] objectForKey:@"x1"] y1:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"image_crop_info"] objectForKey:@"y1"] x2:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"image_crop_info"] objectForKey:@"x2"] y2:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"image_crop_info"] objectForKey:@"y2"] width:[NSString stringWithFormat:@"%.f",self.mockView.topImageView.frame.size.width*2]] placeholderImage:[UIImage imageNamed:@"event_background.jpg"]];
                 
                 self.mockView.eventNameLabel.text = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"name"];
-                currentDateStr = [self getLocalDateFormateUTCDate:[[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"schedules"] objectAtIndex:0] objectForKey:@"begin_time_local"]];
+                currentDateStr = [self getLocalDateFormateUTCDate:[[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"schedules"] objectAtIndex:0] objectForKey:@"begin_time_utc"]];
                 [self.micTopImageView sd_setImageWithURL:[CommonClass showImage:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"image_url"] x1:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"image_crop_info"] objectForKey:@"x1"] y1:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"image_crop_info"] objectForKey:@"y1"] x2:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"image_crop_info"] objectForKey:@"x2"] y2:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"image_crop_info"] objectForKey:@"y2"] width:[NSString stringWithFormat:@"%.f",self.micTopImageView.frame.size.width*2]] placeholderImage:[UIImage imageNamed:@"event_background.jpg"]];
                 
                 //消除活动列表后面未读消息的小红掉标记
@@ -1036,6 +1048,7 @@
         
         [UIView animateWithDuration:0.5 animations:^{
             self.micTopImageView.alpha = 1;
+            self.alpheImageView.alpha = 1;
             self.micShieldButton.alpha = 1;
             self.micPlayerStatesImageView.alpha = 1;
             self.view.userInteractionEnabled = YES;
@@ -1064,7 +1077,7 @@
     [userInfomationData.recordAudio stopPlay];
     [self.hFlowView setHidden:YES];
     NSMutableArray *monthMutableArr = [[NSMutableArray alloc] initWithObjects:@"JAN",@"FEB",@"MAR",@"APR",@"MAY",@"JUN",@"JUL",@"AUG",@"SEP",@"OCT",@"NOV",@"DEC", nil];
-    NSString *currentDateStr = [self getLocalDateFormateUTCDate:[[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"schedules"] objectAtIndex:0] objectForKey:@"begin_time_local"]];
+    NSString *currentDateStr = [self getLocalDateFormateUTCDate:[[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"schedules"] objectAtIndex:0] objectForKey:@"begin_time_utc"]];
     NSString *monthStr = [monthMutableArr objectAtIndex:[[currentDateStr substringWithRange:NSMakeRange(5,2)] integerValue]-1];
     NSString *dayStr = [currentDateStr substringWithRange:NSMakeRange(8,2)];
     

@@ -267,6 +267,40 @@
     }
 }
 
+#pragma mark ====== 插入预加载数据库======
+- (void)insertCoreDataxx:(NSString *)userIdx avatarImage:(NSString *)avatarImagex roomId:(NSString *)roomIdx time:(NSNumber *)timex
+               message:(NSString *)messagex messageId:(NSString *)messageIdx fromUserName:(NSString *) fromUserNamex
+{
+    //查询数据库，如果当前需要插入的messageid在数据库不存在，则
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Mic"];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"messageId = %@ AND accountId = %@",messageIdx,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID]]];
+    request.predicate = predicate;
+    //  执行这个查询请求
+    NSError *error = nil;
+    NSArray *result = [self.managedObjectContext executeFetchRequest:request error:&error];
+    
+//    if ([result count] == 0) {
+        UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+        if (![userInfomationData.currtentRoomIdStr isEqualToString:roomIdx]) {
+            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:[NSString stringWithFormat:@"%@%@",@"red",roomIdx]];
+        }
+        //  创建实体描述对象
+        NSEntityDescription *description = [NSEntityDescription entityForName:@"Mic" inManagedObjectContext:self.managedObjectContext];
+        //  1.先创建一个模型对象
+        Mic *mic = [[Mic alloc] initWithEntity:description insertIntoManagedObjectContext:self.managedObjectContext];
+        mic.accountId = [[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID];
+        mic.userId = userIdx;
+        mic.avatarImage = NULL_TO_NIL(avatarImagex);
+        mic.roomId = roomIdx;
+        mic.isRead = 0;
+        mic.time = timex;
+        mic.message = messagex;
+        mic.messageId = messageIdx;
+        mic.fromUserName = fromUserNamex;
+        [self saveContext];
+//    }
+}
+
 #pragma mark ====== 插入lastMessageId到数据库（每次从服务器上拉取的时候插入）======
 
 - (void)insertCoraData:(NSString *)roomIdx lastMessageId:(NSString *)lastMessageIdx beginMessageId:(NSString *)beginMessageIdx
@@ -384,9 +418,6 @@
     request.fetchOffset=0; //分页起始索引
     request.fetchLimit=20*userInfomationData.micMockListPageIndex; //每页条数
     request.predicate = predicate;
-//    if (userInfomationData.micMockListPageIndex == 1) {
-//        userInfomationData.lastMockListMicCount = 20;
-//    }
     //  执行这个查询请求
     NSError *error = nil;
     
@@ -470,8 +501,10 @@
     NSArray *result = [self.managedObjectContext executeFetchRequest:request error:&error];
     NSLog(@"xxxxcx---appdelegate-%@===%@ --%lu",roomId,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID],(unsigned long)[result count]);
     if ([result count] != 0) {
-        [self.managedObjectContext deleteObject:[result objectAtIndex:0]];
-        [self saveContext];
+        for (NSInteger i = 0; i < [result count]; i++) {
+            [self.managedObjectContext deleteObject:[result objectAtIndex:i]];
+            [self saveContext];
+        }
         [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
     }
     

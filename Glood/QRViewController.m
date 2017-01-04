@@ -191,16 +191,21 @@
     }
     else{
         NSLog(@"不支持老版本扫描");
-        UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:nil message:[NSString stringWithFormat:@"二维码有毛病"] preferredStyle:UIAlertControllerStyleAlert];
-        __weak __typeof(self) weakSelf = self;
-        UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-            //继续扫描
-            [weakSelf setZBarReaderViewStart];
-        }];
-        [alertVC addAction:action];
-        [self presentViewController:alertVC animated:YES completion:^{
-            
-        }];
+        [weakSelf setZBarReaderViewStop];
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:@"QR code error" delegate:self cancelButtonTitle:@"try again" otherButtonTitles:nil, nil];
+        alertView.tag = 20000102;
+        [alertView show];
+//        UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:nil message:[NSString stringWithFormat:@"二维码有毛病"] preferredStyle:UIAlertControllerStyleAlert];
+//        __weak __typeof(self) weakSelf = self;
+//        [weakSelf setZBarReaderViewStop];
+//        UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+//            //继续扫描
+//            [weakSelf setZBarReaderViewStart];
+//        }];
+//        [alertVC addAction:action];
+//        [self presentViewController:alertVC animated:YES completion:^{
+//            
+//        }];
     }
 
     //二维码扫描成功，弹窗提示
@@ -215,6 +220,13 @@
 //        
 //    }];
     
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (alertView.tag == 20000102) {
+        [self setZBarReaderViewStart];
+    }
 }
 
 -(void)viewWillAppear:(BOOL)animated{
