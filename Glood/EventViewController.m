@@ -764,6 +764,7 @@
             [self.mockBgView setHidden:YES];
             [[AVAudioSession sharedInstance] requestRecordPermission:^(BOOL granted) {
                 [self.myAppDelegate deletePreLoadingMessage];
+                [userInfomationData.recordAudio stopRecoring];
                 
                 if (granted) {
                     
