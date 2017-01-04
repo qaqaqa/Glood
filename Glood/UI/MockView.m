@@ -241,7 +241,7 @@
 - (void)endRefreshingxx
 {
     NSLog(@"end refreshing");
-    [ShowMessage showMessage:@"end"];
+//    [ShowMessage showMessage:@"end"];
 }
 
 - (BOOL)shouldAutorotate

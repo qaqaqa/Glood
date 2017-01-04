@@ -723,8 +723,8 @@ static UIColor *kLGRefreshViewTintColor;
     {
         _refreshing = YES;
 
-        _scrollView.scrollEnabled = NO;
-        _scrollView.userInteractionEnabled = NO;
+//        _scrollView.scrollEnabled = NO;
+//        _scrollView.userInteractionEnabled = NO;
 
         if (_loadingView && !_loadingView.alpha)
             [self showLoadingView:YES];
