@@ -502,7 +502,7 @@
 {
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
         NSLog(@"***-------  %@",roomIdContent);
-        [userInfomationData.chat invoke:@"getMessagesInRoom" withArgs:@[roomIdContent,lastMessageId,@"20"] completionHandler:^(id response, NSError *error) {
+        [userInfomationData.chat invoke:@"getMessagesInRoom" withArgs:@[roomIdContent,@"Audio",lastMessageId,@"20"] completionHandler:^(id response, NSError *error) {
             if (error) {
                 NSLog(@"xxxxxxxxxxx----%@",error.description);
                 return;

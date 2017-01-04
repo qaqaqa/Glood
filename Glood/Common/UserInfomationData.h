@@ -48,4 +48,6 @@
 
 @property (strong, nonatomic) NSString *currtentRoomIdStr;  //用户当前所在哪个聊天室
 
+//@property (assign, nonatomic) NSInteger lastMockListMicCount; //上一次加载的mic数量
+
 @end

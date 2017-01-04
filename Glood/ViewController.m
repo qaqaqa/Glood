@@ -55,19 +55,19 @@
 //    [self.view addSubview:loginButton];
 }
 
-- (void)loginButton:(FBSDKLoginButton *)loginButton didCompleteWithResult:(FBSDKLoginManagerLoginResult *)result
-                error:(NSError *)error;
-{
-    NSLog(@"xxxxx---xxxxx---- %@---%@",result.token,error);
-    if ([FBSDKAccessToken currentAccessToken]) {
-        [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:nil]
-         startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-             if (!error) {
-                 NSLog(@"fetched user:%@", result);
-             }
-         }];
-    }
-}
+//- (void)loginButton:(FBSDKLoginButton *)loginButton didCompleteWithResult:(FBSDKLoginManagerLoginResult *)result
+//                error:(NSError *)error;
+//{
+//    NSLog(@"xxxxx---xxxxx---- %@---%@",result.token,error);
+//    if ([FBSDKAccessToken currentAccessToken]) {
+//        [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:nil]
+//         startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+//             if (!error) {
+//                 NSLog(@"fetched user:%@", result);
+//             }
+//         }];
+//    }
+//}
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -81,8 +81,6 @@
     }
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(getEventList)name:@"getEventList"object:nil];
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(exchangeToken)name:@"exchangeToken"object:nil];
-    //    EventViewController *eventVC = [[EventViewController alloc] initWithNibName:nil bundle:nil];
-    //   [self.navigationController pushViewController:eventVC animated:YES];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -125,9 +123,7 @@
 - (void)onSignInBtnClick:(id)sender
 {
     FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];
-    [login
-     logInWithReadPermissions: @[@"public_profile", @"email", @"user_friends"]
-     fromViewController:self
+    [login logInWithReadPermissions: @[@"public_profile", @"email", @"user_friends"] fromViewController:self
      handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
          NSLog(@"xxxxx-*-*-*------  %@--- %@",result.token.userID,result.token.tokenString );
          if (error) {

@@ -19,7 +19,7 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 
-@interface SettingsViewController ()<FBSDKLoginButtonDelegate>
+@interface SettingsViewController ()
 
 @property (retain, nonatomic) UIView *cehuaView;
 @property (retain, nonatomic) JTMaterialSwitch *jtSwitch;;

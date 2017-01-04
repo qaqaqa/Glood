@@ -384,7 +384,9 @@
     request.fetchOffset=0; //分页起始索引
     request.fetchLimit=20*userInfomationData.micMockListPageIndex; //每页条数
     request.predicate = predicate;
-    
+//    if (userInfomationData.micMockListPageIndex == 1) {
+//        userInfomationData.lastMockListMicCount = 20;
+//    }
     //  执行这个查询请求
     NSError *error = nil;
     
