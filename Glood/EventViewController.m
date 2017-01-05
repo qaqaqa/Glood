@@ -61,6 +61,8 @@
 
 @property (retain, nonatomic) UIView *mockBgView;
 
+@property (retain, nonatomic) NSTimer *yuLoadTimer;
+
 @property (strong, nonatomic) AppDelegate *myAppDelegate;
 
 @end
@@ -749,11 +751,16 @@
             [[NSNotificationCenter defaultCenter] postNotificationName:@"recordOrExchangeChatRoomStopAnimation" object:self];
             self.navigationController.interactivePopGestureRecognizer.delaysTouchesBegan=NO;
             
+            [self.yuLoadTimer invalidate];
+            self.yuLoadTimer = [NSTimer scheduledTimerWithTimeInterval:0.5
+                                                          target:self
+                                                        selector:@selector(yuLoad)
+                                                        userInfo:nil
+                                                         repeats:NO];
             [self.soundingRecoringButton setImage:[UIImage imageNamed:@"voice2.png"] forState:UIControlStateNormal];
             [userInfomationData.recordAudio startRecoring:@"IOS"];
             self.recordAudioTimeOutStr = @"no";
             [self gcdTimeRecordAudio];
-            
         }
         
         //判断应用程序是不是第一次启用麦克风，用以在第一次询问麦克风权限时，预加载出错问题
@@ -784,6 +791,12 @@
         
     }
 //        });
+}
+
+- (void)yuLoad
+{
+    [self.yuLoadTimer invalidate];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"startRecordAudio" object:self];//预加载将要发送的语音
 }
 
 - (void)showAlertView:(UILongPressGestureRecognizer *)sender
@@ -840,6 +853,7 @@
 //        AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeAudio];
 //        if ((authStatus ==AVAuthorizationStatusNotDetermined || authStatus ==AVAuthorizationStatusAuthorized)) {
             NSLog(@"结束录音！");
+        [self.yuLoadTimer invalidate];
         [self performSelector:@selector(cancelTimer) withObject:nil afterDelay:0.5f];
             if ([self.recordAudioTimeOutStr isEqualToString:@"no"]) {
                 [self.soundingRecoringButton setImage:[UIImage imageNamed:@"voice.png"] forState:UIControlStateNormal];
@@ -931,9 +945,6 @@
         }else{
             NSString *strTime = [NSString stringWithFormat:@"%d秒",timeout];
             dispatch_async(dispatch_get_main_queue(), ^{
-                if (timeout == 58) {
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"startRecordAudio" object:self];//预加载将要发送的语音
-                }
                 //设置界面的按钮显示 根据自己需求设置
                 if (timeout < 10) {
                     [self.gcdView setHidden:NO];
