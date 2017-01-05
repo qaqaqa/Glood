@@ -298,6 +298,7 @@
     }];
     hubConnection.delegate = self;
     [hubConnection start];
+    userInfomationData.hubConnection = hubConnection;
 }
 
 #pragma mark ======== 连接signlar服务后，先让用户进入聊天室 =========

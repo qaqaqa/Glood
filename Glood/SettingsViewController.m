@@ -78,9 +78,10 @@
 
 - (void)onlogoutBtnClick:(id)sender
 {
-    FBSDKLoginManager *_loginManager;
-    [_loginManager logOut];
+    FBSDKLoginManager *loginManager = [[FBSDKLoginManager alloc] init];
+    [loginManager logOut];
     UserInfomationData * userInfomationData = [UserInfomationData shareInstance];
+    [userInfomationData.hubConnection stop];
     [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:Exchange_OAUTH2_TOKEN];
     [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:FACEBOOK_OAUTH2_USERID];
     [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:FACEBOOK_OAUTH2_TOKEN];

@@ -127,7 +127,7 @@
      handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
          NSLog(@"xxxxx-*-*-*------  %@--- %@",result.token.userID,result.token.tokenString );
          if (error) {
-             NSLog(@"Process error");
+             NSLog(@"Process error---- %@",error);
          } else if (result.isCancelled) {
              NSLog(@"Cancelled");
          } else {

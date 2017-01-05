@@ -48,4 +48,6 @@
 
 @property (strong, nonatomic) NSString *currtentRoomIdStr;  //用户当前所在哪个聊天室
 
+@property (strong, nonatomic) id hubConnection; //保存SRHubConnection对象
+
 @end
