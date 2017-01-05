@@ -748,7 +748,7 @@
             NSLog(@"开始录音！");
             [[NSNotificationCenter defaultCenter] postNotificationName:@"recordOrExchangeChatRoomStopAnimation" object:self];
             self.navigationController.interactivePopGestureRecognizer.delaysTouchesBegan=NO;
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"startRecordAudio" object:self];//预加载将要发送的语音
+            
             [self.soundingRecoringButton setImage:[UIImage imageNamed:@"voice2.png"] forState:UIControlStateNormal];
             [userInfomationData.recordAudio startRecoring:@"IOS"];
             self.recordAudioTimeOutStr = @"no";
@@ -931,6 +931,9 @@
         }else{
             NSString *strTime = [NSString stringWithFormat:@"%d秒",timeout];
             dispatch_async(dispatch_get_main_queue(), ^{
+                if (timeout == 58) {
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"startRecordAudio" object:self];//预加载将要发送的语音
+                }
                 //设置界面的按钮显示 根据自己需求设置
                 if (timeout < 10) {
                     [self.gcdView setHidden:NO];

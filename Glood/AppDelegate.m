@@ -472,8 +472,10 @@
     NSArray *result = [self.managedObjectContext executeFetchRequest:request error:&error];
     NSLog(@"xxxxcx---appdelegate-%@===%@ --%lu",roomId,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID],(unsigned long)[result count]);
     if ([result count] != 0) {
-        [self.managedObjectContext deleteObject:[result objectAtIndex:0]];
-        [self saveContext];
+        for (NSInteger i = 0; i < [result count]; i++) {
+            [self.managedObjectContext deleteObject:[result objectAtIndex:i]];
+            [self saveContext];
+        }
         [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
     }
     

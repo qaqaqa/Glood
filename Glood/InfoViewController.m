@@ -104,8 +104,9 @@
     [webView setBackgroundColor:[UIColor clearColor]];
     webView.delegate = self;
     [webView setOpaque:NO];
-    webView.scalesPageToFit = YES;
-    [webView loadHTMLString:[NSString stringWithFormat:@"%@",[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"long_description"]] baseURL:nil];
+//    webView.scalesPageToFit = YES;
+    NSString *htmlString = [NSString stringWithFormat:@"%@%@",@"<style>*{word-break:break-word;}</style>",[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"long_description"]];
+    [webView loadHTMLString:htmlString baseURL:nil];
     [self.bgScrollView addSubview:webView];
     
     for (UIView *_aView in [webView subviews])

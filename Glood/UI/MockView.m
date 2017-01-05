@@ -364,27 +364,6 @@
 - (void)recordOrExchangeChatRoomStopAnimation
 {
     if (self.upHeadButtonTag != 0) {
-//        UIImageView *find_bgImageView1 = (UIImageView *)[self viewWithTag:self.upHeadButtonTag-headImageButtonTag+bgImageViewTag];
-//        UIImageView *find_circleOneImageView1 = (UIImageView *)[self viewWithTag:self.upHeadButtonTag-headImageButtonTag+circleOneImageViewTag];
-//        UIImageView *find_circleTwoImageView1 = (UIImageView *)[self viewWithTag:self.upHeadButtonTag-headImageButtonTag+circleTwoImageViewTag];
-//        UIButton *find_headImageButtonView1 = (UIButton *)[self viewWithTag:self.upHeadButtonTag-headImageButtonTag+headImageButtonTag];
-//        dispatch_time_t popTime1 = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.0 * NSEC_PER_SEC));
-//        dispatch_after(popTime1, dispatch_get_main_queue(), ^(void){
-//            [UIView animateWithDuration:0.0 animations:^{
-//                find_headImageButtonView1.transform = CGAffineTransformIdentity;
-//            } completion:^(BOOL finished) {
-//            }];
-//            [UIView animateWithDuration:0.0 animations:^{
-//                [find_bgImageView1 setImage:[UIImage imageNamed:@"background.png"]];
-//                find_circleTwoImageView1.alpha=0.5;
-//                find_circleTwoImageView1.transform = CGAffineTransformIdentity;
-//                find_circleOneImageView1.alpha=0.5;
-//                find_circleOneImageView1.transform = CGAffineTransformIdentity;
-//            } completion:^(BOOL finished) {
-//                self.upHeadButtonTag = 0;
-//                
-//            }];
-//        });
         
         NSLog(@"sdfsd*--*-*-*------  %ld",(long)self.upHeadButtonTag);
         UIImageView *find_bgImageView1 = (UIImageView *)[self viewWithTag:self.upHeadButtonTag-headImageButtonTag+bgImageViewTag];
@@ -407,21 +386,10 @@
     NSString *roomId = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
     [self.myAppDelegate insertCoreDataxx:[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID] avatarImage:[[NSUserDefaults standardUserDefaults] objectForKey:USER_AVATAR_URL] roomId:roomId time:@0 message:@"100" messageId:@"99999999999999999" fromUserName:[[NSUserDefaults standardUserDefaults] objectForKey:USER_NAME]];
     NSLog(@"xxxxcx---mockview-%@===%@",roomId,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID]);
+    //如果是用户自己发的信息，则跳转到底部
+    UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+    userInfomationData.refushStr = @"no";
     [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
-
-//    UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
-//    NSLog(@"sdfsdf*/*/***------ %lu",[self.historyMicListArr count]-1);
-//    if ((20*userInfomationData.micMockListPageIndex) <= [self.historyMicListArr count] && [self.historyMicListArr count] > 4) {
-//    NSArray *result = [[NSArray alloc] initWithArray:[self.myAppDelegate selectCoreDataroomIdxx:roomId]];
-//    for (NSInteger i = 0; i < [result count]; i++) {
-//        [self.historyMicListArr addObject:[result objectAtIndex:i]];
-//        Mic *mic = result[i];
-//        NSLog(@"-*-*-*-*-------- %ld----%@",i,mic.messageId);
-//    }
-//        NSInteger i = [self.historyMicListArr count];
-//        NSIndexPath *lastPath = [NSIndexPath indexPathForRow: i-1 inSection: 0 ];
-//        [self.tableView scrollToRowAtIndexPath:lastPath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
-//    }
 }
 
 - (void)onHeadBtnClick:(id)sender
