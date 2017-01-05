@@ -401,58 +401,60 @@
     time = [mic.time floatValue];
     if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"isSelectShield"] integerValue] == 0) {
         
-        //在播放之前，暂停所有的播放
-        [self recordOrExchangeChatRoomStopAnimation];
-        [userInfomationData.recordAudio saveRecord:mic.message messageId:mic.messageId];
-        [userInfomationData.recordAudio palyRecord:mic.messageId];
-        NSLog(@"点击头像播放------%ld----- %@--- %@",(long)button.tag,mic.messageId,mic.fromUserName);
-        self.upHeadButtonTag = button.tag;
-        UIImageView *find_bgImageView = (UIImageView *)[self viewWithTag:button.tag-headImageButtonTag+bgImageViewTag];
-        UIImageView *find_circleOneImageView = (UIImageView *)[self viewWithTag:button.tag-headImageButtonTag+circleOneImageViewTag];
-        UIImageView *find_circleTwoImageView = (UIImageView *)[self viewWithTag:button.tag-headImageButtonTag+circleTwoImageViewTag];
-        UIButton *find_headImageButtonView = (UIButton *)[self viewWithTag:button.tag-headImageButtonTag+headImageButtonTag];
-        [find_bgImageView setImage:[UIImage imageNamed:@"background2.png"]];
-        [UIView animateWithDuration:0.5 animations:^{
-            find_headImageButtonView.transform = CGAffineTransformMakeScale(1.1,1.1);
-        } completion:^(BOOL finished) {
-        }];
-        
-        [UIView beginAnimations:nil context:NULL];
-        [UIView setAnimationDuration:1.0f];
-        UIView.animationRepeatCount =HUGE_VALF;
-        find_circleOneImageView.alpha=0.1;
-        find_circleOneImageView.transform = CGAffineTransformMakeScale(1.8,1.8);
-        [UIView commitAnimations];
-        
-        double delayInSeconds = 0.5;
-        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        if ([mic.time floatValue]>0.5) {
+            //在播放之前，暂停所有的播放
+            [self recordOrExchangeChatRoomStopAnimation];
+            [userInfomationData.recordAudio saveRecord:mic.message messageId:mic.messageId];
+            [userInfomationData.recordAudio palyRecord:mic.messageId];
+            NSLog(@"点击头像播放------%ld----- %@--- %@",(long)button.tag,mic.messageId,mic.fromUserName);
+            self.upHeadButtonTag = button.tag;
+            UIImageView *find_bgImageView = (UIImageView *)[self viewWithTag:button.tag-headImageButtonTag+bgImageViewTag];
+            UIImageView *find_circleOneImageView = (UIImageView *)[self viewWithTag:button.tag-headImageButtonTag+circleOneImageViewTag];
+            UIImageView *find_circleTwoImageView = (UIImageView *)[self viewWithTag:button.tag-headImageButtonTag+circleTwoImageViewTag];
+            UIButton *find_headImageButtonView = (UIButton *)[self viewWithTag:button.tag-headImageButtonTag+headImageButtonTag];
+            [find_bgImageView setImage:[UIImage imageNamed:@"background2.png"]];
+            [UIView animateWithDuration:0.5 animations:^{
+                find_headImageButtonView.transform = CGAffineTransformMakeScale(1.1,1.1);
+            } completion:^(BOOL finished) {
+            }];
+            
             [UIView beginAnimations:nil context:NULL];
             [UIView setAnimationDuration:1.0f];
             UIView.animationRepeatCount =HUGE_VALF;
-            find_circleTwoImageView.alpha=0.1;
-            find_circleTwoImageView.transform = CGAffineTransformMakeScale(1.8,1.8);
+            find_circleOneImageView.alpha=0.1;
+            find_circleOneImageView.transform = CGAffineTransformMakeScale(1.8,1.8);
             [UIView commitAnimations];
-        });
-        
-        //播放完毕
-        
-        dispatch_time_t popTime1 = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(time * NSEC_PER_SEC));
-        dispatch_after(popTime1, dispatch_get_main_queue(), ^(void){
-            [UIView animateWithDuration:0.5 animations:^{
-                find_headImageButtonView.transform = CGAffineTransformIdentity;
-            } completion:^(BOOL finished) {
-            }];
-            [UIView animateWithDuration:0.0 animations:^{
-                [find_bgImageView setImage:[UIImage imageNamed:@"background.png"]];
-                find_circleTwoImageView.alpha=0.5;
-                find_circleTwoImageView.transform = CGAffineTransformIdentity;
-                find_circleOneImageView.alpha=0.5;
-                find_circleOneImageView.transform = CGAffineTransformIdentity;
-            } completion:^(BOOL finished) {
-                
-            }];
-        });
+            
+            double delayInSeconds = 0.5;
+            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                [UIView beginAnimations:nil context:NULL];
+                [UIView setAnimationDuration:1.0f];
+                UIView.animationRepeatCount =HUGE_VALF;
+                find_circleTwoImageView.alpha=0.1;
+                find_circleTwoImageView.transform = CGAffineTransformMakeScale(1.8,1.8);
+                [UIView commitAnimations];
+            });
+            
+            //播放完毕
+            
+            dispatch_time_t popTime1 = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(time * NSEC_PER_SEC));
+            dispatch_after(popTime1, dispatch_get_main_queue(), ^(void){
+                [UIView animateWithDuration:0.5 animations:^{
+                    find_headImageButtonView.transform = CGAffineTransformIdentity;
+                } completion:^(BOOL finished) {
+                }];
+                [UIView animateWithDuration:0.0 animations:^{
+                    [find_bgImageView setImage:[UIImage imageNamed:@"background.png"]];
+                    find_circleTwoImageView.alpha=0.5;
+                    find_circleTwoImageView.transform = CGAffineTransformIdentity;
+                    find_circleOneImageView.alpha=0.5;
+                    find_circleOneImageView.transform = CGAffineTransformIdentity;
+                } completion:^(BOOL finished) {
+                    
+                }];
+            });
+        }
         
     }
     else{

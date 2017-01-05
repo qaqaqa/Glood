@@ -75,6 +75,8 @@
     
     userInfomationData.isGetMicListMutableArr = [[NSMutableArray alloc] initWithCapacity:10];
     
+    userInfomationData.waitingSendMessageQunenMutableDic = [[NSMutableDictionary alloc] initWithCapacity:10];
+    
     return YES;
 }
 

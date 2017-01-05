@@ -292,9 +292,12 @@
     }];
     [hubConnection setClosed:^{
         NSLog(@"Connection Closed");
+        [MMProgressHUD dismiss];
     }];
     [hubConnection setError:^(NSError *error) {
         NSLog(@"Connection Error %@",error.description);
+        [MMProgressHUD dismiss];
+        [[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"closed"];
     }];
     hubConnection.delegate = self;
     [hubConnection start];
@@ -529,6 +532,7 @@
         [userInfomationData.chat invoke:@"getMessagesInRoom" withArgs:@[roomIdContent,@"Audio",lastMessageId,@"20"] completionHandler:^(id response, NSError *error) {
             if (error) {
                 NSLog(@"xxxxxxxxxxx----%@",error.description);
+                [MMProgressHUD dismissWithError:@"Error"];
                 return;
             }
             if (response == NULL) {
@@ -538,13 +542,12 @@
             
             for (NSInteger i = 0;i < [response count] ; i ++) {
                 NSArray *arr = [[NSArray alloc] init];
-                arr = [[[response objectAtIndex:i] objectForKey:@"content"] componentsSeparatedByString:@","];
+                arr = [[[(NSArray *)response objectAtIndex:i] objectForKey:@"content"] componentsSeparatedByString:@","];
                 if ([[[response objectAtIndex:i] objectForKey:@"message_type"] isEqualToString:@"Audio"] && [arr count]==2) {
                     [self.myAppDelegate insertCoreData:[[response objectAtIndex:i] objectForKey:@"user_id"] avatarImage:[[response objectAtIndex:i] objectForKey:@"user_avatar"] roomId:[[response objectAtIndex:i] objectForKey:@"room_id"] time:[NSNumber numberWithFloat:[[arr objectAtIndex:0] floatValue]] message:[arr objectAtIndex:1] messageId:[[response objectAtIndex:i] objectForKey:@"id"] fromUserName:[[response objectAtIndex:i] objectForKey:@"user_name"]];
                     [self.myAppDelegate insertCoraData:[[response objectAtIndex:i] objectForKey:@"room_id"] lastMessageId:[[response objectAtIndex:[response count]-1] objectForKey:@"id"] beginMessageId:[[response objectAtIndex:0] objectForKey:@"id"]];
                     userInfomationData.inRoomMessageForRoomIdStr = [[response objectAtIndex:i] objectForKey:@"room_id"];
                     
-                    NSLog(@"*-*---xxxxx-----messageid:%@",[[response objectAtIndex:0] objectForKey:@"id"]);
                 }
             }
             

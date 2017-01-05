@@ -31,8 +31,7 @@ static const char *kScanQRCodeQueueName = "ScanQRCodeQueue";
     UIImageView *_scanCropView;//扫描窗口
     AVCaptureSession *_captureSession;
     AVCaptureVideoPreviewLayer *_videoPreviewLayer;
-
-    
+    NSInteger xx;
 }
 
 @end
@@ -94,6 +93,7 @@ static const char *kScanQRCodeQueueName = "ScanQRCodeQueue";
                                               otherButtonTitles:@"Set", nil];
         alert.tag = 10212;
         [alert show];
+        return;
 //        UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
 //        label.textColor = [UIColor whiteColor];
 //        label.textAlignment = NSTextAlignmentCenter;
@@ -172,7 +172,7 @@ static const char *kScanQRCodeQueueName = "ScanQRCodeQueue";
 
 - (BOOL)startReading
 {
-    
+    xx = 0;
     // 开始会话
     [_captureSession startRunning];
     
@@ -181,6 +181,7 @@ static const char *kScanQRCodeQueueName = "ScanQRCodeQueue";
 
 - (void)stopReading
 {
+    xx = 1;
     // 停止会话
     [_captureSession stopRunning];
     
@@ -256,7 +257,6 @@ static const char *kScanQRCodeQueueName = "ScanQRCodeQueue";
                 
             }
             else{
-                NSLog(@"不支持老版本扫描");
 //                UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:nil message:[NSString stringWithFormat:@"二维码有毛病"] preferredStyle:UIAlertControllerStyleAlert];
 //                UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
 //                }];
@@ -265,10 +265,14 @@ static const char *kScanQRCodeQueueName = "ScanQRCodeQueue";
 //                    
 //                }];
                 NSLog(@"不支持老版本扫描");
+                
+                if (xx == 0) {
+                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:@"QR code error" delegate:self cancelButtonTitle:@"try again" otherButtonTitles:nil, nil];
+                    alertView.tag = 20000102;
+                    [alertView show];
+                }
                 [self stopReading];
-                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:@"QR code error" delegate:self cancelButtonTitle:@"try again" otherButtonTitles:nil, nil];
-                alertView.tag = 20000102;
-                [alertView show];
+                
             }
         });
     

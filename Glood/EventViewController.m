@@ -963,7 +963,7 @@
                                 self.recordAudioTimeOutStr = @"yes";
                                 dispatch_async(dispatch_get_global_queue(0,0), ^{
                                     [userInfomationData.commonService sendMessageInRoom:[userInfomationData.recordAudio stopRecoring] roomId:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"] messageType:3];
-                                    
+//                                    [self waitingSendMessageQunenMutableDic:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"] messageId:<#(NSString *)#>];
                                 });
 //                            }
                             
@@ -978,6 +978,15 @@
         }  
     });  
     dispatch_resume(_timer);
+}
+
+- (NSDictionary *)waitingSendMessageQunenMutableDic:(NSString *)roomIdx messageId:(NSString *)messageIdx
+{
+    UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+    userInfomationData.waitingSendMessageQunenMutableDic = @{
+                                                             @"id":[NSString stringWithFormat:@"%@,%@",roomIdx,messageIdx]
+                                                             };
+    return userInfomationData.waitingSendMessageQunenMutableDic;
 }
 
 //进入聊天室场景
