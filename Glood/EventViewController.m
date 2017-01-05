@@ -383,10 +383,16 @@
             Mic *mic = find_eventCoverFlowView.historyMicListArr[i];
             if ([[shieldMutableArr objectAtIndex:x] isEqualToString:mic.userId]) {
                 [indexSets addIndex:i];
+                [self.myAppDelegate deleteShieldMessage:roomIdStr userId:mic.userId];
             }
         }
     }
     [find_eventCoverFlowView.historyMicListArr removeObjectsAtIndexes:indexSets];
+    
+//    for (NSInteger i = 0; i < [find_eventCoverFlowView.historyMicListArr count]; i++) {
+//        //删除屏蔽人的数据
+//        [self.myAppDelegate deleteShieldMessage:nil userId:nil];
+//    }
     
     [find_eventCoverFlowView.tableView reloadData];
     

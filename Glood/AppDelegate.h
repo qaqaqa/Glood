@@ -59,5 +59,8 @@
 //查询数据库，找出每个房间最大的messageId
 - (NSString *)largeMessageIdFromDB:(NSString *)roomId;
 
+//删除屏蔽人的信息
+-(void)deleteShieldMessage:(NSString *)roomIdx userId:(NSString *)userIdx;
+
 @end
 

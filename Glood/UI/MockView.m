@@ -519,10 +519,15 @@
             Mic *mic = self.historyMicListArr[i];
             if ([[shieldMutableArr objectAtIndex:x] isEqualToString:mic.userId]) {
                 [indexSets addIndex:i];
+                [self.myAppDelegate deleteShieldMessage:self.currentRoomId userId:mic.userId];
             }
         }
     }
     [self.historyMicListArr removeObjectsAtIndexes:indexSets];
+//    for (NSInteger i = 0; i < [self.historyMicListArr count]; i++) {
+//        //删除屏蔽人的数据
+//        [self.myAppDelegate deleteShieldMessage:nil userId:nil];
+//    }
     if ([self.historyMicListArr count] == 0 ) {
         [MMProgressHUD dismiss];
     }

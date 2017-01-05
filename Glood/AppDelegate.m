@@ -540,5 +540,32 @@
     return largeMessageId;
 }
 
+#pragma mark ====== 删除屏蔽人的信息======
+-(void)deleteShieldMessage:(NSString *)roomIdx userId:(NSString *)userIdx
+{
+    //  查询数据
+    //  1.NSFetchRequst对象
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Mic"];
+    //  2.设置排序
+    //  2.1创建排序描述对象
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"messageId" ascending:NO];
+    request.sortDescriptors = @[sortDescriptor];
+    NSString *roomId = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"roomId = %@ AND userId= %@",roomIdx,userIdx]];
+    request.predicate = predicate;
+    
+    //  执行这个查询请求
+    NSError *error = nil;
+    
+    NSArray *result = [self.managedObjectContext executeFetchRequest:request error:&error];
+    if ([result count] != 0) {
+        for (NSInteger i = 0; i < [result count]; i++) {
+            [self.managedObjectContext deleteObject:[result objectAtIndex:i]];
+            [self saveContext];
+        }
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
+    }
+}
+
 
 @end

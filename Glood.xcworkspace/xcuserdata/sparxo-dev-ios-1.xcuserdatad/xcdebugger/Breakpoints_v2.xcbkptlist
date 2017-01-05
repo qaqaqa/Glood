@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Glood/EventViewController.m"
-            timestampString = "505279381.320961"
+            timestampString = "505280515.456192"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "804"
-            endingLineNumber = "804"
+            startingLineNumber = "810"
+            endingLineNumber = "810"
             landmarkName = "-showAlertView:"
             landmarkType = "7">
          </BreakpointContent>
