@@ -27,12 +27,12 @@
         [self.bgView setImage:[UIImage imageNamed:@"bg"]];
         [self addSubview:self.bgView];
         
-        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH-50, SCREEN_HEIGHT)];
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH-35, SCREEN_HEIGHT)];
         imageView.backgroundColor = [UIColor whiteColor];
         imageView.alpha = 0.3;
         [self addSubview:imageView];
         
-        self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0,45,SCREEN_WIDTH-70,SCREEN_HEIGHT)];
+        self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0,20,SCREEN_WIDTH-70,SCREEN_HEIGHT)];
         self.tableView.backgroundColor = [UIColor clearColor];
         self.tableView.dataSource = self;
         self.tableView.delegate = self;
@@ -71,12 +71,13 @@
         [self.ceHuaTabelViewCell setSelectionStyle:UITableViewCellSelectionStyleNone];
     }
     
-    self.ceHuaTabelViewCell.ceHuaIconImageView.frame = CGRectMake(35, 15, SCREEN_WIDTH*20/320, SCREEN_WIDTH*20/320);
+    self.ceHuaTabelViewCell.ceHuaIconImageView.frame = CGRectMake(18, 12, SCREEN_WIDTH*30/320, SCREEN_WIDTH*30/320);
     [self.ceHuaTabelViewCell.ceHuaIconImageView setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@",[[self.cehuaArr objectAtIndex:indexPath.row] objectForKey:@"MingleIcon"]]]];
     self.ceHuaTabelViewCell.ceHuaIconImageView.tag = ceHuaIconImageViewTag+indexPath.row;
     
-    self.ceHuaTabelViewCell.ceHuaTitleLabel.frame = CGRectMake(35+(SCREEN_WIDTH*20/320)+40, self.ceHuaTabelViewCell.ceHuaIconImageView.frame.origin.y-5, 250, self.ceHuaTabelViewCell.ceHuaIconImageView.frame.size.height+10);
+    self.ceHuaTabelViewCell.ceHuaTitleLabel.frame = CGRectMake(15+(SCREEN_WIDTH*20/320)+40, self.ceHuaTabelViewCell.ceHuaIconImageView.frame.origin.y-5, 250, self.ceHuaTabelViewCell.ceHuaIconImageView.frame.size.height+10);
     self.ceHuaTabelViewCell.ceHuaTitleLabel.text = [NSString stringWithFormat:@"%@",[[self.cehuaArr objectAtIndex:indexPath.row] objectForKey:@"MingleTitle"]];
+    self.ceHuaTabelViewCell.ceHuaTitleLabel.font = [UIFont fontWithName:@"ProximaNova-Light" size:22];
     
     return self.ceHuaTabelViewCell;
 }

@@ -76,7 +76,7 @@
         
         UILabel *titleEmail = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*40/320, SCREEN_HEIGHT*90/568, SCREEN_WIDTH*150/320, SCREEN_HEIGHT*30/568)];
         titleEmail.text = @"email";
-        titleEmail.font = [UIFont fontWithName:@"ProximaNova-Light.otf" size:17];
+        titleEmail.font = [UIFont fontWithName:@"ProximaNova-Light" size:17];
         titleEmail.textColor = [UIColor colorWithRed:115/255.0 green:113/255.0 blue:114/255.0 alpha:1.0];
         [self.signInView addSubview:titleEmail];
         
@@ -93,7 +93,7 @@
         
         UILabel *titlePassworde = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*40/320, emailLineImageView.frame.origin.y+30, SCREEN_WIDTH*150/320, SCREEN_HEIGHT*30/568)];
         titlePassworde.text = @"password";
-        titlePassworde.font = [UIFont fontWithName:@"ProximaNova-Light.otf" size:17];
+        titlePassworde.font = [UIFont fontWithName:@"ProximaNova-Light" size:17];
         titlePassworde.textColor = [UIColor colorWithRed:115/255.0 green:113/255.0 blue:114/255.0 alpha:1.0];
         [self.signInView addSubview:titlePassworde];
         

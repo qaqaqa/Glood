@@ -47,22 +47,21 @@
     
     [self.bgScrollView addSubview:topImageView];
     
-    UILabel *monthLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*10/320, topImageView.frame.size.height+topImageView.frame.origin.y+SCREEN_WIDTH*10/320, SCREEN_WIDTH*60/320, SCREEN_HEIGHT*30/568)];
+    UILabel *monthLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*10/320, topImageView.frame.size.height+topImageView.frame.origin.y+15, SCREEN_WIDTH*55/320, SCREEN_HEIGHT*30/568)];
     monthLabel.textAlignment = NSTextAlignmentRight;
     monthLabel.text = [NSString stringWithFormat:@"%@",monthStr];
-//    monthLabel.font = [UIFont boldSystemFontOfSize:13];
     monthLabel.font = [UIFont fontWithName:@"ProximaNova-Semibold" size:25];
     [self.bgScrollView addSubview:monthLabel];
     
-    UILabel *dayLabel = [[UILabel alloc] initWithFrame:CGRectMake(monthLabel.frame.origin.x, monthLabel.frame.size.height+monthLabel.frame.origin.y, SCREEN_WIDTH*60/320, SCREEN_HEIGHT*35/568)];
+    UILabel *dayLabel = [[UILabel alloc] initWithFrame:CGRectMake(monthLabel.frame.origin.x, monthLabel.frame.size.height+monthLabel.frame.origin.y, SCREEN_WIDTH*55/320, SCREEN_HEIGHT*35/568)];
     dayLabel.textAlignment = NSTextAlignmentRight;
+    dayLabel.backgroundColor = [UIColor clearColor];
     dayLabel.text = [NSString stringWithFormat:@"%@",dayStr];
-//    dayLabel.font = [UIFont boldSystemFontOfSize:25];
-    dayLabel.font = [UIFont fontWithName:@"ProximaNova-Bold" size:35];
+    dayLabel.font = [UIFont fontWithName:@"ProximaNova-Bold" size:38];
     [self.bgScrollView addSubview:dayLabel];
     
-    CGSize eventNameSize = [[NSString stringWithFormat:@"%@",[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"name"]] sizeWithFont:[UIFont fontWithName:@"ProximaNova-Regular" size:28] constrainedToSize:CGSizeMake(SCREEN_WIDTH*220/320, 60) lineBreakMode:NSLineBreakByWordWrapping];
-    UILabel *eventNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(monthLabel.frame.origin.x+monthLabel.frame.size.width+15, monthLabel.frame.origin.y+2, SCREEN_WIDTH*220/320, eventNameSize.height)];
+    CGSize eventNameSize = [[NSString stringWithFormat:@"%@",[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"name"]] sizeWithFont:[UIFont fontWithName:@"ProximaNova-Regular" size:25] constrainedToSize:CGSizeMake(SCREEN_WIDTH*220/320, 60) lineBreakMode:NSLineBreakByWordWrapping];
+    UILabel *eventNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(monthLabel.frame.origin.x+monthLabel.frame.size.width+13, monthLabel.frame.origin.y+2, SCREEN_WIDTH*220/320, eventNameSize.height)];
     eventNameLabel.textAlignment = NSTextAlignmentLeft;
     eventNameLabel.numberOfLines = 0;
     eventNameLabel.lineBreakMode = NSLineBreakByWordWrapping;
@@ -71,25 +70,32 @@
     eventNameLabel.font = [UIFont fontWithName:@"ProximaNova-Regular" size:25];
     [self.bgScrollView addSubview:eventNameLabel];
     
-    UIImageView *timelogoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(dayLabel.frame.origin.x+(SCREEN_WIDTH*12/320), dayLabel.frame.origin.y+dayLabel.frame.size.height+(SCREEN_WIDTH*10/320), SCREEN_WIDTH*15/320, SCREEN_WIDTH*15/320)];
+    UIImageView *timelogoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(dayLabel.frame.origin.x+dayLabel.frame.size.width-(SCREEN_WIDTH*20/320), dayLabel.frame.origin.y+dayLabel.frame.size.height+10, SCREEN_WIDTH*20/320, SCREEN_WIDTH*20/320)];
     [timelogoImageView setImage:[UIImage imageNamed:@"timeicon"]];
     [self.bgScrollView addSubview:timelogoImageView];
     
-    UILabel *timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(timelogoImageView.frame.size.width+timelogoImageView.frame.origin.x+5, timelogoImageView.frame.origin.y, SCREEN_WIDTH*200/320, SCREEN_WIDTH*15/320)];
+    UILabel *timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(timelogoImageView.frame.size.width+timelogoImageView.frame.origin.x+5, timelogoImageView.frame.origin.y+4, SCREEN_WIDTH*200/320, SCREEN_WIDTH*15/320)];
     timeLabel.text = [NSString stringWithFormat:@"%@",timeStr];
-    timeLabel.font = [UIFont systemFontOfSize:14];
+    timeLabel.font = [UIFont fontWithName:@"ProximaNova-Light" size:14];
     [self.bgScrollView addSubview:timeLabel];
     
-    UIImageView *addresslogoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(timelogoImageView.frame.origin.x+1, timeLabel.frame.origin.y+timeLabel.frame.size.height+(SCREEN_WIDTH*10/320), SCREEN_WIDTH*17/320, SCREEN_WIDTH*19/320)];
+    UIImageView *addresslogoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(timelogoImageView.frame.origin.x, timeLabel.frame.origin.y+timeLabel.frame.size.height+15, SCREEN_WIDTH*20/320, SCREEN_WIDTH*20/320)];
     [addresslogoImageView setImage:[UIImage imageNamed:@"addressicon"]];
     [self.bgScrollView addSubview:addresslogoImageView];
     
-    CGSize addressSize = [[NSString stringWithFormat:@"%@",[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"location"]] sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(SCREEN_WIDTH*200/320, 100) lineBreakMode:NSLineBreakByWordWrapping];
-    UILabel *addressLabel = [[UILabel alloc] initWithFrame:CGRectMake(addresslogoImageView.frame.size.width+addresslogoImageView.frame.origin.x+5, addresslogoImageView.frame.origin.y, SCREEN_WIDTH*200/320, addressSize.height)];
+    CGSize addressSize = [[NSString stringWithFormat:@"%@",[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"location"]] sizeWithFont:[UIFont fontWithName:@"ProximaNova-Light" size:14] constrainedToSize:CGSizeMake(SCREEN_WIDTH*200/320, 100) lineBreakMode:NSLineBreakByWordWrapping];
+    NSLog(@"xxxx-x--x-x----- %f",addressSize.height);
+    UILabel *addressLabel = [[UILabel alloc] init];
+    if (addressSize.height <= 20) {
+        addressLabel.frame = CGRectMake(addresslogoImageView.frame.size.width+addresslogoImageView.frame.origin.x+5, addresslogoImageView.frame.origin.y+5, SCREEN_WIDTH*200/320, addressSize.height);
+    }
+    else{
+        addressLabel.frame = CGRectMake(addresslogoImageView.frame.size.width+addresslogoImageView.frame.origin.x+5, addresslogoImageView.frame.origin.y+3, SCREEN_WIDTH*200/320, addressSize.height);
+    }
     addressLabel.numberOfLines = 0;
+    addressLabel.font = [UIFont fontWithName:@"ProximaNova-Light" size:14];
     addressLabel.lineBreakMode = NSLineBreakByWordWrapping;
     addressLabel.text = [NSString stringWithFormat:@"%@",[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"location"]];
-    addressLabel.font = [UIFont systemFontOfSize:14];
     [self.bgScrollView addSubview:addressLabel];
     
 //    CGSize contentSize = [[NSString stringWithFormat:@"%@",[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"long_description"]] sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(SCREEN_WIDTH*290/320, 10000) lineBreakMode:NSLineBreakByWordWrapping];
@@ -100,7 +106,7 @@
 //    contentLabel.lineBreakMode = NSLineBreakByWordWrapping;
 //    [self.bgScrollView addSubview:contentLabel];
     
-    UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*15/320, addressLabel.frame.size.height+addressLabel.frame.origin.y+25, SCREEN_WIDTH*290/320, (SCREEN_HEIGHT*(568-250)/568)-addressSize.height-35)];
+    UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*15/320, addressLabel.frame.size.height+addressLabel.frame.origin.y+20, SCREEN_WIDTH*290/320, (SCREEN_HEIGHT*(568-250)/568)-addressSize.height-35)];
     [webView setBackgroundColor:[UIColor clearColor]];
     webView.delegate = self;
     [webView setOpaque:NO];

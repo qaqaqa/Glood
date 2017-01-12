@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		59CB923B232BD5E66224C869 /* libPods-Glood.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13274DD396770F850824E751 /* libPods-Glood.a */; };
-		CC15C6CB1E1CD8C100CEE318 /* alphe.png in Resources */ = {isa = PBXBuildFile; fileRef = CC15C6CA1E1CD8C100CEE318 /* alphe.png */; };
 		CC258BE51E10D24700491916 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CC258BE41E10D24700491916 /* main.m */; };
 		CC258BE81E10D24700491916 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CC258BE71E10D24700491916 /* AppDelegate.m */; };
 		CC258BEB1E10D24700491916 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CC258BEA1E10D24700491916 /* ViewController.m */; };
@@ -137,14 +136,6 @@
 		CC7925531E1103A300CD2BF3 /* Mic+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = CC7925501E1103A300CD2BF3 /* Mic+CoreDataProperties.m */; };
 		CC7925541E1103A300CD2BF3 /* Mic.m in Sources */ = {isa = PBXBuildFile; fileRef = CC7925521E1103A300CD2BF3 /* Mic.m */; };
 		CCC01A651E163B46008A1F5D /* CommonClass.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC01A641E163B46008A1F5D /* CommonClass.m */; };
-		CCE61ABC1E135CFA002E3A7F /* RecordingSignal001@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = CCE61AB41E135CFA002E3A7F /* RecordingSignal001@3x.png */; };
-		CCE61ABD1E135CFA002E3A7F /* RecordingSignal002@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = CCE61AB51E135CFA002E3A7F /* RecordingSignal002@3x.png */; };
-		CCE61ABE1E135CFA002E3A7F /* RecordingSignal003@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = CCE61AB61E135CFA002E3A7F /* RecordingSignal003@3x.png */; };
-		CCE61ABF1E135CFA002E3A7F /* RecordingSignal004@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = CCE61AB71E135CFA002E3A7F /* RecordingSignal004@3x.png */; };
-		CCE61AC01E135CFA002E3A7F /* RecordingSignal005@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = CCE61AB81E135CFA002E3A7F /* RecordingSignal005@3x.png */; };
-		CCE61AC11E135CFA002E3A7F /* RecordingSignal006@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = CCE61AB91E135CFA002E3A7F /* RecordingSignal006@3x.png */; };
-		CCE61AC21E135CFA002E3A7F /* RecordingSignal007@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = CCE61ABA1E135CFA002E3A7F /* RecordingSignal007@3x.png */; };
-		CCE61AC31E135CFA002E3A7F /* RecordingSignal008@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = CCE61ABB1E135CFA002E3A7F /* RecordingSignal008@3x.png */; };
 		CCFAAA6B1E1224C100ACF992 /* Node+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = CCFAAA681E1224C100ACF992 /* Node+CoreDataProperties.m */; };
 		CCFAAA6C1E1224C100ACF992 /* Node.m in Sources */ = {isa = PBXBuildFile; fileRef = CCFAAA6A1E1224C100ACF992 /* Node.m */; };
 /* End PBXBuildFile section */
@@ -168,7 +159,6 @@
 
 /* Begin PBXFileReference section */
 		13274DD396770F850824E751 /* libPods-Glood.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Glood.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		CC15C6CA1E1CD8C100CEE318 /* alphe.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = alphe.png; sourceTree = "<group>"; };
 		CC258BE01E10D24700491916 /* Glood.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Glood.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC258BE41E10D24700491916 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		CC258BE61E10D24700491916 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -401,14 +391,6 @@
 		CC7925521E1103A300CD2BF3 /* Mic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Mic.m; sourceTree = "<group>"; };
 		CCC01A631E163B46008A1F5D /* CommonClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonClass.h; sourceTree = "<group>"; };
 		CCC01A641E163B46008A1F5D /* CommonClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommonClass.m; sourceTree = "<group>"; };
-		CCE61AB41E135CFA002E3A7F /* RecordingSignal001@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "RecordingSignal001@3x.png"; sourceTree = "<group>"; };
-		CCE61AB51E135CFA002E3A7F /* RecordingSignal002@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "RecordingSignal002@3x.png"; sourceTree = "<group>"; };
-		CCE61AB61E135CFA002E3A7F /* RecordingSignal003@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "RecordingSignal003@3x.png"; sourceTree = "<group>"; };
-		CCE61AB71E135CFA002E3A7F /* RecordingSignal004@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "RecordingSignal004@3x.png"; sourceTree = "<group>"; };
-		CCE61AB81E135CFA002E3A7F /* RecordingSignal005@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "RecordingSignal005@3x.png"; sourceTree = "<group>"; };
-		CCE61AB91E135CFA002E3A7F /* RecordingSignal006@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "RecordingSignal006@3x.png"; sourceTree = "<group>"; };
-		CCE61ABA1E135CFA002E3A7F /* RecordingSignal007@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "RecordingSignal007@3x.png"; sourceTree = "<group>"; };
-		CCE61ABB1E135CFA002E3A7F /* RecordingSignal008@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "RecordingSignal008@3x.png"; sourceTree = "<group>"; };
 		CCFAAA671E1224C100ACF992 /* Node+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Node+CoreDataProperties.h"; sourceTree = "<group>"; };
 		CCFAAA681E1224C100ACF992 /* Node+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Node+CoreDataProperties.m"; sourceTree = "<group>"; };
 		CCFAAA691E1224C100ACF992 /* Node.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Node.h; sourceTree = "<group>"; };
@@ -911,7 +893,6 @@
 		CC3BE4B91E10D3E60034214B /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				CCE61AB31E135C9F002E3A7F /* chat_record */,
 				CC3BE4BA1E10D3E60034214B /* 171604419.jpg */,
 				CC3BE4BB1E10D3E60034214B /* add.png */,
 				CC3BE4BC1E10D3E60034214B /* addressicon.png */,
@@ -941,7 +922,6 @@
 				CC3BE4D41E10D3E60034214B /* up.png */,
 				CC3BE4D51E10D3E60034214B /* voice.png */,
 				CC3BE4D61E10D3E60034214B /* voice2.png */,
-				CC15C6CA1E1CD8C100CEE318 /* alphe.png */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -981,21 +961,6 @@
 				CC3BE4E01E10D3E60034214B /* EventListTableViewCell.m */,
 			);
 			path = cell;
-			sourceTree = "<group>";
-		};
-		CCE61AB31E135C9F002E3A7F /* chat_record */ = {
-			isa = PBXGroup;
-			children = (
-				CCE61AB41E135CFA002E3A7F /* RecordingSignal001@3x.png */,
-				CCE61AB51E135CFA002E3A7F /* RecordingSignal002@3x.png */,
-				CCE61AB61E135CFA002E3A7F /* RecordingSignal003@3x.png */,
-				CCE61AB71E135CFA002E3A7F /* RecordingSignal004@3x.png */,
-				CCE61AB81E135CFA002E3A7F /* RecordingSignal005@3x.png */,
-				CCE61AB91E135CFA002E3A7F /* RecordingSignal006@3x.png */,
-				CCE61ABA1E135CFA002E3A7F /* RecordingSignal007@3x.png */,
-				CCE61ABB1E135CFA002E3A7F /* RecordingSignal008@3x.png */,
-			);
-			path = chat_record;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1111,9 +1076,7 @@
 				CC3BE4F01E10D3E60034214B /* ProximaNova-Light.otf in Resources */,
 				CC3BE5341E10D3E70034214B /* feedbackeys.png in Resources */,
 				CC3BE5381E10D3E70034214B /* line.png in Resources */,
-				CCE61ABD1E135CFA002E3A7F /* RecordingSignal002@3x.png in Resources */,
 				CC3BE5291E10D3E70034214B /* add.png in Resources */,
-				CCE61ABC1E135CFA002E3A7F /* RecordingSignal001@3x.png in Resources */,
 				CC3BE52B1E10D3E70034214B /* addTicketBtn.jpeg in Resources */,
 				CC3BE5231E10D3E70034214B /* zbar-samples.png in Resources */,
 				CC3BE4F51E10D3E60034214B /* ProximaNova-SemiboldItalic.otf in Resources */,
@@ -1123,15 +1086,9 @@
 				CC3BE5221E10D3E70034214B /* zbar-helpicons.png in Resources */,
 				CC3BE53F1E10D3E70034214B /* setting.png in Resources */,
 				CC3BE5311E10D3E70034214B /* event_background.jpg in Resources */,
-				CCE61ABE1E135CFA002E3A7F /* RecordingSignal003@3x.png in Resources */,
 				CC3BE5391E10D3E70034214B /* menu.png in Resources */,
-				CCE61ABF1E135CFA002E3A7F /* RecordingSignal004@3x.png in Resources */,
 				CC3BE4EF1E10D3E60034214B /* ProximaNova-Bold.otf in Resources */,
-				CCE61AC01E135CFA002E3A7F /* RecordingSignal005@3x.png in Resources */,
 				CC3BE53B1E10D3E70034214B /* people.png in Resources */,
-				CCE61AC31E135CFA002E3A7F /* RecordingSignal008@3x.png in Resources */,
-				CCE61AC21E135CFA002E3A7F /* RecordingSignal007@3x.png in Resources */,
-				CC15C6CB1E1CD8C100CEE318 /* alphe.png in Resources */,
 				CC3BE5321E10D3E70034214B /* eye.png in Resources */,
 				CC3BE5371E10D3E70034214B /* like2.png in Resources */,
 				CC3BE53C1E10D3E70034214B /* play.png in Resources */,
@@ -1139,7 +1096,6 @@
 				CC3BE5431E10D3E70034214B /* voice.png in Resources */,
 				CC3BE5421E10D3E70034214B /* up.png in Resources */,
 				CC3BE5401E10D3E70034214B /* ticket_box.png in Resources */,
-				CCE61AC11E135CFA002E3A7F /* RecordingSignal006@3x.png in Resources */,
 				CC3BE52C1E10D3E70034214B /* back.png in Resources */,
 				CC258BF31E10D24700491916 /* Assets.xcassets in Resources */,
 				CC3BE4F31E10D3E60034214B /* ProximaNova-RegularItalic.otf in Resources */,

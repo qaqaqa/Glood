@@ -54,7 +54,7 @@
         self.checkCodeLabel = [[UILabel alloc] init];
         self.checkCodeLabel.textColor = [UIColor blackColor];
 //        self.checkCodeLabel.font = [UIFont boldSystemFontOfSize:20];
-        self.checkCodeLabel.font = [UIFont fontWithName:@"ProximaNova-Bold" size:22];
+        self.checkCodeLabel.font = [UIFont fontWithName:@"ProximaNova-Semibold" size:22];
         self.checkCodeLabel.textAlignment = NSTextAlignmentCenter;
         [self addSubview:self.checkCodeLabel];
         

@@ -70,7 +70,7 @@
         [self.checkInTableViewCell setSelectionStyle:UITableViewCellSelectionStyleNone];
     }
     
-    self.checkInTableViewCell.bgImageView.frame = CGRectMake(15,-20,SCREEN_WIDTH*290/320, SCREEN_HEIGHT*200/568);
+    self.checkInTableViewCell.bgImageView.frame = CGRectMake(8,-20,SCREEN_WIDTH*304/320, SCREEN_HEIGHT*200/568);
 //    self.checkInTableViewCell.bgImageView.layer.cornerRadius = 8;
 //    self.checkInTableViewCell.bgImageView.layer.masksToBounds = YES;
     
@@ -84,9 +84,10 @@
     // 4.获取输出的二维码
     CIImage *outputImage = [filter outputImage];
     // 5.显示二维码
-    self.checkInTableViewCell.qrImageView.frame = CGRectMake(45, SCREEN_HEIGHT*18/568, SCREEN_WIDTH*118/320, SCREEN_WIDTH*118/320);
+    self.checkInTableViewCell.qrImageView.frame = CGRectMake(45, SCREEN_HEIGHT*18/568, SCREEN_WIDTH*125/320, SCREEN_WIDTH*125/320);
     self.checkInTableViewCell.qrImageView.tag = qrImageViewTag+indexPath.row;
-    UIImage *qrcode = [self createNonInterpolatedUIImageFormCIImage:outputImage withSize:SCREEN_WIDTH*118/320];
+    self.checkInTableViewCell.qrImageView.alpha = 0.92;
+    UIImage *qrcode = [self createNonInterpolatedUIImageFormCIImage:outputImage withSize:SCREEN_WIDTH*120/320];
     UIImage *customQrcode = [self imageBlackToTransparent:qrcode withRed:115.0f andGreen:116.0f andBlue:117.0f];
     self.checkInTableViewCell.qrImageView.image = customQrcode;
     
@@ -94,11 +95,13 @@
     self.checkInTableViewCell.fristNameLabel.textAlignment = NSTextAlignmentCenter;
     self.checkInTableViewCell.fristNameLabel.text = [[self.mockTicketDataMutableArr objectAtIndex:indexPath.row] objectForKey:@"attendee_first_name"];
     self.checkInTableViewCell.fristNameLabel.tag = firstNameLabelTag+indexPath.row;
+    self.checkInTableViewCell.fristNameLabel.font = [UIFont fontWithName:@"ProximaNova-Regular" size:16];
     
     self.checkInTableViewCell.lastNameLabel.frame = CGRectMake(self.checkInTableViewCell.fristNameLabel.frame.origin.x, self.checkInTableViewCell.fristNameLabel.frame.origin.y+self.checkInTableViewCell.fristNameLabel.frame.size.height+5, self.checkInTableViewCell.fristNameLabel.frame.size.width, self.checkInTableViewCell.fristNameLabel.frame.size.height);
     self.checkInTableViewCell.lastNameLabel.textAlignment = NSTextAlignmentCenter;
     self.checkInTableViewCell.lastNameLabel.text = [[self.mockTicketDataMutableArr objectAtIndex:indexPath.row] objectForKey:@"attendee_last_name"];
     self.checkInTableViewCell.lastNameLabel.tag = lastNameLabelTag+indexPath.row;
+    self.checkInTableViewCell.lastNameLabel.font = [UIFont fontWithName:@"ProximaNova-Regular" size:16];
     
     self.checkInTableViewCell.ticketTypeLabel.frame = CGRectMake(self.checkInTableViewCell.fristNameLabel.frame.origin.x+(SCREEN_WIDTH*25/320), self.checkInTableViewCell.lastNameLabel.frame.origin.y+self.checkInTableViewCell.lastNameLabel.frame.size.height+5, self.checkInTableViewCell.fristNameLabel.frame.size.width-(SCREEN_WIDTH*50/320), self.checkInTableViewCell.fristNameLabel.frame.size.height*3);
     self.checkInTableViewCell.ticketTypeLabel.numberOfLines = 2;
@@ -106,11 +109,13 @@
     self.checkInTableViewCell.ticketTypeLabel.textAlignment = NSTextAlignmentCenter;
     self.checkInTableViewCell.ticketTypeLabel.text = [[self.mockTicketDataMutableArr objectAtIndex:indexPath.row] objectForKey:@"ticket_name"];
     self.checkInTableViewCell.ticketTypeLabel.tag = ticketTypeLabelTag+indexPath.row;
+    self.checkInTableViewCell.ticketTypeLabel.font = [UIFont fontWithName:@"ProximaNova-Light" size:17];
     
     self.checkInTableViewCell.checkCodeLabel.frame = CGRectMake(self.checkInTableViewCell.fristNameLabel.frame.origin.x, self.checkInTableViewCell.ticketTypeLabel.frame.origin.y+self.checkInTableViewCell.ticketTypeLabel.frame.size.height, self.checkInTableViewCell.fristNameLabel.frame.size.width, self.checkInTableViewCell.fristNameLabel.frame.size.height);
     self.checkInTableViewCell.checkCodeLabel.textAlignment = NSTextAlignmentCenter;
     self.checkInTableViewCell.checkCodeLabel.text = [[self.mockTicketDataMutableArr objectAtIndex:indexPath.row] objectForKey:@"check_code"];
     self.checkInTableViewCell.checkCodeLabel.tag = checkCodeLabelTag+indexPath.row;
+    self.checkInTableViewCell.checkCodeLabel.font = [UIFont fontWithName:@"ProximaNova-Semibold" size:22];
     
     
     return self.checkInTableViewCell;

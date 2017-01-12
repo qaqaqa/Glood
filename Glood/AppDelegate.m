@@ -76,6 +76,9 @@
     userInfomationData.isGetMicListMutableArr = [[NSMutableArray alloc] initWithCapacity:10];
     
     userInfomationData.waitingSendMessageQunenMutableDic = [[NSMutableDictionary alloc] initWithCapacity:10];
+    userInfomationData.waitingSendMessageQunenMutableArr = [[NSMutableArray alloc] initWithCapacity:10];
+    userInfomationData.yuMessageId = 99999999999000000;
+    NSLog(@"*-*-*-*---xxxxx-*x-  %lld",userInfomationData.yuMessageId);
     
     return YES;
 }
@@ -453,7 +456,7 @@
 //}
 
 #pragma mark ====== 删除数据库一条消息（预加载的消息)======
-- (void)deletePreLoadingMessage
+- (void)deletePreLoadingMessage:(NSString *)roomIdx message:(NSString *)messageIdx
 {
     //  查询数据
     //  1.NSFetchRequst对象
@@ -463,9 +466,9 @@
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"messageId" ascending:NO];
     request.sortDescriptors = @[sortDescriptor];
     NSString *roomId = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"roomId = %@ AND accountId = %@ AND messageId = %@",roomId,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID],@"99999999999999999"]];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"roomId = %@ AND accountId = %@ AND messageId = %@",roomIdx,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID],messageIdx]];
     request.fetchOffset=0;
-    request.fetchLimit=100;
+    request.fetchLimit=1000;
     request.predicate = predicate;
     
     //  执行这个查询请求
@@ -483,7 +486,7 @@
     
 }
 
-#pragma mark ====== 删除数据库中包含messageId等于“99999999999999999”的所有消息======
+#pragma mark ====== 删除数据库中包含messageId大于“99999999999000000”的所有消息======
 - (void)deleteAllPreLoadingMessage
 {
     //  查询数据
@@ -494,7 +497,7 @@
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"messageId" ascending:NO];
     request.sortDescriptors = @[sortDescriptor];
     NSString *roomId = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"messageId = %@",@"99999999999999999"]];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"messageId >= %@",@"99999999999000000"]];
     request.fetchOffset=0;
     request.fetchLimit=100;
     request.predicate = predicate;

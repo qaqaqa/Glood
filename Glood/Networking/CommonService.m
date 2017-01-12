@@ -249,6 +249,7 @@
     self.chat = [hubConnection createHubProxy:@"chat"];
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
     userInfomationData.chat = self.chat;
+    userInfomationData.hubConnection = hubConnection;
     [self.chat on:@"onUserJoinRoom" perform:self selector:@selector(onUserJoinRoom:)];
     [self.chat on:@"onUserLeaveRoom" perform:self selector:@selector(onUserLeaveRoom:)];
     [self.chat on:@"onSendMessageInRoom" perform:self selector:@selector(onSendMessageInRoom:)];
@@ -259,18 +260,7 @@
         
         [[NSUserDefaults standardUserDefaults] setObject:@"open" forKey:@"signlarStauts"];
         [MMProgressHUD showWithTitle:@"拉取活动信息" status:NSLocalizedString(@"Please wating", nil)];
-        [[self getEventsList] then:^id(id value) {
-            UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
-            userInfomationData.eventDic = [[NSDictionary alloc] init];
-            userInfomationData.eventDic = value;
-            NSLog(@"拉取活动成功----");
-            [MMProgressHUD showWithTitle:@"正在加入聊天室" status:NSLocalizedString(@"Please wating", nil)];
-            [self joinChatRoom];
-            return value;
-        } error:^id(NSError *error) {
-            NSLog(@"拉取活动失败--- %@",error);
-            //拉取活动失败，继续拉取
-            [MMProgressHUD dismissWithError:@"拉取活动失败，请重新尝试" afterDelay:2.0f];
+        if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"open"]) {
             [[self getEventsList] then:^id(id value) {
                 UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
                 userInfomationData.eventDic = [[NSDictionary alloc] init];
@@ -281,27 +271,66 @@
                 return value;
             } error:^id(NSError *error) {
                 NSLog(@"拉取活动失败--- %@",error);
+                //拉取活动失败，继续拉取
                 [MMProgressHUD dismissWithError:@"拉取活动失败，请重新尝试" afterDelay:2.0f];
+                if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"open"]) {
+                    [[self getEventsList] then:^id(id value) {
+                        UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+                        userInfomationData.eventDic = [[NSDictionary alloc] init];
+                        userInfomationData.eventDic = value;
+                        NSLog(@"拉取活动成功----");
+                        [MMProgressHUD showWithTitle:@"正在加入聊天室" status:NSLocalizedString(@"Please wating", nil)];
+                        [self joinChatRoom];
+                        return value;
+                    } error:^id(NSError *error) {
+                        NSLog(@"拉取活动失败--- %@",error);
+                        [MMProgressHUD dismissWithError:@"拉取活动失败，请重新尝试" afterDelay:2.0f];
+                        return error;
+                    }];
+                }
                 return error;
             }];
-            return error;
-        }];
+        }
+        else
+        {
+            [ShowMessage showMessage:@"已断开聊天室"];
+        }
+        
     }];
     [hubConnection setConnectionSlow:^{
         NSLog(@"Connection Slow");
+        [userInfomationData.hubConnection disconnect];
+        [[NSUserDefaults standardUserDefaults] setObject:@"closed" forKey:@"signlarStauts"];
+        [self reconntionSignlar];
     }];
     [hubConnection setClosed:^{
         NSLog(@"Connection Closed");
-        [MMProgressHUD dismiss];
+        [[NSUserDefaults standardUserDefaults] setObject:@"closed" forKey:@"signlarStauts"];
+        [userInfomationData.hubConnection disconnect];
+        [self reconntionSignlar];
     }];
     [hubConnection setError:^(NSError *error) {
         NSLog(@"Connection Error %@",error.description);
-        [MMProgressHUD dismiss];
-        [[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"closed"];
+        [userInfomationData.hubConnection disconnect];
+        
+        [[NSUserDefaults standardUserDefaults] setObject:@"closed" forKey:@"signlarStauts"];
+        if ([error.description rangeOfString:@"Code=-1001"].location !=NSNotFound) {
+            [MMProgressHUD dismissWithError:@"请求超时，马上重试"];
+        }
+        else if([error.description rangeOfString:@"Code=-1005"].location !=NSNotFound)
+        {
+            [MMProgressHUD dismissWithError:@"网络连接已中断"];
+        }
+        else
+        {
+            [MMProgressHUD dismiss];
+        }
+        [self reconntionSignlar];
+        
     }];
     hubConnection.delegate = self;
     [hubConnection start];
-    userInfomationData.hubConnection = hubConnection;
+    
 }
 
 #pragma mark ======== 连接signlar服务后，先让用户进入聊天室 =========
@@ -323,13 +352,20 @@
             userInfomationData.userDic = response;
             
             [MMProgressHUD dismiss];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"getEventList" object:self];
+            if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"open"]) {
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"getEventList" object:self];
+            }
+            
             if ([self.reConnectionTag isEqualToString:@"reConnetion"]) {
                 [self getMessageInRoom:@"" roomId:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"]];
                 dispatch_async(dispatch_get_global_queue(0,0), ^{
                     for (NSInteger i = 0; i < [[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] count]; i ++) {
-                        [self getMessageInRoom:@"" roomId:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"id"]];
+                        if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"open"]) {
+                            [self getMessageInRoom:@"" roomId:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"id"]];
+                        }
+                        
                     }
+                    
                 });
                 
                 self.reConnectionTag = @"";
@@ -337,9 +373,13 @@
             
             
             NSLog(@"join-*-*-*-*-*-*-*-*-*-*  %@",response);
-            [[NSUserDefaults standardUserDefaults] setObject:[response objectForKey:@"avatar"] forKey:USER_AVATAR_URL];
-            [[NSUserDefaults standardUserDefaults] setObject:[[[response objectForKey:@"connected_clients"] objectAtIndex:0] objectForKey:@"user_name"] forKey:USER_NAME];
-            [[NSUserDefaults standardUserDefaults] setObject:[response objectForKey:@"current_client_id"] forKey:USER_CLIENT_ID];
+            if ([response count]>=5) {
+                [[NSUserDefaults standardUserDefaults] setObject:[response objectForKey:@"avatar"] forKey:USER_AVATAR_URL];
+                [[NSUserDefaults standardUserDefaults] setObject:[[[response objectForKey:@"connected_clients"] objectAtIndex:0] objectForKey:@"user_name"] forKey:USER_NAME];
+                [[NSUserDefaults standardUserDefaults] setObject:[response objectForKey:@"current_client_id"] forKey:USER_CLIENT_ID];
+                NSLog(@"hahahhahahahaha===------  %@",[[[response objectForKey:@"connected_clients"] objectAtIndex:0] objectForKey:@"user_name"]);
+            }
+            
         }];
     }
     else
@@ -353,7 +393,7 @@
 - (void)reconntionSignlar
 {
     if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"closed"]){
-        [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
+//        [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
         [MMProgressHUD showWithTitle:@"断线重连中" status:NSLocalizedString(@"Please wating", nil)];
         [self.timer invalidate];
         [self connectionSignlar];
@@ -404,32 +444,79 @@
             NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"messageId" ascending:NO];
             request.sortDescriptors = @[sortDescriptor];
             NSString *roomId = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
-            NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"roomId = %@ AND accountId = %@ AND messageId = %@",roomId,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID],@"99999999999999999"]];
+            NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"roomId = %@ AND accountId = %@ AND messageId = %@",roomId,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID],[msg objectForKey:@"id"]]];
             request.fetchOffset=0;
-            request.fetchLimit=100;
+            request.fetchLimit=1000;
             request.predicate = predicate;
             
             //  执行这个查询请求
             NSError *error = nil;
             
             NSArray *result = [self.myAppDelegate.managedObjectContext executeFetchRequest:request error:&error];
-            NSLog(@"xxxxcx---commonservice-%@===%@ --%lu---",roomId,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID],(unsigned long)[result count]);
+            NSLog(@"xxxxcx-hahah--commonservice-%@===%@ --%lu---",roomId,[msg objectForKey:@"id"],(unsigned long)[result count]);
             
-            for (NSInteger i = 0; i < [result count]; i ++) {
-                
-                Mic *mic = result[0];
-                NSLog(@"xxxxxx-*-*-------  ^%@",mic.messageId);
-                mic.accountId = [[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID];
-                mic.userId = [msg objectForKey:@"user_id"];
-                mic.avatarImage = NULL_TO_NIL([msg objectForKey:@"user_avatar"]);
-                mic.roomId = [msg objectForKey:@"room_id"];
-                mic.isRead = 0;
-                mic.time = [NSNumber numberWithFloat:[[arr objectAtIndex:0] floatValue]];
-                mic.message = [arr objectAtIndex:1];
-                mic.messageId = [msg objectForKey:@"id"];
-                mic.fromUserName = [msg objectForKey:@"user_name"];
-                [self.myAppDelegate saveContext];
+            if ([result count] != 0) {
+                for (NSInteger i = 0; i < [result count]; i ++) {
+                    
+                    Mic *mic = result[0];
+                    NSLog(@"xxxxxx-*-*-------  ^%@",mic.messageId);
+                    mic.accountId = [[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID];
+                    mic.userId = [msg objectForKey:@"user_id"];
+                    mic.avatarImage = NULL_TO_NIL([msg objectForKey:@"user_avatar"]);
+                    mic.roomId = [msg objectForKey:@"room_id"];
+                    mic.isRead = 0;
+                    mic.time = [NSNumber numberWithFloat:[[arr objectAtIndex:0] floatValue]];
+                    mic.message = [arr objectAtIndex:1];
+                    mic.messageId = [msg objectForKey:@"id"];
+                    mic.fromUserName = [msg objectForKey:@"user_name"];
+                    [self.myAppDelegate saveContext];
+                }
             }
+            else
+            {
+                NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Mic"];
+                //  2.设置排序
+                //  2.1创建排序描述对象
+                NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"messageId" ascending:NO];
+                request.sortDescriptors = @[sortDescriptor];
+                NSString *roomId = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
+                NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"roomId = %@ AND accountId = %@ AND messageId >= %@",roomId,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID],@"99999999999000000"]];
+                request.fetchOffset=0;
+                request.fetchLimit=1000;
+                request.predicate = predicate;
+                NSLog(@"789456465165456489466");
+                //  执行这个查询请求
+                NSError *error = nil;
+                
+                NSArray *resultx = [self.myAppDelegate.managedObjectContext executeFetchRequest:request error:&error];
+                
+                
+                for (NSInteger i = 0; i < [resultx count]; i ++) {
+                    
+                    Mic *mic = resultx[0];
+                    for (NSInteger i = 0; i < [userInfomationData.waitingSendMessageQunenMutableArr count]; i ++) {
+                        if ([[[userInfomationData.waitingSendMessageQunenMutableArr objectAtIndex:i] objectForKey:@"message_id"] isEqualToString:mic.messageId] && [[[userInfomationData.waitingSendMessageQunenMutableArr objectAtIndex:i] objectForKey:@"room_id"] isEqualToString:[msg objectForKey:@"room_id"]]) {
+                            [userInfomationData.waitingSendMessageQunenMutableArr removeObjectAtIndex:i];
+                            return;
+                        }
+                    }
+                    
+                    
+                    NSLog(@"xxxxxx-*-*-------  ^%@",mic.messageId);
+                    mic.accountId = [[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID];
+                    mic.userId = [msg objectForKey:@"user_id"];
+                    mic.avatarImage = NULL_TO_NIL([msg objectForKey:@"user_avatar"]);
+                    mic.roomId = [msg objectForKey:@"room_id"];
+                    mic.isRead = 0;
+                    mic.time = [NSNumber numberWithFloat:[[arr objectAtIndex:0] floatValue]];
+                    mic.message = [arr objectAtIndex:1];
+                    mic.messageId = [msg objectForKey:@"id"];
+                    mic.fromUserName = [msg objectForKey:@"user_name"];
+                    [self.myAppDelegate saveContext];
+                }
+            }
+            
+            
         }
         
         //活动列表后的未读消息小红点标记
@@ -497,23 +584,71 @@
 }
 
 #pragma mark ======== 在聊天室内，发送消息 =========
-- (void)sendMessageInRoom:(NSString *)messgae roomId:(NSString *)roomIdContent messageType:(NSInteger)messageType
+- (void)sendMessageInRoom:(NSString *)messgae roomId:(NSString *)roomIdContent messageType:(NSInteger)messageType messageId:(NSString *)messageIdx
 {
     if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"open"]) {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"sendMessageScu" object:self];
         UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
         NSLog(@"-*-/-*-*-*- ----  %@",messgae);
         [userInfomationData.chat invoke:@"sendMessageInRoom" withArgs:@[messgae,roomIdContent,[NSNumber numberWithInteger:messageType]] completionHandler:^(id response, NSError *error) {
+            
             if (error) {
-                [self.myAppDelegate deletePreLoadingMessage];
                 [ShowMessage showMessage:@"消息发送失败"];
-                [self.myAppDelegate deleteAllPreLoadingMessage];
-                NSLog(@"xxxxxxxxxxx----%@",error.description);
+                [self.myAppDelegate deletePreLoadingMessage:roomIdContent message:messageIdx];
+                for (NSInteger i = 0; i < [userInfomationData.waitingSendMessageQunenMutableArr count]; i ++) {
+                    if ([[[userInfomationData.waitingSendMessageQunenMutableArr objectAtIndex:i] objectForKey:@"message_id"] isEqualToString:messgae] && [[[userInfomationData.waitingSendMessageQunenMutableArr objectAtIndex:i] objectForKey:@"room_id"] isEqualToString:roomIdContent]) {
+                        [userInfomationData.waitingSendMessageQunenMutableArr removeObjectAtIndex:i];
+                        return ;
+                    }
+                }
+                //                [self.myAppDelegate deleteAllPreLoadingMessage];
+                NSLog(@"xxxxxxxxxxx发送失败----%@----%@",error.description,messageIdx);
+                return;
+            }
+            if (response == NULL) {
                 return;
             }
             
+            
             [ShowMessage showMessage:@"消息发送成功"];
             NSLog(@"发送消息-*-*-*-*-*-*-*-*-*-*  %@",response);
+            
+            for (NSInteger x = 0; x < [userInfomationData.waitingSendMessageQunenMutableArr count]; x ++) {
+                //                NSLog(@"*--*-*-*-*-*- %@---%@",[[userInfomationData.waitingSendMessageQunenMutableArr objectAtIndex:i] objectForKey:@"message_id"],messgae)
+                if ([[[userInfomationData.waitingSendMessageQunenMutableArr objectAtIndex:x] objectForKey:@"message_id"] isEqualToString:messageIdx] && [[[userInfomationData.waitingSendMessageQunenMutableArr objectAtIndex:x] objectForKey:@"room_id"] isEqualToString:roomIdContent]) {
+                    [userInfomationData.waitingSendMessageQunenMutableArr removeObjectAtIndex:x];
+                    
+                    //更新数据库一条消息
+                    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Mic"];
+                    //  2.设置排序
+                    //  2.1创建排序描述对象
+                    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"messageId" ascending:NO];
+                    request.sortDescriptors = @[sortDescriptor];
+                    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"roomId = %@ AND accountId = %@ AND messageId = %@",roomIdContent,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID],messageIdx]];
+                    request.fetchOffset=0;
+                    request.fetchLimit=1000;
+                    request.predicate = predicate;
+                    
+                    //  执行这个查询请求
+                    NSError *error = nil;
+                    
+                    NSArray *result = [self.myAppDelegate.managedObjectContext executeFetchRequest:request error:&error];
+                    NSLog(@"xxxxcx---发送消息成功-%@===%@ --%lu---",roomIdContent,messageIdx,(unsigned long)[result count]);
+                    
+                    for (NSInteger i = 0; i < [result count]; i ++) {
+                        
+                        Mic *mic = result[0];
+                        NSLog(@"xxxxxx-*-*-------  ^%@---- %@",mic.messageId,response);
+                        mic.messageId = response;
+                        NSLog(@"xxxxxx-*-*------hahah-  ^%@----- %@",mic.messageId,response);
+                        [self.myAppDelegate saveContext];
+                    }
+                    return;
+                }
+                
+            }
+
+            
         }];
     }
     else
@@ -533,32 +668,43 @@
             if (error) {
                 NSLog(@"xxxxxxxxxxx----%@",error.description);
                 [MMProgressHUD dismissWithError:@"Error"];
+                if ([userInfomationData.isEnterMicList isEqualToString:@"true"]) {
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
+                }
+                else
+                {
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryList" object:self];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
+                }
                 return;
             }
             if (response == NULL) {
                 return;
             }
-            NSLog(@"xxxxjxjxjxlll----- %lu",[response count]);
-            
-            for (NSInteger i = 0;i < [response count] ; i ++) {
-                NSArray *arr = [[NSArray alloc] init];
-                arr = [[[(NSArray *)response objectAtIndex:i] objectForKey:@"content"] componentsSeparatedByString:@","];
-                if ([[[response objectAtIndex:i] objectForKey:@"message_type"] isEqualToString:@"Audio"] && [arr count]==2) {
-                    [self.myAppDelegate insertCoreData:[[response objectAtIndex:i] objectForKey:@"user_id"] avatarImage:[[response objectAtIndex:i] objectForKey:@"user_avatar"] roomId:[[response objectAtIndex:i] objectForKey:@"room_id"] time:[NSNumber numberWithFloat:[[arr objectAtIndex:0] floatValue]] message:[arr objectAtIndex:1] messageId:[[response objectAtIndex:i] objectForKey:@"id"] fromUserName:[[response objectAtIndex:i] objectForKey:@"user_name"]];
-                    [self.myAppDelegate insertCoraData:[[response objectAtIndex:i] objectForKey:@"room_id"] lastMessageId:[[response objectAtIndex:[response count]-1] objectForKey:@"id"] beginMessageId:[[response objectAtIndex:0] objectForKey:@"id"]];
-                    userInfomationData.inRoomMessageForRoomIdStr = [[response objectAtIndex:i] objectForKey:@"room_id"];
-                    
+            NSLog(@"xxxxjxjxjxlll----- %lu---%@",[response count],response);
+            if ([response count]>=3) {
+                for (NSInteger i = 0;i < [response count] ; i ++) {
+                    NSArray *arr = [[NSArray alloc] init];
+                    arr = [[[(NSArray *)response objectAtIndex:i] objectForKey:@"content"] componentsSeparatedByString:@","];
+                    if ([[[response objectAtIndex:i] objectForKey:@"message_type"] isEqualToString:@"Audio"] && [arr count]==2) {
+                        [self.myAppDelegate insertCoreData:[[response objectAtIndex:i] objectForKey:@"user_id"] avatarImage:[[response objectAtIndex:i] objectForKey:@"user_avatar"] roomId:[[response objectAtIndex:i] objectForKey:@"room_id"] time:[NSNumber numberWithFloat:[[arr objectAtIndex:0] floatValue]] message:[arr objectAtIndex:1] messageId:[[response objectAtIndex:i] objectForKey:@"id"] fromUserName:[[response objectAtIndex:i] objectForKey:@"user_name"]];
+                        [self.myAppDelegate insertCoraData:[[response objectAtIndex:i] objectForKey:@"room_id"] lastMessageId:[[response objectAtIndex:[response count]-1] objectForKey:@"id"] beginMessageId:[[response objectAtIndex:0] objectForKey:@"id"]];
+                        userInfomationData.inRoomMessageForRoomIdStr = [[response objectAtIndex:i] objectForKey:@"room_id"];
+                        
+                    }
+                    NSLog(@"*-*-*-*-*-*------- %@",[[response objectAtIndex:i] objectForKey:@"id"]);
+                }
+                
+                if ([userInfomationData.isEnterMicList isEqualToString:@"true"]) {
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
+                }
+                else
+                {
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryList" object:self];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
                 }
             }
             
-            if ([userInfomationData.isEnterMicList isEqualToString:@"true"]) {
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
-            }
-            else
-            {
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryList" object:self];
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
-            }
             
         }];
     }

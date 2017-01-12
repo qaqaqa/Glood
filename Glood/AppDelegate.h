@@ -51,7 +51,7 @@
 - (NSArray *)selectCoreDataroomId:(NSString *)roomIdx pageIndex:(NSInteger)pageIndexx pageSize:(NSInteger)pageSizex;
 
 //删除数据库一条消息（预加载的消息）
-- (void)deletePreLoadingMessage;
+- (void)deletePreLoadingMessage:(NSString *)roomIdx message:(NSString *)messageIdx;
 
 //删除数据库中包含messageId等于“99999999999999999”的所有消息
 - (void)deleteAllPreLoadingMessage;

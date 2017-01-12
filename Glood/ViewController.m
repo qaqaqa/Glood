@@ -17,7 +17,11 @@
 #import "AddATicketViewController.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
+#import "AppDelegate.h"
+
 @interface ViewController ()<FBSDKLoginButtonDelegate >
+
+@property (strong, nonatomic) AppDelegate *myAppDelegate;
 
 @end
 
@@ -42,6 +46,8 @@
     facebookButton.backgroundColor = [UIColor colorWithRed:68/255.0 green:81/255.0 blue:183/255.0 alpha:1.0];
     [facebookButton addTarget:self action:@selector(onSignInBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:facebookButton];
+    
+    self.myAppDelegate = [UIApplication sharedApplication].delegate;
     
     //    self.commonService = [[CommonService alloc] init];
     
@@ -72,6 +78,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
+    [self.myAppDelegate deleteAllPreLoadingMessage];
     NSLog(@"xxxx-*-------  %@",[[NSUserDefaults standardUserDefaults] objectForKey:Exchange_OAUTH2_TOKEN]);
     if (![CommonService isBlankString:[[NSUserDefaults standardUserDefaults] objectForKey:Exchange_OAUTH2_TOKEN]]) {
         //又置换后的token，则直接登陆
@@ -93,6 +100,7 @@
 
 - (void)getEventList
 {
+    [MMProgressHUD dismiss];
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
     if ([[userInfomationData.eventDic objectForKey:@"result"] count] == 0)
     {
@@ -122,22 +130,32 @@
 #pragma  mark ==========  点击连接facebook SDK登陆 ==========
 - (void)onSignInBtnClick:(id)sender
 {
-    FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];
-    [login logInWithReadPermissions: @[@"public_profile", @"email", @"user_friends"] fromViewController:self
-     handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
-         NSLog(@"xxxxx-*-*-*------  %@--- %@",result.token.userID,result.token.tokenString );
-         if (error) {
-             NSLog(@"Process error---- %@",error);
-         } else if (result.isCancelled) {
-             NSLog(@"Cancelled");
-         } else {
-             NSLog(@"Logged in");
-             
-             //置换token
-             [[NSUserDefaults standardUserDefaults] setObject:result.token.tokenString forKey:FACEBOOK_OAUTH2_TOKEN];
-             [self exchangeToken];
-         }
-     }];
+    if (![CommonService isBlankString:[[NSUserDefaults standardUserDefaults] objectForKey:Exchange_OAUTH2_TOKEN]]) {
+        //又置换后的token，则直接登陆
+        [MMProgressHUD showWithTitle:@"正在连接聊天服务器" status:NSLocalizedString(@"Please wating", nil)];
+        UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+        [userInfomationData.commonService connectionSignlar];
+    }
+    else
+    {
+        FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];
+        [login logInWithReadPermissions: @[@"public_profile", @"email", @"user_friends"] fromViewController:self
+                                handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+                                    NSLog(@"xxxxx-*-*-*------  %@--- %@",result.token.userID,result.token.tokenString );
+                                    if (error) {
+                                        NSLog(@"Process error---- %@",error);
+                                    } else if (result.isCancelled) {
+                                        NSLog(@"Cancelled");
+                                    } else {
+                                        NSLog(@"Logged in");
+                                        
+                                        //置换token
+                                        [[NSUserDefaults standardUserDefaults] setObject:result.token.tokenString forKey:FACEBOOK_OAUTH2_TOKEN];
+                                        [self exchangeToken];
+                                    }
+                                }];
+    }
+    
 }
 
 

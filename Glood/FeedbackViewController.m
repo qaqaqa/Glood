@@ -35,7 +35,7 @@
     self.bgView.backgroundColor = [UIColor clearColor];
     [self.view addSubview:self.bgView];
     
-    UIButton *leftButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*10/320, SCREEN_HEIGHT*10/568, SCREEN_WIDTH*34/320, SCREEN_HEIGHT*36/568)];
+    UIButton *leftButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*16/320, SCREEN_HEIGHT*10/568, SCREEN_WIDTH*34/320, SCREEN_HEIGHT*36/568)];
     [leftButton setImage:[UIImage imageNamed:@"menu"] forState:UIControlStateNormal];
     [leftButton addTarget:self action:@selector(onLeftBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self.bgView addSubview:leftButton];
@@ -50,16 +50,25 @@
     [self.bgView addSubview:topImageView];
     
     NSString *tipsStr = @"If you have some good idea that you think will improve our community experience,please share them!";
-    CGSize tipsSize = [tipsStr sizeWithFont:[UIFont systemFontOfSize:SCREEN_WIDTH*18/320] constrainedToSize:CGSizeMake(SCREEN_WIDTH*220/320, 100) lineBreakMode:NSLineBreakByWordWrapping];
-    UILabel *tipsLabel = [[UILabel alloc] initWithFrame:CGRectMake((SCREEN_WIDTH-(SCREEN_WIDTH*280/320))/2, topImageView.frame.size.height+topImageView.frame.origin.y+(SCREEN_HEIGHT*30/568), SCREEN_WIDTH*280/320, tipsSize.height)];
+    CGSize tipsSize = [tipsStr sizeWithFont:[UIFont fontWithName:@"ProximaNova-Light" size:SCREEN_WIDTH*18/320] constrainedToSize:CGSizeMake(SCREEN_WIDTH*220/320, 100) lineBreakMode:NSLineBreakByWordWrapping];
+    UILabel *tipsLabel = [[UILabel alloc] initWithFrame:CGRectMake((SCREEN_WIDTH-(SCREEN_WIDTH*260/320))/2, topImageView.frame.size.height+topImageView.frame.origin.y+(SCREEN_HEIGHT*30/568), SCREEN_WIDTH*260/320, tipsSize.height)];
     tipsLabel.backgroundColor = [UIColor clearColor];
     tipsLabel.numberOfLines = 0;
+    tipsLabel.font = [UIFont fontWithName:@"ProximaNova-Light" size:SCREEN_WIDTH*18/320];
     tipsLabel.lineBreakMode = NSLineBreakByWordWrapping;
     tipsLabel.text = tipsStr;
-    tipsLabel.font = [UIFont systemFontOfSize:SCREEN_WIDTH*18/320];
     [self.bgView addSubview:tipsLabel];
     
-    self.feedbackTextView = [[UITextView alloc] initWithFrame:CGRectMake(tipsLabel.frame.origin.x, tipsLabel.frame.origin.y+tipsLabel.frame.size.height+10, SCREEN_WIDTH*280/320, SCREEN_HEIGHT*175/568)];
+    //设置行间距
+    NSMutableAttributedString * attributedString1 = [[NSMutableAttributedString alloc] initWithString:tipsStr];
+    NSMutableParagraphStyle * paragraphStyle1 = [[NSMutableParagraphStyle alloc] init];
+    [paragraphStyle1 setLineSpacing:5];
+    [attributedString1 addAttribute:NSParagraphStyleAttributeName value:paragraphStyle1 range:NSMakeRange(0, [tipsStr length])];
+    [tipsLabel setAttributedText:attributedString1];
+    [tipsLabel sizeToFit];
+    [self.view addSubview:tipsLabel];
+    
+    self.feedbackTextView = [[UITextView alloc] initWithFrame:CGRectMake(tipsLabel.frame.origin.x, tipsLabel.frame.origin.y+tipsLabel.frame.size.height+(SCREEN_HEIGHT*23/568), SCREEN_WIDTH*260/320, SCREEN_HEIGHT*180/568)];
     self.feedbackTextView.delegate = self;
     self.feedbackTextView.backgroundColor = [UIColor whiteColor];
     self.feedbackTextView.layer.cornerRadius = 8;
@@ -68,12 +77,12 @@
     self.feedbackTextView.returnKeyType = UIReturnKeySend;
     [self.bgView addSubview:self.feedbackTextView];
         
-    UIButton *logoutButton = [[UIButton alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT-50, SCREEN_WIDTH, 50)];
+    UIButton *logoutButton = [[UIButton alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT-49, SCREEN_WIDTH, 49)];
     [logoutButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    logoutButton.titleLabel.font = [UIFont boldSystemFontOfSize:25.f];
+    logoutButton.titleLabel.font = [UIFont fontWithName:@"ProximaNova-Bold" size:24];
     [logoutButton setTitle:@"send" forState:UIControlStateNormal];
     logoutButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-    logoutButton.backgroundColor = [UIColor colorWithRed:72/255.0 green:164/255.0 blue:233/255.0 alpha:1];
+    logoutButton.backgroundColor = [UIColor colorWithRed:70/255.0 green:165/255.0 blue:234/255.0 alpha:1];
     [logoutButton addTarget:self action:@selector(onSendBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.bgView addSubview:logoutButton];
 }

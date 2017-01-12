@@ -49,7 +49,6 @@
 @property (retain, nonatomic) UIButton *soundingRecoringButton;
 @property (retain, nonatomic) UIImageView *soundingRecoringImageView; //长按手势时，检查麦克风权限是否开启
 @property (retain, nonatomic) UIImageView *micTopImageView;
-@property (retain, nonatomic) UIImageView *alpheImageView;
 @property (retain, nonatomic) UIImageView *micPlayerStatesImageView;
 @property (retain, nonatomic) UIButton *micShieldButton;
 @property (strong, nonatomic) NSMutableArray *dataArr;//活动list
@@ -98,15 +97,16 @@
     commonNavView.backgroundColor = [UIColor clearColor];
     [self.view addSubview:commonNavView];
     
-    self.micTopImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, commonNavView.frame.size.height+commonNavView.frame.origin.y+10, SCREEN_WIDTH, SCREEN_HEIGHT*110/568)];
+    self.micTopImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, commonNavView.frame.size.height+commonNavView.frame.origin.y+15, SCREEN_WIDTH, SCREEN_HEIGHT*110/568)];
     self.micTopImageView.alpha = 0;
     [self.view addSubview:self.micTopImageView];
     
-    self.alpheImageView = [[UIImageView alloc] init];
-    self.alpheImageView.frame  = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-    [self.alpheImageView setImage:[UIImage imageNamed:@"alphe.png"]];
-    self.alpheImageView.alpha = 0;
-    [self.view addSubview:self.alpheImageView];
+    CAGradientLayer *gradientLayer = [CAGradientLayer layer];
+    gradientLayer.frame = self.micTopImageView.bounds;
+    gradientLayer.colors = @[(__bridge id)[UIColor colorWithWhite:0 alpha:0.0].CGColor,(__bridge id)[UIColor colorWithWhite:0 alpha:1].CGColor];
+    gradientLayer.startPoint = CGPointMake(0, 1);
+    gradientLayer.endPoint = CGPointMake(0, 0);
+    [self.micTopImageView.layer setMask:gradientLayer];
     
     [self.mockView removeFromSuperview];
     self.mockView = [[MockView alloc] init];
@@ -147,13 +147,13 @@
     self.micPlayerStatesImageView.alpha = 0;
     [self.view addSubview:self.micPlayerStatesImageView];
     
-    self.micShieldButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-10-(SCREEN_WIDTH*20/320), self.micPlayerStatesImageView.frame.origin.y-3, SCREEN_WIDTH*30/320, SCREEN_HEIGHT*34/568)];
+    self.micShieldButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-21-(SCREEN_WIDTH*20/320), self.micPlayerStatesImageView.frame.origin.y+8, SCREEN_WIDTH*30/320, SCREEN_HEIGHT*30/568)];
     [self.micShieldButton setImage:[UIImage imageNamed:@"people.png"] forState:UIControlStateNormal];
     [self.micShieldButton addTarget:self action:@selector(onShieldBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     self.micShieldButton.alpha = 0;
     [self.view addSubview: self.micShieldButton];
     
-    UIButton *leftButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*10/320, SCREEN_HEIGHT*10/568, SCREEN_WIDTH*34/320, SCREEN_HEIGHT*36/568)];
+    UIButton *leftButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*16/320, SCREEN_HEIGHT*10/568, SCREEN_WIDTH*34/320, SCREEN_HEIGHT*36/568)];
     [leftButton setImage:[UIImage imageNamed:@"menu"] forState:UIControlStateNormal];
     [leftButton addTarget:self action:@selector(onLeftBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:leftButton];
@@ -163,14 +163,13 @@
     largeLeftButton.backgroundColor = [UIColor clearColor];
     [self.view addSubview:largeLeftButton];
     
-    self.navtitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*80/320, SCREEN_HEIGHT*10/568, SCREEN_WIDTH*160/320, SCREEN_HEIGHT*36/568)];
+    self.navtitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*60/320, SCREEN_HEIGHT*12/568, SCREEN_WIDTH*200/320, SCREEN_HEIGHT*36/568)];
     self.navtitleLabel.text = @"Communities";
     self.navtitleLabel.textAlignment = NSTextAlignmentCenter;
-    self.navtitleLabel.font = [UIFont fontWithName:@"ProximaNova-Light.otf" size:17];
-    self.navtitleLabel.textColor = [UIColor colorWithRed:115/255.0 green:113/255.0 blue:114/255.0 alpha:1.0];
+    self.navtitleLabel.font = [UIFont fontWithName:@"ProximaNova-Regular" size:17];
     [self.view addSubview:self.navtitleLabel];
     
-    self.rightButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*54/320), SCREEN_HEIGHT*10/568, SCREEN_WIDTH*34/320, SCREEN_HEIGHT*36/568)];
+    self.rightButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*54/320), SCREEN_HEIGHT*16/568, SCREEN_WIDTH*28/320, SCREEN_HEIGHT*28/568)];
     [self.rightButton setImage:[UIImage imageNamed:@"down"] forState:UIControlStateNormal];
     [self.rightButton addTarget:self action:@selector(onRightBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.rightButton];
@@ -231,7 +230,7 @@
     CeHuaView *ceHuav = [[CeHuaView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
     [self.cehuaView addSubview:ceHuav];
     
-    UIButton *ceHuaMoreButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*34/320)-50, SCREEN_HEIGHT*10/568, SCREEN_WIDTH*34/320, SCREEN_HEIGHT*36/568)];
+    UIButton *ceHuaMoreButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*34/320)-32, SCREEN_HEIGHT*15/568, SCREEN_WIDTH*34/320, SCREEN_HEIGHT*36/568)];
     [ceHuaMoreButton setImage:[UIImage imageNamed:@"menu"] forState:UIControlStateNormal];
     [ceHuaMoreButton addTarget:self action:@selector(onCeHuaMoreBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.cehuaView addSubview:ceHuaMoreButton];
@@ -485,7 +484,7 @@
     
     [self.mockView addNSNotificationCenter];
     
-    [self.myAppDelegate deleteAllPreLoadingMessage];
+//    [self.myAppDelegate deleteAllPreLoadingMessage];
     
 }
 
@@ -624,7 +623,6 @@
         self.mockView.alpha = 0;
         self.navtitleLabel.text = @"Communities";
         self.micTopImageView.alpha = 0;
-        self.alpheImageView.alpha = 0;
         self.micShieldButton.alpha = 0;
         self.micPlayerStatesImageView.alpha = 0;
         self.mockView.lastBgView.alpha = 1;
@@ -776,7 +774,20 @@
             NSLog(@"第一次启动");
             [self.mockBgView setHidden:YES];
             [[AVAudioSession sharedInstance] requestRecordPermission:^(BOOL granted) {
-                [self.myAppDelegate deletePreLoadingMessage];
+                NSString *roomIdStr;
+                if ([CommonService isBlankString:userInfomationData.QRRoomId]) {
+                    roomIdStr = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
+                }
+                else
+                {
+                    for (NSInteger i = 0; i < [(NSMutableArray*)[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] count]; i ++) {
+                        if ([userInfomationData.QRRoomId isEqualToString:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"id"]]) {
+                            roomIdStr = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"id"];
+                        }
+                    }
+                    
+                }
+                [self.myAppDelegate deletePreLoadingMessage:roomIdStr message:[NSString stringWithFormat:@"%lld",userInfomationData.yuMessageId]];
                 [userInfomationData.recordAudio stopRecoring];
                 
                 if (granted) {
@@ -865,14 +876,16 @@
                 [self.soundingRecoringButton setImage:[UIImage imageNamed:@"voice.png"] forState:UIControlStateNormal];
                 if (![CommonService isBlankString:[userInfomationData.recordAudio stopRecoring]]) {
                     if ([CommonService isBlankString:userInfomationData.QRRoomId]) {
-                        [userInfomationData.commonService sendMessageInRoom:[userInfomationData.recordAudio stopRecoring] roomId:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"] messageType:3];
+//                        [userInfomationData.commonService sendMessageInRoom:[userInfomationData.recordAudio stopRecoring] roomId:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"] messageType:3];
+                        [self waitingSendMessageQunenMutableDic:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"] messageId:nil message:[userInfomationData.recordAudio stopRecoring]];
                     }
                     else
                     {
                         for (NSInteger i = 0; i < [(NSMutableArray*)[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] count]; i ++) {
                             if ([userInfomationData.QRRoomId isEqualToString:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"id"]]) {
                                 
-                                [userInfomationData.commonService sendMessageInRoom:[userInfomationData.recordAudio stopRecoring] roomId:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"id"] messageType:3];
+//                                [userInfomationData.commonService sendMessageInRoom:[userInfomationData.recordAudio stopRecoring] roomId:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"id"] messageType:3];
+                                [self waitingSendMessageQunenMutableDic:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"id"] messageId:nil message:[userInfomationData.recordAudio stopRecoring]];
                             }
                         }
                         
@@ -908,8 +921,22 @@
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
     AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeAudio];
     if ([userInfomationData.isEnterMicList isEqualToString:@"true"] && (authStatus ==AVAuthorizationStatusNotDetermined || authStatus ==AVAuthorizationStatusAuthorized)) {
-        [self.myAppDelegate deletePreLoadingMessage];
+        NSString *roomIdStr;
+        if ([CommonService isBlankString:userInfomationData.QRRoomId]) {
+            roomIdStr = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
+        }
+        else
+        {
+            for (NSInteger i = 0; i < [(NSMutableArray*)[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] count]; i ++) {
+                if ([userInfomationData.QRRoomId isEqualToString:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"id"]]) {
+                    roomIdStr = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"id"];
+                }
+            }
+            
+        }
+        [self.myAppDelegate deletePreLoadingMessage:roomIdStr message:[NSString stringWithFormat:@"%lld",userInfomationData.yuMessageId]];
         NSLog(@"取消录音！");
+        [ShowMessage showMessage:@"取消录音"];
         [self.mockBgView setHidden:YES];
         UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
         [self.soundingRecoringButton setImage:[UIImage imageNamed:@"voice.png"] forState:UIControlStateNormal];
@@ -961,10 +988,7 @@
 //                        if ([userInfomationData.recordAudio stopRecoring] != nil) {
                             if ([self.recordAudioTimeOutStr isEqualToString:@"no"]) {
                                 self.recordAudioTimeOutStr = @"yes";
-                                dispatch_async(dispatch_get_global_queue(0,0), ^{
-                                    [userInfomationData.commonService sendMessageInRoom:[userInfomationData.recordAudio stopRecoring] roomId:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"] messageType:3];
-//                                    [self waitingSendMessageQunenMutableDic:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"] messageId:<#(NSString *)#>];
-                                });
+                                [self waitingSendMessageQunenMutableDic:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"] messageId:nil message:[userInfomationData.recordAudio stopRecoring]];
 //                            }
                             
                             
@@ -980,13 +1004,21 @@
     dispatch_resume(_timer);
 }
 
-- (NSDictionary *)waitingSendMessageQunenMutableDic:(NSString *)roomIdx messageId:(NSString *)messageIdx
+- (void)waitingSendMessageQunenMutableDic:(NSString *)roomIdx messageId:(NSString *)messageIdx message:(NSString *)messagex
 {
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+    messageIdx = [NSString stringWithFormat:@"%lld",userInfomationData.yuMessageId];
     userInfomationData.waitingSendMessageQunenMutableDic = @{
-                                                             @"id":[NSString stringWithFormat:@"%@,%@",roomIdx,messageIdx]
+                                                             @"message":messagex,
+                                                             @"room_id":roomIdx,
+                                                             @"message_id":messageIdx
                                                              };
-    return userInfomationData.waitingSendMessageQunenMutableDic;
+    [userInfomationData.waitingSendMessageQunenMutableArr addObject:userInfomationData.waitingSendMessageQunenMutableDic];
+    dispatch_async(dispatch_get_global_queue(0,0), ^{
+        for (NSInteger i = 0; i < [userInfomationData.waitingSendMessageQunenMutableArr count]; i ++) {
+            [userInfomationData.commonService sendMessageInRoom:[[userInfomationData.waitingSendMessageQunenMutableArr objectAtIndex:i] objectForKey:@"message"] roomId:[[userInfomationData.waitingSendMessageQunenMutableArr objectAtIndex:i] objectForKey:@"room_id"] messageType:3 messageId:[[userInfomationData.waitingSendMessageQunenMutableArr objectAtIndex:i] objectForKey:@"message_id"]];
+        }
+    });
 }
 
 //进入聊天室场景
@@ -1081,7 +1113,6 @@
         
         [UIView animateWithDuration:0.5 animations:^{
             self.micTopImageView.alpha = 1;
-            self.alpheImageView.alpha = 1;
             self.micShieldButton.alpha = 1;
             self.micPlayerStatesImageView.alpha = 1;
             self.view.userInteractionEnabled = YES;

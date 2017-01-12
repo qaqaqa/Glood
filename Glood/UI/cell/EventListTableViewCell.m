@@ -27,11 +27,10 @@
         [self addSubview:self.eventImageView];
         
         self.eventNameLabel = [[UILabel alloc] init];
-        self.eventNameLabel.font = [UIFont systemFontOfSize:15];
         [self addSubview:self.eventNameLabel];
         
         self.redImageView = [[UIImageView alloc] init];
-        self.redImageView.backgroundColor = [UIColor colorWithRed:233/255.0 green:80/255.0 blue:23/255.0 alpha:1];
+        self.redImageView.backgroundColor = [UIColor colorWithRed:232/255.0 green:20/255.0 blue:81/255.0 alpha:1];
         [self addSubview:self.redImageView];
         
         self.lineImageView = [[UIImageView alloc] init];

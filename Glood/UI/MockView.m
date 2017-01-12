@@ -21,6 +21,7 @@
 @property (retain, nonatomic) EventViewController *eventViewVC;
 @property (assign, nonatomic) NSInteger upHeadButtonTag;
 @property (strong, nonatomic) AppDelegate *myAppDelegate;
+@property (retain, nonatomic) UIView *shieldbgView;
 
 @end
 
@@ -71,13 +72,7 @@
         [self.bgView addSubview:topBgView];
         
         self.topImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.bgView.frame.size.width-2, SCREEN_HEIGHT*90/568)];
-        //        [self.topImageView sd_setImageWithURL:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"image_url"] placeholderImage:[UIImage imageNamed:@"event_background.jpg"]];
         [topBgView addSubview:self.topImageView];
-        
-//        UIImageView *alpheImageView = [[UIImageView alloc] init];
-//        alpheImageView.frame  = CGRectMake(0, 0, self.topImageView.frame.size.width, self.topImageView.frame.size.height);
-//        [alpheImageView setImage:[UIImage imageNamed:@"alphe.png"]];
-//        [topBgView addSubview:alpheImageView];
         
         self.monthLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*15/320, self.topImageView.frame.size.height+self.topImageView.frame.origin.y+SCREEN_WIDTH*10/320, SCREEN_WIDTH*40/320, SCREEN_HEIGHT*25/568)];
         self.monthLabel.textAlignment = NSTextAlignmentLeft;
@@ -157,36 +152,42 @@
         self.shieldBgView.alpha = 0;
         [self addSubview:self.shieldBgView];
         
-        UIView *shieldbgView = [[UIView alloc] initWithFrame:CGRectMake((SCREEN_WIDTH-(SCREEN_WIDTH*240/320))/2, (SCREEN_HEIGHT-(SCREEN_HEIGHT*183/568))/2, SCREEN_WIDTH*240/320, SCREEN_HEIGHT*183/568)];
-        shieldbgView.backgroundColor = [UIColor whiteColor];
-        shieldbgView.layer.cornerRadius = 5;
-        shieldbgView.layer.masksToBounds = YES;
-        [self.shieldBgView addSubview:shieldbgView];
+        self.shieldbgView = [[UIView alloc] initWithFrame:CGRectMake((SCREEN_WIDTH-(SCREEN_WIDTH*240/320))/2, (SCREEN_HEIGHT-(SCREEN_HEIGHT*214/568))/2, SCREEN_WIDTH*240/320, SCREEN_HEIGHT*183/568)];
+        self.shieldbgView.backgroundColor = [UIColor whiteColor];
+        self.shieldbgView.layer.cornerRadius = 8;
+        self.shieldbgView.layer.masksToBounds = YES;
+        [self.shieldBgView addSubview:self.shieldbgView];
         
-        self.shieldHeadImageView = [[UIImageView alloc] initWithFrame:CGRectMake((SCREEN_WIDTH-(SCREEN_WIDTH*70/320))/2, (SCREEN_HEIGHT-(SCREEN_HEIGHT*235/568))/2, SCREEN_WIDTH*70/320, SCREEN_WIDTH*70/320)];
+        self.shieldHeadImageView = [[UIImageView alloc] initWithFrame:CGRectMake((SCREEN_WIDTH-(SCREEN_WIDTH*56/320))/2, (SCREEN_HEIGHT-(SCREEN_HEIGHT*250/568))/2, SCREEN_WIDTH*56/320, SCREEN_WIDTH*56/320)];
         self.shieldHeadImageView.layer.cornerRadius = self.shieldHeadImageView.frame.size.width/2;
         self.shieldHeadImageView.layer.masksToBounds = YES;
         [self.shieldBgView addSubview:self.shieldHeadImageView];
         
-        self.shieldTipLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*25/320, SCREEN_HEIGHT*50/568, SCREEN_WIDTH*190/320, SCREEN_HEIGHT*60/568)];
-        self.shieldTipLabel.font = [UIFont systemFontOfSize:18];
-        self.shieldTipLabel.numberOfLines = 2;
-        self.shieldTipLabel.textAlignment = NSTextAlignmentCenter;
-        [shieldbgView addSubview:self.shieldTipLabel];
+        UILabel *shieldBeforeLabel = [[UILabel alloc] init];
+        shieldBeforeLabel.frame = CGRectMake(SCREEN_WIDTH*25/320, SCREEN_HEIGHT*52/568, SCREEN_WIDTH*190/320, SCREEN_HEIGHT*30/568);
+        shieldBeforeLabel.text = @"Are you sure you want to";
+        shieldBeforeLabel.font = [UIFont fontWithName:@"ProximaNova-Light" size:SCREEN_WIDTH*17/320];
+        [self.shieldbgView addSubview:shieldBeforeLabel];
         
-        UIButton *cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(0, shieldbgView.frame.size.height-(SCREEN_HEIGHT*45/568), SCREEN_WIDTH*119.5/320, SCREEN_HEIGHT*45/568)];
+        self.shieldTipLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*25/320, SCREEN_HEIGHT*82/568, SCREEN_WIDTH*190/320, SCREEN_HEIGHT*30/568)];
+        self.shieldTipLabel.font = [UIFont fontWithName:@"ProximaNova-Light" size:SCREEN_WIDTH*17/320];
+        [self.shieldbgView addSubview:self.shieldTipLabel];
+        
+        UIButton *cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(0, self.shieldbgView.frame.size.height-(SCREEN_HEIGHT*45/568), SCREEN_WIDTH*119.5/320, SCREEN_HEIGHT*45/568)];
         cancelButton.backgroundColor = [UIColor colorWithRed:0/255.0 green:143/255.0 blue:255/255.0 alpha:1];
         [cancelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [cancelButton setTitle:@"No" forState:UIControlStateNormal];
+        cancelButton.titleLabel.font = [UIFont fontWithName:@"ProximaNova-Regular" size:24];
         [cancelButton addTarget:self action:@selector(onCancelBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-        [shieldbgView addSubview:cancelButton];
+        [self.shieldbgView addSubview:cancelButton];
         
         UIButton *okButton = [[UIButton alloc] initWithFrame:CGRectMake(cancelButton.frame.origin.x+cancelButton.frame.size.width+1, cancelButton.frame.origin.y, SCREEN_WIDTH*119.5/320, SCREEN_HEIGHT*45/568)];
         okButton.backgroundColor = [UIColor colorWithRed:0/255.0 green:143/255.0 blue:255/255.0 alpha:1];
         [okButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [okButton setTitle:@"Yes" forState:UIControlStateNormal];
+        okButton.titleLabel.font = [UIFont fontWithName:@"ProximaNova-Regular" size:24];
         [okButton addTarget:self action:@selector(onYesBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-        [shieldbgView addSubview:okButton];
+        [self.shieldbgView addSubview:okButton];
         
         
         userInfomationData.refushStr = @"no";
@@ -383,11 +384,12 @@
 //录音开始，预加载一条语音
 - (void)startRecordAudio
 {
-    NSString *roomId = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
-    [self.myAppDelegate insertCoreDataxx:[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID] avatarImage:[[NSUserDefaults standardUserDefaults] objectForKey:USER_AVATAR_URL] roomId:roomId time:@0 message:@"100" messageId:@"99999999999999999" fromUserName:[[NSUserDefaults standardUserDefaults] objectForKey:USER_NAME]];
-    NSLog(@"xxxxcx---mockview-%@===%@",roomId,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID]);
-    //如果是用户自己发的信息，则跳转到底部
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+    userInfomationData.yuMessageId ++;
+    NSString *roomId = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
+    [self.myAppDelegate insertCoreDataxx:[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID] avatarImage:[[NSUserDefaults standardUserDefaults] objectForKey:USER_AVATAR_URL] roomId:roomId time:@0 message:@"100" messageId:[NSString stringWithFormat:@"%lld",userInfomationData.yuMessageId] fromUserName:[[NSUserDefaults standardUserDefaults] objectForKey:USER_NAME]];
+    NSLog(@"xxxxcx---mockview-%@===%@--- %lld",roomId,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID],userInfomationData.yuMessageId);
+    //如果是用户自己发的信息，则跳转到底部
     userInfomationData.refushStr = @"no";
     [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
 }
@@ -401,7 +403,7 @@
     time = [mic.time floatValue];
     if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"isSelectShield"] integerValue] == 0) {
         
-        if ([mic.time floatValue]>0.5) {
+        if ([mic.time floatValue]>0.1) {
             //在播放之前，暂停所有的播放
             [self recordOrExchangeChatRoomStopAnimation];
             [userInfomationData.recordAudio saveRecord:mic.message messageId:mic.messageId];
@@ -466,10 +468,12 @@
             UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
             userInfomationData.shieldUserId = mic.userId;
             userInfomationData.shieldRoomId = mic.roomId;
+            
             [UIView animateWithDuration:0.5 animations:^{
                 self.shieldBgView.alpha = 1.0;
                 [self.shieldHeadImageView sd_setImageWithURL:mic.avatarImage placeholderImage:[UIImage imageNamed:@"171604419.jpg"]];
-                self.shieldTipLabel.text = [NSString stringWithFormat:@"Are you sure you want to block %@.?",mic.fromUserName];
+                self.shieldTipLabel.text = [NSString stringWithFormat:@"block %@.?",mic.fromUserName];
+                
             } completion:^(BOOL finished) {
             }];
         }

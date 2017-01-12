@@ -64,7 +64,7 @@
 - (void)joinRoom:(NSString *)roomId;
 
 //在聊天室内，发送消息
-- (void)sendMessageInRoom:(NSString *)messgae roomId:(NSString *)roomIdContent messageType:(NSInteger)messageType;
+- (void)sendMessageInRoom:(NSString *)messgae roomId:(NSString *)roomIdContent messageType:(NSInteger)messageType messageId:(NSString *)messageIdx;
 
 //进入聊天室时，获取历史消息
 - (void)getMessageInRoom:(NSString *)lastMessageId roomId:(NSString *)roomIdContent;

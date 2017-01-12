@@ -27,7 +27,6 @@
         [self addSubview:self.ceHuaIconImageView];
         
         self.ceHuaTitleLabel = [[UILabel alloc] init];
-        self.ceHuaTitleLabel.font = [UIFont systemFontOfSize:25];
         [self addSubview:self.ceHuaTitleLabel];
     }
     return self;

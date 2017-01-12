@@ -84,7 +84,7 @@
         [passbtn addTarget:self action:@selector(dismissGuideView) forControlEvents:(UIControlEventTouchUpInside)];
         passbtn.backgroundColor = [UIColor clearColor];
         [passbtn.titleLabel setFont:[UIFont systemFontOfSize:25]];
-        passbtn.titleLabel.font = [UIFont fontWithName:@"ProximaNova-Regular.otf" size:45.f];
+        passbtn.titleLabel.font = [UIFont fontWithName:@"ProximaNova-Regular" size:45.f];
         [passbtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         NSString *title;
         switch (i) {

@@ -607,7 +607,10 @@
             blockSelf.dismissAnimationCompletion();
         }
         
-        [blockSelf.hud removeFromSuperview];
+        if (blockSelf.hud != nil) {
+            [blockSelf.hud removeFromSuperview];
+        }
+        
         
         blockSelf.queuedDismissAnimation = nil;
         

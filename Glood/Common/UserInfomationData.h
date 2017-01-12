@@ -50,6 +50,8 @@
 
 @property (strong, nonatomic) id hubConnection; //保存SRHubConnection对象
 
+@property (strong, nonatomic) NSMutableArray *waitingSendMessageQunenMutableArr; //等待发送的消息数组对象
 @property (strong, nonatomic) NSDictionary *waitingSendMessageQunenMutableDic; //等待发送的消息队列对象
+@property (assign, nonatomic) long long yuMessageId; //预设一个初始的messageId
 
 @end

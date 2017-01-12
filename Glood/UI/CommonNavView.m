@@ -32,7 +32,7 @@
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*80/320, SCREEN_HEIGHT*10/568, SCREEN_WIDTH*160/320, SCREEN_HEIGHT*36/568)];
         self.titleLabel.text = @"Communities";
         self.titleLabel.textAlignment = NSTextAlignmentCenter;
-        self.titleLabel.font = [UIFont fontWithName:@"ProximaNova-Light.otf" size:17];
+        self.titleLabel.font = [UIFont fontWithName:@"ProximaNova-Light" size:17];
         self.titleLabel.textColor = [UIColor colorWithRed:115/255.0 green:113/255.0 blue:114/255.0 alpha:1.0];
         [self.topBgView addSubview:self.titleLabel];
         

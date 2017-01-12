@@ -12,6 +12,8 @@
 #import "ShowMessage.h"
 #import "MMProgressHUD.h"
 #import "AppDelegate.h"
+#import "UserInfomationData.h"
+#import "CommonService.h"
 
 @import AVFoundation;
 @import AudioToolbox;
@@ -95,7 +97,21 @@
 
 - (void)cancelTimer
 {
-    [self.myAppDelegate deletePreLoadingMessage];
+    UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+    NSString *roomIdStr;
+    if ([CommonService isBlankString:userInfomationData.QRRoomId]) {
+        roomIdStr = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
+    }
+    else
+    {
+        for (NSInteger i = 0; i < [(NSMutableArray*)[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] count]; i ++) {
+            if ([userInfomationData.QRRoomId isEqualToString:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"id"]]) {
+                roomIdStr = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"id"];
+            }
+        }
+        
+    }
+    [self.myAppDelegate deletePreLoadingMessage:roomIdStr message:[NSString stringWithFormat:@"%lld",userInfomationData.yuMessageId]];
 }
 
 - (NSString *)stopRecoringCancel
