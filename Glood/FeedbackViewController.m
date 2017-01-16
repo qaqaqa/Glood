@@ -66,7 +66,7 @@
     [attributedString1 addAttribute:NSParagraphStyleAttributeName value:paragraphStyle1 range:NSMakeRange(0, [tipsStr length])];
     [tipsLabel setAttributedText:attributedString1];
     [tipsLabel sizeToFit];
-    [self.view addSubview:tipsLabel];
+    [self.bgView addSubview:tipsLabel];
     
     self.feedbackTextView = [[UITextView alloc] initWithFrame:CGRectMake(tipsLabel.frame.origin.x, tipsLabel.frame.origin.y+tipsLabel.frame.size.height+(SCREEN_HEIGHT*23/568), SCREEN_WIDTH*260/320, SCREEN_HEIGHT*180/568)];
     self.feedbackTextView.delegate = self;

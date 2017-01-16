@@ -40,8 +40,6 @@
         [self addSubview:self.headImageButton];
         
         self.nameLabel = [[UILabel alloc] init];
-        self.nameLabel.textColor = [UIColor blackColor];
-        self.nameLabel.font = [UIFont systemFontOfSize:12];
         self.nameLabel.textAlignment = NSTextAlignmentCenter;
         [self addSubview:self.nameLabel];
 

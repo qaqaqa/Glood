@@ -115,7 +115,7 @@
     [self.view addSubview:self.mockView];
     
     [self.hFlowView removeFromSuperview];
-    self.hFlowView = [[PagedFlowView alloc] initWithFrame:CGRectMake(0, commonNavView.frame.size.height+commonNavView.frame.origin.y-15, SCREEN_WIDTH, SCREEN_HEIGHT-commonNavView.frame.size.height)];
+    self.hFlowView = [[PagedFlowView alloc] initWithFrame:CGRectMake(0, commonNavView.frame.size.height+commonNavView.frame.origin.y-20, SCREEN_WIDTH, SCREEN_HEIGHT-commonNavView.frame.size.height)];
     self.hFlowView.delegate = self;
     self.hFlowView.dataSource = self;
     self.hFlowView.minimumPageAlpha = 0.1 ;
@@ -166,6 +166,7 @@
     self.navtitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*60/320, SCREEN_HEIGHT*12/568, SCREEN_WIDTH*200/320, SCREEN_HEIGHT*36/568)];
     self.navtitleLabel.text = @"Communities";
     self.navtitleLabel.textAlignment = NSTextAlignmentCenter;
+    self.navtitleLabel.textColor = [UIColor colorWithRed:57/255.0 green:66/255.0 blue:57/255.0 alpha:1.0];
     self.navtitleLabel.font = [UIFont fontWithName:@"ProximaNova-Regular" size:17];
     [self.view addSubview:self.navtitleLabel];
     
@@ -1039,7 +1040,7 @@
     
     self.view.userInteractionEnabled = NO;
     
-    self.cgAffineTransformMakeScale = 1.3;
+    self.cgAffineTransformMakeScale = 1.41;
     //进入聊天室列表
     NSMutableArray *monthMutableArr = [[NSMutableArray alloc] initWithObjects:@"JAN",@"FEB",@"MAR",@"APR",@"MAY",@"JUN",@"JUL",@"AUG",@"SEP",@"OCT",@"NOV",@"DEC", nil];
     
@@ -1086,13 +1087,13 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
     [UIView animateWithDuration:2.5 animations:^{
         self.mockView.lastBgView.alpha = 0;
-        self.mockView.tableView.frame = CGRectMake((SCREEN_WIDTH-(SCREEN_WIDTH*260/320))/2,SCREEN_HEIGHT*225/568,SCREEN_WIDTH*260/320,SCREEN_HEIGHT*220/568);
-        self.mockView.lastBgView.transform = CGAffineTransformMakeScale(self.cgAffineTransformMakeScale, self.cgAffineTransformMakeScale);
+        self.mockView.tableView.frame = CGRectMake((SCREEN_WIDTH-(SCREEN_WIDTH*260/320))/2,SCREEN_HEIGHT*220/568,SCREEN_WIDTH*260/320,SCREEN_HEIGHT*220/568);
+        self.mockView.lastBgView.transform = CGAffineTransformMakeScale(1.32, 1.32);
         self.mockView.tableView.transform = CGAffineTransformMakeScale(self.cgAffineTransformMakeScale, self.cgAffineTransformMakeScale);
         self.mockView.refreshView.frame = CGRectMake(0,-40,SCREEN_WIDTH*260/320,46);
         self.mockView.refreshView.backgroundColor = [UIColor clearColor];
         self.mockView.refreshView.transform = CGAffineTransformMakeScale(self.cgAffineTransformMakeScale, self.cgAffineTransformMakeScale);
-        self.mockView.micTableViewCell.nameLabel.alpha = 1;
+        
         
     } completion:^(BOOL finished) {
         
@@ -1115,6 +1116,7 @@
             self.micTopImageView.alpha = 1;
             self.micShieldButton.alpha = 1;
             self.micPlayerStatesImageView.alpha = 1;
+            self.mockView.micTableViewCell.nameLabel.alpha = 1;
             self.view.userInteractionEnabled = YES;
             
         } completion:^(BOOL finished) {

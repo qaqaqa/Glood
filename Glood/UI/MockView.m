@@ -65,25 +65,25 @@
         self.bgView.layer.masksToBounds = YES;
         [self.lastBgView addSubview:self.bgView];
         
-        UIView *topBgView = [[UIView alloc] initWithFrame:CGRectMake(1, 1, self.bgView.frame.size.width-2, SCREEN_HEIGHT*100/568)];
+        UIView *topBgView = [[UIView alloc] initWithFrame:CGRectMake(1.5, 1.5, self.bgView.frame.size.width-3, SCREEN_HEIGHT*100/568)];
         topBgView.backgroundColor = [UIColor whiteColor];
         topBgView.layer.cornerRadius = 5;
         topBgView.layer.masksToBounds = YES;
         [self.bgView addSubview:topBgView];
         
-        self.topImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.bgView.frame.size.width-2, SCREEN_HEIGHT*90/568)];
+        self.topImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.bgView.frame.size.width-2, SCREEN_HEIGHT*81/568)];
         [topBgView addSubview:self.topImageView];
         
         self.monthLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*15/320, self.topImageView.frame.size.height+self.topImageView.frame.origin.y+SCREEN_WIDTH*10/320, SCREEN_WIDTH*40/320, SCREEN_HEIGHT*25/568)];
         self.monthLabel.textAlignment = NSTextAlignmentLeft;
         //        monthLabel.text = [NSString stringWithFormat:@"%@",monthStr];
-        self.monthLabel.font = [UIFont boldSystemFontOfSize:13];
+        self.monthLabel.font = [UIFont fontWithName:@"ProximaNova-Semibold" size:13];
         [self.bgView addSubview:self.monthLabel];
         
-        self.dayLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.monthLabel.frame.origin.x, self.monthLabel.frame.size.height+self.monthLabel.frame.origin.y, SCREEN_WIDTH*40/320, SCREEN_HEIGHT*25/568)];
+        self.dayLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.monthLabel.frame.origin.x, self.monthLabel.frame.size.height+self.monthLabel.frame.origin.y-5, SCREEN_WIDTH*40/320, SCREEN_HEIGHT*25/568)];
         self.dayLabel.textAlignment = NSTextAlignmentLeft;
         //        dayLabel.text = [NSString stringWithFormat:@"%@",dayStr];
-        self.dayLabel.font = [UIFont boldSystemFontOfSize:25];
+        self.dayLabel.font = [UIFont fontWithName:@"ProximaNova-Semibold" size:22];
         [self.bgView addSubview:self.dayLabel];
         
         self.eventNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.monthLabel.frame.origin.x+self.monthLabel.frame.size.width-5, self.monthLabel.frame.origin.y, SCREEN_WIDTH*220/320, SCREEN_HEIGHT*25/568)];
@@ -96,7 +96,7 @@
         infoButton.backgroundColor = [UIColor whiteColor];
         [infoButton setTitle:@"info" forState:UIControlStateNormal];
         [infoButton setTitleColor:[UIColor colorWithRed:0/255.0 green:130/255.0 blue:255/255.0 alpha:1.0] forState:UIControlStateNormal];
-        infoButton.titleLabel.font = [UIFont systemFontOfSize:16];
+        infoButton.titleLabel.font = [UIFont fontWithName:@"ProximaNova-Regular" size:16];
         infoButton.layer.cornerRadius =(SCREEN_WIDTH*24/SCREEN_WIDTH)/2;
         infoButton.layer.masksToBounds = YES;
         infoButton.layer.borderWidth = 1;
@@ -111,22 +111,22 @@
         checkInButton.backgroundColor = [UIColor colorWithRed:0/255.0 green:130/255.0 blue:255/255.0 alpha:1.0];
         [checkInButton setTitle:@"check-in" forState:UIControlStateNormal];
         [checkInButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        checkInButton.titleLabel.font = [UIFont systemFontOfSize:16];
+        checkInButton.titleLabel.font = [UIFont fontWithName:@"ProximaNova-Regular" size:16];
         checkInButton.layer.cornerRadius =(SCREEN_WIDTH*24/SCREEN_WIDTH)/2;
         checkInButton.layer.masksToBounds = YES;
         checkInButton.titleLabel.textAlignment = NSTextAlignmentCenter;
         [checkInButton addTarget:self action:@selector(onCheckInClick:) forControlEvents:UIControlEventTouchUpInside];
         [self.bgView addSubview:checkInButton];
         
-        self.tableView = [[UITableView alloc] initWithFrame:CGRectMake((SCREEN_WIDTH-(SCREEN_WIDTH*260/320))/2,SCREEN_HEIGHT*275/568,SCREEN_WIDTH*260/320,SCREEN_HEIGHT*220/568)];
+        self.tableView = [[UITableView alloc] initWithFrame:CGRectMake((SCREEN_WIDTH-(SCREEN_WIDTH*260/320))/2,SCREEN_HEIGHT*260/568,SCREEN_WIDTH*260/320,SCREEN_HEIGHT*220/568)];
         self.tableView.backgroundColor = [UIColor clearColor];
         self.tableView.dataSource = self;
         self.tableView.delegate = self;
         self.tableView.alwaysBounceVertical = YES;
         self.tableView.allowsSelection = NO;
-        [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
         self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-//        self.tableView.separatorInset = UIEdgeInsetsMake(15, 0, 15, 0);
+        self.tableView.separatorInset = UIEdgeInsetsMake(15, 0, 15, 0);
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         [self addSubview:self.tableView];
         
         __weak typeof(self) wself = self;
@@ -302,6 +302,7 @@
     self.micTableViewCell.nameLabel.frame = CGRectMake(0, SCREEN_WIDTH*35/320-5, SCREEN_WIDTH*260/320, 35);
     self.micTableViewCell.nameLabel.tag = nameLabelTag+indexPath.row;
     self.micTableViewCell.nameLabel.alpha = 1;
+    self.micTableViewCell.nameLabel.font = [UIFont fontWithName:@"ProximaNova-Light" size:10];
     //    self.micTableViewCell.nameLabel.text = @"Li Lei";
     
     self.micTableViewCell.circleOneImageView.frame = self.micTableViewCell.headImageButton.frame;

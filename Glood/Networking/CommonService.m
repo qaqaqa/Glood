@@ -299,8 +299,8 @@
     }];
     [hubConnection setConnectionSlow:^{
         NSLog(@"Connection Slow");
-        [userInfomationData.hubConnection disconnect];
-        [[NSUserDefaults standardUserDefaults] setObject:@"closed" forKey:@"signlarStauts"];
+//        [userInfomationData.hubConnection disconnect];
+//        [[NSUserDefaults standardUserDefaults] setObject:@"closed" forKey:@"signlarStauts"];
         [self reconntionSignlar];
     }];
     [hubConnection setClosed:^{

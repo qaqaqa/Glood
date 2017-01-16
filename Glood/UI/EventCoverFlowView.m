@@ -69,13 +69,13 @@
         bgView.layer.masksToBounds = YES;
         [self addSubview:bgView];
         
-        UIView *topBgView = [[UIView alloc] initWithFrame:CGRectMake(1, 1, bgView.frame.size.width-2, SCREEN_HEIGHT*100/568)];
+        UIView *topBgView = [[UIView alloc] initWithFrame:CGRectMake(1.5, 1.5, bgView.frame.size.width-3, SCREEN_HEIGHT*100/568)];
         topBgView.backgroundColor = [UIColor whiteColor];
         topBgView.layer.cornerRadius = 5;
         topBgView.layer.masksToBounds = YES;
         [bgView addSubview:topBgView];
         
-        UIImageView *topImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, bgView.frame.size.width-2, SCREEN_HEIGHT*90/568)];
+        UIImageView *topImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, bgView.frame.size.width-2, SCREEN_HEIGHT*81/568)];
 //        [topImageView sd_setImageWithURL:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"eventIndex"] integerValue]] objectForKey:@"image_url"] placeholderImage:[UIImage imageNamed:@"event_background.jpg"]];
         [topImageView sd_setImageWithURL:[CommonClass showImage:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"eventIndex"] integerValue]] objectForKey:@"image_url"] x1:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"eventIndex"] integerValue]] objectForKey:@"image_crop_info"] objectForKey:@"x1"] y1:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"eventIndex"] integerValue]] objectForKey:@"image_crop_info"] objectForKey:@"y1"] x2:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"eventIndex"] integerValue]] objectForKey:@"image_crop_info"] objectForKey:@"x2"] y2:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"eventIndex"] integerValue]] objectForKey:@"image_crop_info"] objectForKey:@"y2"] width:[NSString stringWithFormat:@"%.f",topImageView.frame.size.width*2]] placeholderImage:[UIImage imageNamed:@"event_background.jpg"]];
         [topBgView addSubview:topImageView];
@@ -83,26 +83,26 @@
         UILabel *monthLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*15/320, topImageView.frame.size.height+topImageView.frame.origin.y+SCREEN_WIDTH*10/320, SCREEN_WIDTH*40/320, SCREEN_HEIGHT*25/568)];
         monthLabel.textAlignment = NSTextAlignmentLeft;
         monthLabel.text = [NSString stringWithFormat:@"%@",monthStr];
-        monthLabel.font = [UIFont boldSystemFontOfSize:13];
+        monthLabel.font = [UIFont fontWithName:@"ProximaNova-Semibold" size:13];
         [bgView addSubview:monthLabel];
         
-        UILabel *dayLabel = [[UILabel alloc] initWithFrame:CGRectMake(monthLabel.frame.origin.x, monthLabel.frame.size.height+monthLabel.frame.origin.y, SCREEN_WIDTH*40/320, SCREEN_HEIGHT*25/568)];
+        UILabel *dayLabel = [[UILabel alloc] initWithFrame:CGRectMake(monthLabel.frame.origin.x, monthLabel.frame.size.height+monthLabel.frame.origin.y-5, SCREEN_WIDTH*40/320, SCREEN_HEIGHT*25/568)];
         dayLabel.textAlignment = NSTextAlignmentLeft;
         dayLabel.text = [NSString stringWithFormat:@"%@",dayStr];
-        dayLabel.font = [UIFont boldSystemFontOfSize:25];
+        dayLabel.font = [UIFont fontWithName:@"ProximaNova-Semibold" size:22];
         [bgView addSubview:dayLabel];
         
-        UILabel *eventNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(monthLabel.frame.origin.x+monthLabel.frame.size.width-5, monthLabel.frame.origin.y, SCREEN_WIDTH*220/320, SCREEN_HEIGHT*25/568)];
+        UILabel *eventNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(monthLabel.frame.origin.x+monthLabel.frame.size.width-8, monthLabel.frame.origin.y, SCREEN_WIDTH*220/320, SCREEN_HEIGHT*25/568)];
         eventNameLabel.textAlignment = NSTextAlignmentLeft;
         eventNameLabel.text = [NSString stringWithFormat:@"%@",[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"eventIndex"] integerValue]] objectForKey:@"name"]];
-        eventNameLabel.font = [UIFont boldSystemFontOfSize:15];
+        eventNameLabel.font = [UIFont fontWithName:@"ProximaNova-Semibold" size:16];
         [bgView addSubview:eventNameLabel];
         
         self.infoButton = [[UIButton alloc] initWithFrame:CGRectMake(monthLabel.frame.origin.x+2, dayLabel.frame.origin.y+dayLabel.frame.size.height+5, SCREEN_WIDTH*83/320, SCREEN_WIDTH*24/SCREEN_WIDTH)];
         self.infoButton.backgroundColor = [UIColor whiteColor];
         [self.infoButton setTitle:@"info" forState:UIControlStateNormal];
         [self.infoButton setTitleColor:[UIColor colorWithRed:0/255.0 green:130/255.0 blue:255/255.0 alpha:1.0] forState:UIControlStateNormal];
-        self.infoButton.titleLabel.font = [UIFont systemFontOfSize:16];
+        self.infoButton.titleLabel.font = [UIFont fontWithName:@"ProximaNova-Regular" size:16];
         self.infoButton.layer.cornerRadius =(SCREEN_WIDTH*24/SCREEN_WIDTH)/2;
         self.infoButton.layer.masksToBounds = YES;
         self.infoButton.layer.borderWidth = 1;
@@ -117,7 +117,7 @@
         self.checkInButton.backgroundColor = [UIColor colorWithRed:0/255.0 green:130/255.0 blue:255/255.0 alpha:1.0];
         [self.checkInButton setTitle:@"check-in" forState:UIControlStateNormal];
         [self.checkInButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        self.checkInButton.titleLabel.font = [UIFont systemFontOfSize:16];
+        self.checkInButton.titleLabel.font = [UIFont fontWithName:@"ProximaNova-Regular" size:16];
         self.checkInButton.layer.cornerRadius =(SCREEN_WIDTH*24/SCREEN_WIDTH)/2;
         self.checkInButton.layer.masksToBounds = YES;
         self.checkInButton.titleLabel.textAlignment = NSTextAlignmentCenter;
@@ -151,7 +151,7 @@
             
             [userInfomationData.isGetMicListMutableArr addObject:roomId];
         }
-        self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0,self.infoButton.frame.size.height+self.infoButton.frame.origin.y+SCREEN_HEIGHT*20/568,bgView.frame.size.width,SCREEN_HEIGHT*235/568)];
+        self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0,self.infoButton.frame.size.height+self.infoButton.frame.origin.y+SCREEN_HEIGHT*30/568,bgView.frame.size.width,SCREEN_HEIGHT*235/568)];
         self.tableView.dataSource = self;
         self.tableView.delegate = self;
         self.tableView.bounces = NO;
@@ -198,7 +198,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return SCREEN_HEIGHT*55/568;
+    return SCREEN_HEIGHT*61/568;
 }
 
 #define headImageButtonTag 10001
