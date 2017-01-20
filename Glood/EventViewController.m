@@ -222,45 +222,50 @@
 #pragma mark ========== left more button ========
 - (void)onLeftBtnClick
 {
-    NSLog(@"left");
-    //侧滑菜单栏
-    [self.cehuaView removeFromSuperview];
-    self.cehuaView = [[UIView alloc] initWithFrame:CGRectMake(-SCREEN_WIDTH, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
-    self.cehuaView.backgroundColor = [UIColor clearColor];
-    [self.view addSubview:self.cehuaView];
+    if (self.mockView.shieldBgButton.alpha != 1.0) {
+        NSLog(@"left");
+        //侧滑菜单栏
+        [self.cehuaView removeFromSuperview];
+        self.cehuaView = [[UIView alloc] initWithFrame:CGRectMake(-SCREEN_WIDTH, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+        self.cehuaView.backgroundColor = [UIColor clearColor];
+        [self.view addSubview:self.cehuaView];
+        
+        CeHuaView *ceHuav = [[CeHuaView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+        [self.cehuaView addSubview:ceHuav];
+        
+        UIButton *ceHuaMoreButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*34/320)-32, SCREEN_HEIGHT*15/568, SCREEN_WIDTH*34/320, SCREEN_HEIGHT*36/568)];
+        [ceHuaMoreButton setImage:[UIImage imageNamed:@"menu"] forState:UIControlStateNormal];
+        [ceHuaMoreButton addTarget:self action:@selector(onCeHuaMoreBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+        [self.cehuaView addSubview:ceHuaMoreButton];
+        
+        UIButton *largeLeftButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*34/320)-40, 0, SCREEN_WIDTH*54/320, SCREEN_HEIGHT*56/568)];
+        [largeLeftButton addTarget:self action:@selector(onCeHuaMoreBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+        largeLeftButton.backgroundColor = [UIColor clearColor];
+        [self.cehuaView addSubview:largeLeftButton];
+        
+        [UIView animateWithDuration:0.5 animations:^{
+            self.cehuaView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+        } completion:^(BOOL finished) {
+        }];
+    }
     
-    CeHuaView *ceHuav = [[CeHuaView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
-    [self.cehuaView addSubview:ceHuav];
-    
-    UIButton *ceHuaMoreButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*34/320)-32, SCREEN_HEIGHT*15/568, SCREEN_WIDTH*34/320, SCREEN_HEIGHT*36/568)];
-    [ceHuaMoreButton setImage:[UIImage imageNamed:@"menu"] forState:UIControlStateNormal];
-    [ceHuaMoreButton addTarget:self action:@selector(onCeHuaMoreBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-    [self.cehuaView addSubview:ceHuaMoreButton];
-    
-    UIButton *largeLeftButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*34/320)-40, 0, SCREEN_WIDTH*54/320, SCREEN_HEIGHT*56/568)];
-    [largeLeftButton addTarget:self action:@selector(onCeHuaMoreBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-    largeLeftButton.backgroundColor = [UIColor clearColor];
-    [self.cehuaView addSubview:largeLeftButton];
-    
-    [UIView animateWithDuration:0.5 animations:^{
-        self.cehuaView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-    } completion:^(BOOL finished) {
-    }];
 }
 
 #pragma mark ========== right eventlist button ========
 - (void)onRightBtnClick:(id)sender
 {
-    NSLog(@"rigth");
-    self.rightButton.userInteractionEnabled = NO;
-    self.eventListView = [[EventListView alloc] initWithFrame:CGRectMake(0, -SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT)];
-    self.eventListView.delegate = self;
-    [self.view addSubview:self.eventListView];
-    [UIView animateWithDuration:0.5 animations:^{
-        self.eventListView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-    } completion:^(BOOL finished) {
-        self.rightButton.userInteractionEnabled = YES;
-    }];
+    if (self.mockView.shieldBgButton.alpha != 1.0) {
+        NSLog(@"rigth");
+        self.rightButton.userInteractionEnabled = NO;
+        self.eventListView = [[EventListView alloc] initWithFrame:CGRectMake(0, -SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT)];
+        self.eventListView.delegate = self;
+        [self.view addSubview:self.eventListView];
+        [UIView animateWithDuration:0.5 animations:^{
+            self.eventListView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+        } completion:^(BOOL finished) {
+            self.rightButton.userInteractionEnabled = YES;
+        }];
+    }
 }
 
 #pragma mark ========== 活动卡片页面，点击语音头像 =========
@@ -1139,8 +1144,6 @@
 
 - (void)exchangeChatRoom
 {
-    //在屏蔽view弹出的情况下，切换聊天室
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"hiddenShieldView" object:self];
     //切换聊天室时，取消屏蔽
     [[NSUserDefaults standardUserDefaults] setBool:false forKey:@"isSelectShield"];
     [self.micShieldButton setImage:[UIImage imageNamed:@"people.png"] forState:UIControlStateNormal];

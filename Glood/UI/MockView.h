@@ -25,9 +25,10 @@
 @property (retain, nonatomic) UILabel *eventNameLabel;
 
 
-@property (strong, nonatomic) UIView *shieldBgView;
+@property (strong, nonatomic) UIButton *shieldBgButton;
 @property (strong, nonatomic) UIImageView *shieldHeadImageView;
 @property (strong, nonatomic) UILabel *shieldTipLabel;
+@property (retain, nonatomic) UIView *shieldbgView;
 
 @property (strong, nonatomic) NSMutableArray *historyMicListArr;
 //@property (strong, nonatomic) CommonService *commonService;
@@ -42,8 +43,6 @@
 
 - (void)addNSNotificationCenter;
 - (void)deallocNSNotificationCenter;
-
-- (void)hiddenShieldView;
 
 
 @end

@@ -21,7 +21,7 @@
 @property (retain, nonatomic) EventViewController *eventViewVC;
 @property (assign, nonatomic) NSInteger upHeadButtonTag;
 @property (strong, nonatomic) AppDelegate *myAppDelegate;
-@property (retain, nonatomic) UIView *shieldbgView;
+
 
 @end
 
@@ -148,21 +148,22 @@
         self.refreshView.tintColor = redColor;
         self.refreshView.backgroundColor = [UIColor clearColor];
         
-        self.shieldBgView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
-        self.shieldBgView.backgroundColor =[UIColor clearColor];
-        self.shieldBgView.alpha = 0;
-        [self addSubview:self.shieldBgView];
+        self.shieldBgButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+        self.shieldBgButton.backgroundColor =[UIColor clearColor];
+        [self.shieldBgButton addTarget:self action:@selector(onCancelBtnClick) forControlEvents:UIControlEventTouchUpInside];
+        self.shieldBgButton.alpha = 0;
+        [self addSubview:self.shieldBgButton];
         
         self.shieldbgView = [[UIView alloc] initWithFrame:CGRectMake((SCREEN_WIDTH-(SCREEN_WIDTH*240/320))/2, (SCREEN_HEIGHT-(SCREEN_HEIGHT*214/568))/2, SCREEN_WIDTH*240/320, SCREEN_HEIGHT*183/568)];
         self.shieldbgView.backgroundColor = [UIColor whiteColor];
         self.shieldbgView.layer.cornerRadius = 8;
         self.shieldbgView.layer.masksToBounds = YES;
-        [self.shieldBgView addSubview:self.shieldbgView];
+        [self.shieldBgButton addSubview:self.shieldbgView];
         
         self.shieldHeadImageView = [[UIImageView alloc] initWithFrame:CGRectMake((SCREEN_WIDTH-(SCREEN_WIDTH*56/320))/2, (SCREEN_HEIGHT-(SCREEN_HEIGHT*250/568))/2, SCREEN_WIDTH*56/320, SCREEN_WIDTH*56/320)];
         self.shieldHeadImageView.layer.cornerRadius = self.shieldHeadImageView.frame.size.width/2;
         self.shieldHeadImageView.layer.masksToBounds = YES;
-        [self.shieldBgView addSubview:self.shieldHeadImageView];
+        [self.shieldBgButton addSubview:self.shieldHeadImageView];
         
         UILabel *shieldBeforeLabel = [[UILabel alloc] init];
         shieldBeforeLabel.frame = CGRectMake(SCREEN_WIDTH*25/320, SCREEN_HEIGHT*52/568, SCREEN_WIDTH*190/320, SCREEN_HEIGHT*30/568);
@@ -204,7 +205,6 @@
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(sendMessageScu)name:@"sendMessageScu"object:nil];
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(recordOrExchangeChatRoomStopAnimation)name:@"recordOrExchangeChatRoomStopAnimation"object:nil];
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(startRecordAudio)name:@"startRecordAudio"object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(onHiddenShieldView)name:@"hiddenShieldView"object:nil];
 }
 
 - (void)deallocNSNotificationCenter
@@ -215,7 +215,6 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"sendMessageScu" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"recordOrExchangeChatRoomStopAnimation" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"startRecordAudio" object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"hiddenShieldView" object:nil];
 }
 
 - (void)beginRefreshingxx
@@ -332,11 +331,6 @@
     return self.micTableViewCell;
 }
 
-- (void)onHiddenShieldView
-{
-    [self onCancelBtnClick];
-}
-
 - (void)onCancelBtnClick
 {
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
@@ -372,7 +366,7 @@
 - (void)hiddenShieldView
 {
     [UIView animateWithDuration:0.5 animations:^{
-        self.shieldBgView.alpha = 0.0;
+        self.shieldBgButton.alpha = 0.0;
     } completion:^(BOOL finished) {
     }];
 }
@@ -485,7 +479,7 @@
             userInfomationData.shieldRoomId = mic.roomId;
             
             [UIView animateWithDuration:0.5 animations:^{
-                self.shieldBgView.alpha = 1.0;
+                self.shieldBgButton.alpha = 1.0;
                 [self.shieldHeadImageView sd_setImageWithURL:mic.avatarImage placeholderImage:[UIImage imageNamed:@"171604419.jpg"]];
                 self.shieldTipLabel.text = [NSString stringWithFormat:@"block %@.?",mic.fromUserName];
                 
