@@ -462,6 +462,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"getMicHistoryList" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"shield" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"yesShield" object:nil];
+    
     [self.mockView deallocNSNotificationCenter];
 }
 
@@ -481,6 +482,7 @@
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(onCoverFlowViewHeadBtnClick)name:@"onCoverFlowViewHeadBtnClick"object:nil];
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(getMicHistoryList)name:@"getMicHistoryList"object:nil];
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(getYesShield)name:@"yesShield"object:nil];
+    
     
     [self.mockView addNSNotificationCenter];
     
@@ -599,6 +601,7 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:@"recordOrExchangeChatRoomStopAnimation" object:self];
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
     userInfomationData.refreshCount = 0;
+    userInfomationData.mockViewNameLabelIsHiddenStr = @"no";
     userInfomationData.currtentRoomIdStr = @"";
     if ([userInfomationData.isEnterMicList isEqualToString:@"true"]) {
 //        userInfomationData.historyMicArr = [[NSMutableArray alloc] initWithCapacity:10];
@@ -1023,6 +1026,7 @@
     });
 }
 
+#define nameLabelTag 20001
 //进入聊天室场景
 - (void)pushChatRoom
 {
@@ -1117,11 +1121,16 @@
             self.micTopImageView.alpha = 1;
             self.micShieldButton.alpha = 1;
             self.micPlayerStatesImageView.alpha = 1;
-            self.mockView.micTableViewCell.nameLabel.alpha = 1;
+            for (NSInteger i = 0; i < 20; i++) {
+                UILabel *find_nameLabel = (UILabel *)[self.mockView viewWithTag:nameLabelTag+i];
+                find_nameLabel.alpha = 1;
+            }
             
             self.view.userInteractionEnabled = YES;
             
         } completion:^(BOOL finished) {
+            userInfomationData.mockViewNameLabelIsHiddenStr = @"yes";
+            [self.mockView.tableView reloadData];
         }];
     }];
 }
@@ -1130,6 +1139,12 @@
 
 - (void)exchangeChatRoom
 {
+    //在屏蔽view弹出的情况下，切换聊天室
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"hiddenShieldView" object:self];
+    //切换聊天室时，取消屏蔽
+    [[NSUserDefaults standardUserDefaults] setBool:false forKey:@"isSelectShield"];
+    [self.micShieldButton setImage:[UIImage imageNamed:@"people.png"] forState:UIControlStateNormal];
+    self.soundingRecoringButton.userInteractionEnabled = YES;
     //每次进入聊天室页面检查麦克风权限是否开启
     AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeAudio];
     NSLog(@"*-*-*--*hahhah--- %ld",(long)authStatus);

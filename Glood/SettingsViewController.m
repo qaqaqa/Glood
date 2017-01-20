@@ -178,6 +178,7 @@
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
     userInfomationData.refreshCount = -1;
     userInfomationData.pushEventVCTypeStr = @"NOQR";
+    userInfomationData.mockViewNameLabelIsHiddenStr = @"no";
     EventViewController *eventVC = [[EventViewController alloc] initWithNibName:nil bundle:nil];
     [self.navigationController pushViewController:eventVC animated:YES];
 }

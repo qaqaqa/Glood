@@ -43,5 +43,7 @@
 - (void)addNSNotificationCenter;
 - (void)deallocNSNotificationCenter;
 
+- (void)hiddenShieldView;
+
 
 @end

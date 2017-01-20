@@ -179,7 +179,7 @@
         [cancelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [cancelButton setTitle:@"No" forState:UIControlStateNormal];
         cancelButton.titleLabel.font = [UIFont fontWithName:@"ProximaNova-Regular" size:24];
-        [cancelButton addTarget:self action:@selector(onCancelBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+        [cancelButton addTarget:self action:@selector(onCancelBtnClick) forControlEvents:UIControlEventTouchUpInside];
         [self.shieldbgView addSubview:cancelButton];
         
         UIButton *okButton = [[UIButton alloc] initWithFrame:CGRectMake(cancelButton.frame.origin.x+cancelButton.frame.size.width+1, cancelButton.frame.origin.y, SCREEN_WIDTH*119.5/320, SCREEN_HEIGHT*45/568)];
@@ -204,6 +204,7 @@
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(sendMessageScu)name:@"sendMessageScu"object:nil];
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(recordOrExchangeChatRoomStopAnimation)name:@"recordOrExchangeChatRoomStopAnimation"object:nil];
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(startRecordAudio)name:@"startRecordAudio"object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(onHiddenShieldView)name:@"hiddenShieldView"object:nil];
 }
 
 - (void)deallocNSNotificationCenter
@@ -214,6 +215,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"sendMessageScu" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"recordOrExchangeChatRoomStopAnimation" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"startRecordAudio" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"hiddenShieldView" object:nil];
 }
 
 - (void)beginRefreshingxx
@@ -300,7 +302,15 @@
     
     self.micTableViewCell.nameLabel.frame = CGRectMake(0, SCREEN_WIDTH*35/320-5, SCREEN_WIDTH*260/320, 35);
     self.micTableViewCell.nameLabel.tag = nameLabelTag+indexPath.row;
-    self.micTableViewCell.nameLabel.alpha = 1;
+    UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+    if ([userInfomationData.mockViewNameLabelIsHiddenStr isEqualToString:@"no"]) {
+        self.micTableViewCell.nameLabel.alpha = 0;
+    }
+    else
+    {
+        self.micTableViewCell.nameLabel.alpha = 1;
+    }
+
     self.micTableViewCell.nameLabel.font = [UIFont fontWithName:@"ProximaNova-Light" size:10];
     //    self.micTableViewCell.nameLabel.text = @"Li Lei";
     
@@ -322,7 +332,12 @@
     return self.micTableViewCell;
 }
 
-- (void)onCancelBtnClick:(id)sender
+- (void)onHiddenShieldView
+{
+    [self onCancelBtnClick];
+}
+
+- (void)onCancelBtnClick
 {
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
     userInfomationData.shieldUserId = @"";
