@@ -18,5 +18,7 @@
 //@property (retain, nonatomic) NSMutableArray *historyUserAvatarArr;
 //@property (retain, nonatomic) NSMutableArray *historyContentArr;
 
+@property (retain, nonatomic) UIView *bgViewAlpah;
+
 
 @end

@@ -126,7 +126,6 @@
         self.tableView.allowsSelection = NO;
         self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         self.tableView.separatorInset = UIEdgeInsetsMake(15, 0, 15, 0);
-        self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         [self addSubview:self.tableView];
         
         __weak typeof(self) wself = self;
@@ -144,7 +143,9 @@
                                                });
                             }
                         }];
-        self.refreshView.tintColor = [UIColor colorWithRed:0.f green:0.5 blue:1.f alpha:1.f];
+        UIColor *redColor = [UIColor colorWithRed:222/255.0 green:35/255.0 blue:73/255.0 alpha:1.f];
+        UIColor *blueColor = [UIColor colorWithRed:0.f green:0.5 blue:1.f alpha:1.f];
+        self.refreshView.tintColor = redColor;
         self.refreshView.backgroundColor = [UIColor clearColor];
         
         self.shieldBgView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
@@ -218,7 +219,6 @@
 - (void)beginRefreshingxx
 {
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
-    
     NSLog(@"begin Refreshing");
     [ShowMessage showMessage:@"begin"];
     userInfomationData.refushStr = @"yes";
@@ -252,7 +252,6 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSLog(@"xixixixixxixix======  %ld",(unsigned long)[self.historyMicListArr count]);
     return [self.historyMicListArr count];
 }
 

@@ -20,7 +20,7 @@
 
 @interface CommonService ()
 
-@property (strong, nonatomic) NSTimer *timer;
+
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (strong, nonatomic) EventViewController *eventVC;
@@ -237,7 +237,8 @@
 #pragma mark ======== 连接聊天室 =========
 - (void)connectionSignlar
 {
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:5.0
+    UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+    userInfomationData.timer = [NSTimer scheduledTimerWithTimeInterval:5.0
                                                   target:self
                                                 selector:@selector(reconntionSignlar)
                                                 userInfo:nil
@@ -247,7 +248,7 @@
               };
     SRHubConnection *hubConnection = [SRHubConnection connectionWithURLString:SIGNLAR_URL queryString:qs];
     self.chat = [hubConnection createHubProxy:@"chat"];
-    UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+    
     userInfomationData.chat = self.chat;
     userInfomationData.hubConnection = hubConnection;
     [self.chat on:@"onUserJoinRoom" perform:self selector:@selector(onUserJoinRoom:)];
@@ -301,13 +302,13 @@
         NSLog(@"Connection Slow");
 //        [userInfomationData.hubConnection disconnect];
 //        [[NSUserDefaults standardUserDefaults] setObject:@"closed" forKey:@"signlarStauts"];
-        [self reconntionSignlar];
+//        [self reconntionSignlar];
     }];
     [hubConnection setClosed:^{
         NSLog(@"Connection Closed");
         [[NSUserDefaults standardUserDefaults] setObject:@"closed" forKey:@"signlarStauts"];
         [userInfomationData.hubConnection disconnect];
-        [self reconntionSignlar];
+//        [self reconntionSignlar];
     }];
     [hubConnection setError:^(NSError *error) {
         NSLog(@"Connection Error %@",error.description);
@@ -325,7 +326,7 @@
         {
             [MMProgressHUD dismiss];
         }
-        [self reconntionSignlar];
+//        [self reconntionSignlar];
         
     }];
     hubConnection.delegate = self;
@@ -392,10 +393,11 @@
 #pragma mark ======== 断线重连 =========
 - (void)reconntionSignlar
 {
+    UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
     if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"closed"]){
 //        [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
         [MMProgressHUD showWithTitle:@"断线重连中" status:NSLocalizedString(@"Please wating", nil)];
-        [self.timer invalidate];
+        [userInfomationData.timer invalidate];
         [self connectionSignlar];
         self.reConnectionTag = @"reConnetion";
     }
@@ -661,7 +663,7 @@
 #pragma mark ======== 进入聊天室时，获取历史消息 =========
 - (void)getMessageInRoom:(NSString *)lastMessageId roomId:(NSString *)roomIdContent
 {
-    if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"open"]) {
+    if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"open"] && ![CommonService isBlankString:roomIdContent]) {
         UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
         NSLog(@"***-------  %@",roomIdContent);
         [userInfomationData.chat invoke:@"getMessagesInRoom" withArgs:@[roomIdContent,@"Audio",lastMessageId,@"20"] completionHandler:^(id response, NSError *error) {

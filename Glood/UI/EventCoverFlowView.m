@@ -17,7 +17,7 @@
 #import "AppDelegate.h"
 #import "MMProgressHUD.h"
 #import "CommonClass.h"
-
+#import "CoverFlowAlpahView.h"
 
 @interface EventCoverFlowView()
 
@@ -165,6 +165,17 @@
 //            NSIndexPath *lastPath = [NSIndexPath indexPathForRow: [self.historyMicListArr count]-1 inSection: 0 ];
 //            [self.tableView scrollToRowAtIndexPath:lastPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
 //        }
+        
+//        CoverFlowAlpahView *coverFlowAlpahView = [[CoverFlowAlpahView alloc] init];
+//        if (SCREEN_HEIGHT > 568) {
+//            coverFlowAlpahView.frame = CGRectMake(0, -10, SCREEN_WIDTH*260/320, SCREEN_HEIGHT*450/568);
+//        }
+//        else{
+//            coverFlowAlpahView.frame = CGRectMake(0, 0, SCREEN_WIDTH*260/320, SCREEN_HEIGHT*450/568);
+//        }
+//        coverFlowAlpahView.backgroundColor = [UIColor clearColor];
+//        [bgView addSubview:coverFlowAlpahView];
+        
     }
     
     return self;
@@ -198,7 +209,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return SCREEN_HEIGHT*61/568;
+    return SCREEN_HEIGHT*55/568;
 }
 
 #define headImageButtonTag 10001

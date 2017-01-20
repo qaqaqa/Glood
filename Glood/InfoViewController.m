@@ -106,7 +106,7 @@
 //    contentLabel.lineBreakMode = NSLineBreakByWordWrapping;
 //    [self.bgScrollView addSubview:contentLabel];
     
-    UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*15/320, addressLabel.frame.size.height+addressLabel.frame.origin.y+20, SCREEN_WIDTH*290/320, (SCREEN_HEIGHT*(568-250)/568)-addressSize.height-35)];
+    UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*15/320, addressLabel.frame.size.height+addressLabel.frame.origin.y+20, SCREEN_WIDTH*290/320, (SCREEN_HEIGHT*(568-300)/568)-addressSize.height-35)];
     [webView setBackgroundColor:[UIColor clearColor]];
     webView.delegate = self;
     [webView setOpaque:NO];

@@ -29,6 +29,7 @@
 #import "AppDelegate.h"
 #import "Mic.h"
 #import "CommonClass.h"
+#import "CoverFlowAlpahView.h"
 
 #define eventCoverFlowTag 500001
 @import AVFoundation;
@@ -293,6 +294,7 @@
 
 - (void)flowView:(PagedFlowView *)flowView didScrollToPageAtIndex:(NSInteger)index {
     NSLog(@"Scrolled to page # %ld", (long)index);
+    
     [[NSUserDefaults standardUserDefaults] setInteger:index forKey:@"currentIndex"];
     
     NSString *roomId = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:index] objectForKey:@"id"];
@@ -334,13 +336,10 @@
 - (UIView *)flowView:(PagedFlowView *)flowView cellForPageAtIndex:(NSInteger)index{
     [[NSUserDefaults standardUserDefaults] setInteger:index forKey:@"eventIndex"];
     EventCoverFlowView *eventCoverFlowView = (EventCoverFlowView *)[flowView dequeueReusableCell];
-//    if (!eventCoverFlowView) {
         eventCoverFlowView = [[EventCoverFlowView alloc] init];
         eventCoverFlowView.tag = eventCoverFlowTag+index;
         [eventCoverFlowView.infoButton addTarget:self action:@selector(onInfoClick:) forControlEvents:UIControlEventTouchUpInside];
         [eventCoverFlowView.checkInButton addTarget:self action:@selector(onCheckInClick:) forControlEvents:UIControlEventTouchUpInside];
-//    }
-    
     return eventCoverFlowView;
 }
 
@@ -599,6 +598,7 @@
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:@"recordOrExchangeChatRoomStopAnimation" object:self];
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+    userInfomationData.refreshCount = 0;
     userInfomationData.currtentRoomIdStr = @"";
     if ([userInfomationData.isEnterMicList isEqualToString:@"true"]) {
 //        userInfomationData.historyMicArr = [[NSMutableArray alloc] initWithCapacity:10];
@@ -631,9 +631,9 @@
         [UIView animateWithDuration:0.5 animations:^{
             self.mockView.lastBgView.transform = CGAffineTransformMakeScale(1, 1);
             self.mockView.tableView.transform = CGAffineTransformMakeScale(1, 1);
-            self.mockView.refreshView.frame = CGRectMake(0,0,SCREEN_WIDTH*260/320,46);
-            self.mockView.refreshView.backgroundColor = [UIColor clearColor];
-            self.mockView.refreshView.transform = CGAffineTransformMakeScale(1, 1);
+//            self.mockView.refreshView.frame = CGRectMake(0,0,SCREEN_WIDTH*260/320,46);
+//            self.mockView.refreshView.backgroundColor = [UIColor clearColor];
+//            self.mockView.refreshView.transform = CGAffineTransformMakeScale(1, 1);
         } completion:^(BOOL finished) {
             self.hFlowView.alpha = 1;
             
@@ -722,14 +722,15 @@
 - (void)onScrollStart
 {
     self.mockView.alpha = 0;
-    [UIView animateWithDuration:0.5 animations:^{
+    [UIView animateWithDuration:0.4 animations:^{
         self.soundingRecoringButton.alpha = 0.0;
     } completion:^(BOOL finished) {
     }];
 }
 - (void)onScrollEnd
 {
-    [UIView animateWithDuration:0.5 animations:^{
+    
+    [UIView animateWithDuration:0.4 animations:^{
         self.soundingRecoringButton.alpha = 1.0;
     } completion:^(BOOL finished) {
     }];
@@ -1090,8 +1091,8 @@
         self.mockView.tableView.frame = CGRectMake((SCREEN_WIDTH-(SCREEN_WIDTH*260/320))/2,SCREEN_HEIGHT*220/568,SCREEN_WIDTH*260/320,SCREEN_HEIGHT*220/568);
         self.mockView.lastBgView.transform = CGAffineTransformMakeScale(1.32, 1.32);
         self.mockView.tableView.transform = CGAffineTransformMakeScale(self.cgAffineTransformMakeScale, self.cgAffineTransformMakeScale);
-        self.mockView.refreshView.frame = CGRectMake(0,-40,SCREEN_WIDTH*260/320,46);
-        self.mockView.refreshView.backgroundColor = [UIColor clearColor];
+//        self.mockView.refreshView.frame = CGRectMake(0,-40,SCREEN_WIDTH*260/320,46);
+//        self.mockView.refreshView.backgroundColor = [UIColor clearColor];
         self.mockView.refreshView.transform = CGAffineTransformMakeScale(self.cgAffineTransformMakeScale, self.cgAffineTransformMakeScale);
         
         
@@ -1117,6 +1118,7 @@
             self.micShieldButton.alpha = 1;
             self.micPlayerStatesImageView.alpha = 1;
             self.mockView.micTableViewCell.nameLabel.alpha = 1;
+            
             self.view.userInteractionEnabled = YES;
             
         } completion:^(BOOL finished) {
@@ -1132,6 +1134,7 @@
     AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeAudio];
     NSLog(@"*-*-*--*hahhah--- %ld",(long)authStatus);
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+    userInfomationData.mockViewNameLabelIsHiddenStr = @"yes";
     if ((authStatus ==AVAuthorizationStatusRestricted || authStatus ==AVAuthorizationStatusDenied)) {
         [self.soundingRecoringImageView setHidden:NO];
     }

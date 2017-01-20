@@ -16,6 +16,7 @@
 		CC258BF31E10D24700491916 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CC258BF21E10D24700491916 /* Assets.xcassets */; };
 		CC258C011E10D24700491916 /* GloodTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CC258C001E10D24700491916 /* GloodTests.m */; };
 		CC258C0C1E10D24700491916 /* GloodUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = CC258C0B1E10D24700491916 /* GloodUITests.m */; };
+		CC3BB5841E2F2D0000992527 /* CoverFlowAlpahView.m in Sources */ = {isa = PBXBuildFile; fileRef = CC3BB5831E2F2D0000992527 /* CoverFlowAlpahView.m */; };
 		CC3BE4201E10D3D90034214B /* RecordAudio.m in Sources */ = {isa = PBXBuildFile; fileRef = CC3BE41D1E10D3D90034214B /* RecordAudio.m */; };
 		CC3BE4211E10D3D90034214B /* UserInfomationData.m in Sources */ = {isa = PBXBuildFile; fileRef = CC3BE41F1E10D3D90034214B /* UserInfomationData.m */; };
 		CC3BE4EF1E10D3E60034214B /* ProximaNova-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = CC3BE4231E10D3E60034214B /* ProximaNova-Bold.otf */; };
@@ -175,6 +176,8 @@
 		CC258C071E10D24700491916 /* GloodUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GloodUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC258C0B1E10D24700491916 /* GloodUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GloodUITests.m; sourceTree = "<group>"; };
 		CC258C0D1E10D24700491916 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CC3BB5821E2F2D0000992527 /* CoverFlowAlpahView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoverFlowAlpahView.h; sourceTree = "<group>"; };
+		CC3BB5831E2F2D0000992527 /* CoverFlowAlpahView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoverFlowAlpahView.m; sourceTree = "<group>"; };
 		CC3BE41B1E10D3D90034214B /* Define.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Define.h; sourceTree = "<group>"; };
 		CC3BE41C1E10D3D90034214B /* RecordAudio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecordAudio.h; sourceTree = "<group>"; };
 		CC3BE41D1E10D3D90034214B /* RecordAudio.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecordAudio.m; sourceTree = "<group>"; };
@@ -946,6 +949,8 @@
 				CC3BE4EC1E10D3E60034214B /* MockView.m */,
 				CC3BE4ED1E10D3E60034214B /* QRView.h */,
 				CC3BE4EE1E10D3E60034214B /* QRView.m */,
+				CC3BB5821E2F2D0000992527 /* CoverFlowAlpahView.h */,
+				CC3BB5831E2F2D0000992527 /* CoverFlowAlpahView.m */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -1253,6 +1258,7 @@
 				CC3BE4F81E10D3E60034214B /* JTMaterialSwitch.m in Sources */,
 				CC3BE5491E10D3E70034214B /* CommonNavView.m in Sources */,
 				CC3BE5001E10D3E60034214B /* qrspec.c in Sources */,
+				CC3BB5841E2F2D0000992527 /* CoverFlowAlpahView.m in Sources */,
 				CC3BE54E1E10D3E70034214B /* MockView.m in Sources */,
 				CC258BF11E10D24700491916 /* Glood.xcdatamodeld in Sources */,
 				CC3BE4F71E10D3E60034214B /* DALabeledCircularProgressView.m in Sources */,

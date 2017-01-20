@@ -9,6 +9,8 @@
 #import "PagedFlowView.h"
 #import <QuartzCore/QuartzCore.h>
 #import "Define.h"
+#import "EventCoverFlowView.h"
+#import "CoverFlowAlpahView.h"
 
 @interface PagedFlowView ()
 
@@ -102,7 +104,6 @@
 }
 
 - (void)refreshVisibleCellAppearance{
-    
     if (_minimumPageAlpha == 1.0 && _minimumPageScale == 1.0) {
         return;//无需更新
     }
@@ -114,17 +115,17 @@
                 UIView *cell = [_cells objectAtIndex:i];
                 CGFloat origin = cell.frame.origin.x;
                 CGFloat delta = fabs(origin - offset);
-                                                
+                
                 [UIView beginAnimations:@"CellAnimation" context:nil];
                 if (delta < _pageSize.width) {
-                    cell.alpha = 1 - (delta / _pageSize.width) * (1 - _minimumPageAlpha);
-                    
+                    cell.alpha =1 - (delta / _pageSize.width) * (1 - _minimumPageAlpha);
                     CGFloat pageScale = 1 - (delta / _pageSize.width) * (1 - _minimumPageScale);
                     cell.layer.transform = CATransform3DMakeScale(pageScale, pageScale, 1);
                 } else {
                     cell.alpha = _minimumPageAlpha;
                     cell.layer.transform = CATransform3DMakeScale(_minimumPageScale, _minimumPageScale, 1);
                 }
+                
                 [UIView commitAnimations];
             }
             break;   
@@ -457,9 +458,7 @@
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
     //如果有PageControl，计算出当前页码，并对pageControl进行更新
-    
     NSInteger pageIndex;
-    NSLog(@"x-*-x*-df*-*------ %f----%f---%f",_pageSize.width,_scrollView.contentOffset.x,_scrollView.contentOffset.x/_pageSize.width);
     switch (orientation) {
         case PagedFlowViewOrientationHorizontal:
             pageIndex = round(MAX(_scrollView.contentOffset.x, 0) / _pageSize.width);

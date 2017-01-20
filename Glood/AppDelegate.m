@@ -43,6 +43,7 @@
     userInfomationData.commonService = self.commonService;
     userInfomationData.recordAudio = self.recordAudio;
     userInfomationData.micMockListPageIndex = 1; //每次进入应用程序时，当前分页置为0
+    userInfomationData.mockViewNameLabelIsHiddenStr = @"no";
     
     [[UIApplication sharedApplication] setStatusBarHidden: YES];
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];

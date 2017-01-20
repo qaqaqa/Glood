@@ -54,4 +54,10 @@
 @property (strong, nonatomic) NSDictionary *waitingSendMessageQunenMutableDic; //等待发送的消息队列对象
 @property (assign, nonatomic) long long yuMessageId; //预设一个初始的messageId
 
+@property (strong, nonatomic) NSString *mockViewNameLabelIsHiddenStr; //mock tableview cell是否显示发送语音消息的姓名
+
+@property (assign, nonatomic) NSInteger refreshCount; //下拉加载更多的circle
+
+@property (retain, nonatomic) NSTimer *timer; //断线重连计时器
+
 @end

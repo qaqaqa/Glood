@@ -81,6 +81,7 @@
     FBSDKLoginManager *loginManager = [[FBSDKLoginManager alloc] init];
     [loginManager logOut];
     UserInfomationData * userInfomationData = [UserInfomationData shareInstance];
+    [userInfomationData.timer invalidate];
     [userInfomationData.hubConnection stop];
     [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:Exchange_OAUTH2_TOKEN];
     [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:FACEBOOK_OAUTH2_USERID];
@@ -175,6 +176,7 @@
 - (void)onMing
 {
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+    userInfomationData.refreshCount = -1;
     userInfomationData.pushEventVCTypeStr = @"NOQR";
     EventViewController *eventVC = [[EventViewController alloc] initWithNibName:nil bundle:nil];
     [self.navigationController pushViewController:eventVC animated:YES];
