@@ -14,5 +14,6 @@
 @property (retain, nonatomic) UIButton *leftButton;
 @property (retain, nonatomic) UILabel *titleLabel;
 @property (retain, nonatomic) UIButton *rightButton;
+@property (retain, nonatomic) UIButton *largeRightButton;
 
 @end

@@ -306,15 +306,17 @@
     }];
     [hubConnection setClosed:^{
         NSLog(@"Connection Closed");
-        [[NSUserDefaults standardUserDefaults] setObject:@"closed" forKey:@"signlarStauts"];
-        [userInfomationData.hubConnection disconnect];
+//        [userInfomationData.hubConnection disconnect];
+//        [[NSUserDefaults standardUserDefaults] setObject:@"closed" forKey:@"signlarStauts"];
+        
 //        [self reconntionSignlar];
     }];
     [hubConnection setError:^(NSError *error) {
+//        [userInfomationData.hubConnection disconnect];
         NSLog(@"Connection Error %@",error.description);
-        [userInfomationData.hubConnection disconnect];
         
-        [[NSUserDefaults standardUserDefaults] setObject:@"closed" forKey:@"signlarStauts"];
+        
+//        [[NSUserDefaults standardUserDefaults] setObject:@"closed" forKey:@"signlarStauts"];
         if ([error.description rangeOfString:@"Code=-1001"].location !=NSNotFound) {
             [MMProgressHUD dismissWithError:@"请求超时，马上重试"];
         }
@@ -359,6 +361,7 @@
             
             if ([self.reConnectionTag isEqualToString:@"reConnetion"]) {
                 [self getMessageInRoom:@"" roomId:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"]];
+                
                 dispatch_async(dispatch_get_global_queue(0,0), ^{
                     for (NSInteger i = 0; i < [[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] count]; i ++) {
                         if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"open"]) {
@@ -368,6 +371,7 @@
                     }
                     
                 });
+                
                 
                 self.reConnectionTag = @"";
             }
@@ -491,7 +495,7 @@
                 NSError *error = nil;
                 
                 NSArray *resultx = [self.myAppDelegate.managedObjectContext executeFetchRequest:request error:&error];
-                
+                NSLog(@"--*-*-*-*--fsdfsdfdf----  %@",result);
                 
                 for (NSInteger i = 0; i < [resultx count]; i ++) {
                     

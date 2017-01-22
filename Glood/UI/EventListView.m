@@ -45,6 +45,11 @@
         [self.rightButton addTarget:self action:@selector(onRightBtnClick:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:self.rightButton];
         
+        self.largeRightButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*54/320), 0, 54, 54)];
+        [self.largeRightButton addTarget:self action:@selector(onRightBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+        self.largeRightButton.backgroundColor = [UIColor clearColor];
+        [self addSubview:self.largeRightButton];
+        
         UIView *tableviewBgView = [[UIView alloc] initWithFrame:CGRectMake(0,34+30,SCREEN_WIDTH,SCREEN_HEIGHT-64)];
         tableviewBgView.backgroundColor = [UIColor whiteColor];
         tableviewBgView.alpha = 0.4;
@@ -68,7 +73,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 50;
+    return SCREEN_HEIGHT*50/568;
 }
 
 #define eventImageViewTag 10001
@@ -86,17 +91,17 @@
     
     
     if (indexPath.row == 0) {
-        self.eventListTabelViewCell.eventImageView.frame = CGRectMake((105-22)/2, (49-22)/2, 22, 22);
+        self.eventListTabelViewCell.eventImageView.frame = CGRectMake((140-22)/2, (49-22)/2, 22, 22);
         [self.eventListTabelViewCell.eventImageView setImage:[UIImage imageNamed:@"add.png"]];
-        self.eventListTabelViewCell.eventNameLabel.frame = CGRectMake(105+20, 0, SCREEN_WIDTH*170/320, 49);
+        self.eventListTabelViewCell.eventNameLabel.frame = CGRectMake(140+20, 0, SCREEN_WIDTH*170/320, 49);
         self.eventListTabelViewCell.eventNameLabel.text = @"Add new community";
         self.eventListTabelViewCell.eventNameLabel.font = [UIFont fontWithName:@"ProximaNova-Bold" size:17];
         self.eventListTabelViewCell.redImageView.frame = CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*10/320)-5, (49-10)/2, 0, 0);
     }
     else{
-        self.eventListTabelViewCell.eventImageView.frame = CGRectMake(0, 0, 105, 49);
+        self.eventListTabelViewCell.eventImageView.frame = CGRectMake(0, 0, SCREEN_WIDTH*140/320, SCREEN_HEIGHT*49/568);
         [self.eventListTabelViewCell.eventImageView sd_setImageWithURL:[CommonClass showImage:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:indexPath.row-1] objectForKey:@"image_url"] x1:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:indexPath.row-1] objectForKey:@"image_crop_info"] objectForKey:@"x1"] y1:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:indexPath.row-1] objectForKey:@"image_crop_info"] objectForKey:@"y1"] x2:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:indexPath.row-1] objectForKey:@"image_crop_info"] objectForKey:@"x2"] y2:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:indexPath.row-1] objectForKey:@"image_crop_info"] objectForKey:@"y2"] width:[NSString stringWithFormat:@"%.f",self.eventListTabelViewCell.eventImageView.frame.size.width*2]] placeholderImage:[UIImage imageNamed:@"event_background.jpg"]];
-        self.eventListTabelViewCell.eventNameLabel.frame = CGRectMake(105+20, 0, SCREEN_WIDTH*150/320, self.eventListTabelViewCell.eventImageView.frame.size.height);
+        self.eventListTabelViewCell.eventNameLabel.frame = CGRectMake((SCREEN_WIDTH*140/320)+20, 0, SCREEN_WIDTH*130/320, self.eventListTabelViewCell.eventImageView.frame.size.height);
         self.eventListTabelViewCell.eventNameLabel.text = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:indexPath.row-1] objectForKey:@"name"];
         self.eventListTabelViewCell.eventNameLabel.font = [UIFont fontWithName:@"ProximaNova-Light" size:17];
         self.eventListTabelViewCell.redImageView.frame = CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*10/320)-15, (49-10)/2, SCREEN_WIDTH*10/320, SCREEN_WIDTH*10/320);
@@ -117,7 +122,7 @@
     self.eventListTabelViewCell.redImageView.tag = redImageViewTag+indexPath.row;
     
     
-    self.eventListTabelViewCell.lineImageView.frame = CGRectMake(0, 49, SCREEN_WIDTH, 1);
+    self.eventListTabelViewCell.lineImageView.frame = CGRectMake(0, SCREEN_HEIGHT*49/568, SCREEN_WIDTH, 1);
     self.eventListTabelViewCell.lineImageView.tag = lineImageViewTag+indexPath.row;
     return self.eventListTabelViewCell;
 }

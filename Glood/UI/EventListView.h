@@ -21,6 +21,7 @@
 @property (retain, nonatomic) UIButton *leftButton;
 @property (retain, nonatomic) UILabel *titleLabel;
 @property (retain, nonatomic) UIButton *rightButton;
+@property (retain, nonatomic) UIButton *largeRightButton;
 
 @property (retain, nonatomic) UITableView *tableView;
 @property (retain, nonatomic) EventListTableViewCell *eventListTabelViewCell;

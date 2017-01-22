@@ -40,6 +40,10 @@
         [self.rightButton setImage:[UIImage imageNamed:@"down"] forState:UIControlStateNormal];
         [self.rightButton addTarget:self action:@selector(onRightBtnClick:) forControlEvents:UIControlEventTouchUpInside];
         [self.topBgView addSubview:self.rightButton];
+        
+        self.largeRightButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*54/320), 0, 54, 54)];
+        [self.largeRightButton addTarget:self action:@selector(onRightBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+        [self.topBgView addSubview:self.largeRightButton];
     }
     return self;
 }

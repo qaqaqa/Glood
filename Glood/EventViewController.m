@@ -58,6 +58,7 @@
 @property (retain, nonatomic) UIView *cehuaView;
 @property (retain, nonatomic) EventListView *eventListView;
 @property (retain, nonatomic) UIButton *rightButton;
+@property (retain, nonatomic) UIButton *largeRightButton;
 
 @property (retain, nonatomic) UIView *mockBgView;
 
@@ -106,7 +107,7 @@
     gradientLayer.frame = self.micTopImageView.bounds;
     gradientLayer.colors = @[(__bridge id)[UIColor colorWithWhite:0 alpha:0.0].CGColor,(__bridge id)[UIColor colorWithWhite:0 alpha:1].CGColor];
     gradientLayer.startPoint = CGPointMake(0, 1);
-    gradientLayer.endPoint = CGPointMake(0, 0);
+    gradientLayer.endPoint = CGPointMake(0, 0.3);
     [self.micTopImageView.layer setMask:gradientLayer];
     
     [self.mockView removeFromSuperview];
@@ -119,6 +120,7 @@
     self.hFlowView = [[PagedFlowView alloc] initWithFrame:CGRectMake(0, commonNavView.frame.size.height+commonNavView.frame.origin.y-20, SCREEN_WIDTH, SCREEN_HEIGHT-commonNavView.frame.size.height)];
     self.hFlowView.delegate = self;
     self.hFlowView.dataSource = self;
+//    self.hFlowView.backgroundColor = [UIColor blackColor];
     self.hFlowView.minimumPageAlpha = 0.1 ;
     self.hFlowView.minimumPageScale = 0.9;
     [self.view addSubview:self.hFlowView];
@@ -175,6 +177,10 @@
     [self.rightButton setImage:[UIImage imageNamed:@"down"] forState:UIControlStateNormal];
     [self.rightButton addTarget:self action:@selector(onRightBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.rightButton];
+    
+    self.largeRightButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*54/320), 0, 54, 54)];
+    [self.largeRightButton addTarget:self action:@selector(onRightBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.largeRightButton];
     
     if ([userInfomationData.pushEventVCTypeStr isEqualToString:@"QR"]) {
 //        userInfomationData.historyMicArr = [[NSMutableArray alloc] initWithCapacity:10];
@@ -1035,6 +1041,10 @@
 //进入聊天室场景
 - (void)pushChatRoom
 {
+    //切换聊天室时，取消屏蔽
+    [[NSUserDefaults standardUserDefaults] setBool:false forKey:@"isSelectShield"];
+    [self.micShieldButton setImage:[UIImage imageNamed:@"people.png"] forState:UIControlStateNormal];
+    self.soundingRecoringButton.userInteractionEnabled = YES;
     //每次进入聊天室页面检查麦克风权限是否开启
     AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeAudio];
     NSLog(@"*-*-*--*hahhah--- %ld",(long)authStatus);

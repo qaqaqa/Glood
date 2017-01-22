@@ -95,7 +95,7 @@
     [super viewWillDisappear:YES];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"getEventList" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"exchangeToken" object:nil];
-    [MMProgressHUD dismiss];
+//    [MMProgressHUD dismiss];
 }
 
 - (void)getEventList

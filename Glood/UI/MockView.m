@@ -413,6 +413,7 @@
     if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"isSelectShield"] integerValue] == 0) {
         
         if ([mic.time floatValue]>0.1) {
+            self.userInteractionEnabled = NO;
             //在播放之前，暂停所有的播放
             [self recordOrExchangeChatRoomStopAnimation];
             [userInfomationData.recordAudio saveRecord:mic.message messageId:mic.messageId];
@@ -427,6 +428,7 @@
             [UIView animateWithDuration:0.5 animations:^{
                 find_headImageButtonView.transform = CGAffineTransformMakeScale(1.1,1.1);
             } completion:^(BOOL finished) {
+                self.userInteractionEnabled = YES;
             }];
             
             [UIView beginAnimations:nil context:NULL];
@@ -454,6 +456,7 @@
                 [UIView animateWithDuration:0.5 animations:^{
                     find_headImageButtonView.transform = CGAffineTransformIdentity;
                 } completion:^(BOOL finished) {
+                    self.userInteractionEnabled = YES;
                 }];
                 [UIView animateWithDuration:0.0 animations:^{
                     [find_bgImageView setImage:[UIImage imageNamed:@"background.png"]];
