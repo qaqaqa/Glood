@@ -15,6 +15,7 @@
 #import "Define.h"
 #import <Bugly/Bugly.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+@import Firebase;
 
 
 @interface AppDelegate ()
@@ -35,6 +36,7 @@
     
     [[FBSDKApplicationDelegate sharedInstance] application:application
                              didFinishLaunchingWithOptions:launchOptions];
+    [FIRApp configure];
     
     self.isEnterGroundStr = @"no";
     self.commonService = [[CommonService alloc] init];

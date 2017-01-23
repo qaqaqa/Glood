@@ -99,7 +99,7 @@
     commonNavView.backgroundColor = [UIColor clearColor];
     [self.view addSubview:commonNavView];
     
-    self.micTopImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, commonNavView.frame.size.height+commonNavView.frame.origin.y+15, SCREEN_WIDTH, SCREEN_HEIGHT*110/568)];
+    self.micTopImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, commonNavView.frame.size.height+commonNavView.frame.origin.y+15, SCREEN_WIDTH, SCREEN_HEIGHT*135/568)];
     self.micTopImageView.alpha = 0;
     [self.view addSubview:self.micTopImageView];
     
@@ -263,6 +263,7 @@
     if (self.mockView.shieldBgButton.alpha != 1.0) {
         NSLog(@"rigth");
         self.rightButton.userInteractionEnabled = NO;
+        self.largeRightButton.userInteractionEnabled = NO;
         self.eventListView = [[EventListView alloc] initWithFrame:CGRectMake(0, -SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT)];
         self.eventListView.delegate = self;
         [self.view addSubview:self.eventListView];
@@ -270,6 +271,7 @@
             self.eventListView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
         } completion:^(BOOL finished) {
             self.rightButton.userInteractionEnabled = YES;
+            self.largeRightButton.userInteractionEnabled = YES;
         }];
     }
 }

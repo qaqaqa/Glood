@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		59CB923B232BD5E66224C869 /* libPods-Glood.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13274DD396770F850824E751 /* libPods-Glood.a */; };
+		CC257DFB1E35AD6C005994C3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CC257DFA1E35AD6C005994C3 /* GoogleService-Info.plist */; };
 		CC258BE51E10D24700491916 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CC258BE41E10D24700491916 /* main.m */; };
 		CC258BE81E10D24700491916 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CC258BE71E10D24700491916 /* AppDelegate.m */; };
 		CC258BEB1E10D24700491916 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CC258BEA1E10D24700491916 /* ViewController.m */; };
@@ -160,6 +161,8 @@
 
 /* Begin PBXFileReference section */
 		13274DD396770F850824E751 /* libPods-Glood.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Glood.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CC257DD21E359E29005994C3 /* Glood.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Glood.entitlements; sourceTree = "<group>"; };
+		CC257DFA1E35AD6C005994C3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		CC258BE01E10D24700491916 /* Glood.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Glood.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC258BE41E10D24700491916 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		CC258BE61E10D24700491916 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -489,6 +492,7 @@
 		CC258BE21E10D24700491916 /* Glood */ = {
 			isa = PBXGroup;
 			children = (
+				CC257DD21E359E29005994C3 /* Glood.entitlements */,
 				CC3BE4221E10D3E60034214B /* FontFamily */,
 				CC3BE42A1E10D3E60034214B /* Framework */,
 				CC3BE4B01E10D3E60034214B /* Networking */,
@@ -519,6 +523,7 @@
 				CC258BEC1E10D24700491916 /* Main.storyboard */,
 				CC258BF21E10D24700491916 /* Assets.xcassets */,
 				CC258BF71E10D24700491916 /* Info.plist */,
+				CC257DFA1E35AD6C005994C3 /* GoogleService-Info.plist */,
 				CC258BEF1E10D24700491916 /* Glood.xcdatamodeld */,
 				CC258BE31E10D24700491916 /* Supporting Files */,
 			);
@@ -1039,13 +1044,20 @@
 					CC258BDF1E10D24700491916 = {
 						CreatedOnToolsVersion = 7.3.1;
 						DevelopmentTeam = LT4WYE8BSE;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 					CC258BFB1E10D24700491916 = {
 						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = LT4WYE8BSE;
 						TestTargetID = CC258BDF1E10D24700491916;
 					};
 					CC258C061E10D24700491916 = {
 						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = LT4WYE8BSE;
 						TestTargetID = CC258BDF1E10D24700491916;
 					};
 				};
@@ -1085,6 +1097,7 @@
 				CC3BE52B1E10D3E70034214B /* addTicketBtn.jpeg in Resources */,
 				CC3BE5231E10D3E70034214B /* zbar-samples.png in Resources */,
 				CC3BE4F51E10D3E60034214B /* ProximaNova-SemiboldItalic.otf in Resources */,
+				CC257DFB1E35AD6C005994C3 /* GoogleService-Info.plist in Resources */,
 				CC3BE4F41E10D3E60034214B /* ProximaNova-Semibold.otf in Resources */,
 				CC3BE4F21E10D3E60034214B /* ProximaNova-Regular.otf in Resources */,
 				CC3BE5331E10D3E70034214B /* feedback.png in Resources */,
@@ -1327,9 +1340,11 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: wen yihui (DK9D762953)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: wen yihui (DK9D762953)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = LT4WYE8BSE;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1349,6 +1364,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PROVISIONING_PROFILE = "851aa4e0-3e9d-452d-9224-c689c86f3f1d";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1372,9 +1388,11 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: wen yihui (DK9D762953)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: wen yihui (DK9D762953)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = LT4WYE8BSE;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1387,6 +1405,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				PROVISIONING_PROFILE = "851aa4e0-3e9d-452d-9224-c689c86f3f1d";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -1399,6 +1418,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_ENTITLEMENTS = Glood/Glood.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer: wen yihui (DK9D762953)";
 				DEVELOPMENT_TEAM = LT4WYE8BSE;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1414,8 +1435,10 @@
 					"$(PROJECT_DIR)/Glood/Framework/ZBarSDK",
 					"~/Documents/FacebookSDK",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.sparxo.vambie;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sparxo.glood;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "851aa4e0-3e9d-452d-9224-c689c86f3f1d";
+				PROVISIONING_PROFILE_SPECIFIER = GloodDev;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -1426,6 +1449,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_ENTITLEMENTS = Glood/Glood.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer: wen yihui (DK9D762953)";
 				DEVELOPMENT_TEAM = LT4WYE8BSE;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1441,8 +1466,10 @@
 					"$(PROJECT_DIR)/Glood/Framework/ZBarSDK",
 					"~/Documents/FacebookSDK",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.sparxo.vambie;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sparxo.glood;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "851aa4e0-3e9d-452d-9224-c689c86f3f1d";
+				PROVISIONING_PROFILE_SPECIFIER = GloodDev;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
