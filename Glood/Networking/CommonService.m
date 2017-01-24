@@ -17,6 +17,7 @@
 #import "AppDelegate.h"
 #import "EventViewController.h"
 #import "Mic.h"
+@import FirebaseMessaging;
 
 @interface CommonService ()
 
@@ -266,7 +267,8 @@
                 UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
                 userInfomationData.eventDic = [[NSDictionary alloc] init];
                 userInfomationData.eventDic = value;
-                NSLog(@"拉取活动成功----");
+                [self.myAppDelegate subscribeToTopic:value];
+                NSLog(@"拉取活动成功----%@",[[[value objectForKey:@"result"] objectAtIndex:0] objectForKey:@"id"]);
                 [MMProgressHUD showWithTitle:@"正在加入聊天室" status:NSLocalizedString(@"Please wating", nil)];
                 [self joinChatRoom];
                 return value;
@@ -279,6 +281,7 @@
                         UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
                         userInfomationData.eventDic = [[NSDictionary alloc] init];
                         userInfomationData.eventDic = value;
+                        [self.myAppDelegate subscribeToTopic:value];
                         NSLog(@"拉取活动成功----");
                         [MMProgressHUD showWithTitle:@"正在加入聊天室" status:NSLocalizedString(@"Please wating", nil)];
                         [self joinChatRoom];
@@ -480,46 +483,48 @@
             }
             else
             {
-                NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Mic"];
-                //  2.设置排序
-                //  2.1创建排序描述对象
-                NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"messageId" ascending:NO];
-                request.sortDescriptors = @[sortDescriptor];
-                NSString *roomId = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
-                NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"roomId = %@ AND accountId = %@ AND messageId >= %@",roomId,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID],@"99999999999000000"]];
-                request.fetchOffset=0;
-                request.fetchLimit=1000;
-                request.predicate = predicate;
-                NSLog(@"789456465165456489466");
-                //  执行这个查询请求
-                NSError *error = nil;
-                
-                NSArray *resultx = [self.myAppDelegate.managedObjectContext executeFetchRequest:request error:&error];
-                NSLog(@"--*-*-*-*--fsdfsdfdf----  %@",result);
-                
-                for (NSInteger i = 0; i < [resultx count]; i ++) {
-                    
-                    Mic *mic = resultx[0];
-                    for (NSInteger i = 0; i < [userInfomationData.waitingSendMessageQunenMutableArr count]; i ++) {
-                        if ([[[userInfomationData.waitingSendMessageQunenMutableArr objectAtIndex:i] objectForKey:@"message_id"] isEqualToString:mic.messageId] && [[[userInfomationData.waitingSendMessageQunenMutableArr objectAtIndex:i] objectForKey:@"room_id"] isEqualToString:[msg objectForKey:@"room_id"]]) {
-                            [userInfomationData.waitingSendMessageQunenMutableArr removeObjectAtIndex:i];
-                            return;
-                        }
-                    }
-                    
-                    
-                    NSLog(@"xxxxxx-*-*-------  ^%@",mic.messageId);
-                    mic.accountId = [[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID];
-                    mic.userId = [msg objectForKey:@"user_id"];
-                    mic.avatarImage = NULL_TO_NIL([msg objectForKey:@"user_avatar"]);
-                    mic.roomId = [msg objectForKey:@"room_id"];
-                    mic.isRead = 0;
-                    mic.time = [NSNumber numberWithFloat:[[arr objectAtIndex:0] floatValue]];
-                    mic.message = [arr objectAtIndex:1];
-                    mic.messageId = [msg objectForKey:@"id"];
-                    mic.fromUserName = [msg objectForKey:@"user_name"];
-                    [self.myAppDelegate saveContext];
-                }
+                [self.myAppDelegate insertCoreData:[msg objectForKey:@"user_id"] avatarImage:[msg objectForKey:@"user_avatar"] roomId:[msg objectForKey:@"room_id"] time:[NSNumber numberWithFloat:[[arr objectAtIndex:0] floatValue]] message:[arr objectAtIndex:1] messageId:[msg objectForKey:@"id"] fromUserName:[msg objectForKey:@"user_name"]];
+                [self.myAppDelegate deletePreLoadingMessage:roomId message:[NSString stringWithFormat:@"%lld",userInfomationData.yuMessageId]];
+//                NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Mic"];
+//                //  2.设置排序
+//                //  2.1创建排序描述对象
+//                NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"messageId" ascending:NO];
+//                request.sortDescriptors = @[sortDescriptor];
+//                NSString *roomId = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
+//                NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"roomId = %@ AND accountId = %@ AND messageId = %@",roomId,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID],@"84113604084776960"]];
+//                request.fetchOffset=0;
+//                request.fetchLimit=1000;
+//                request.predicate = predicate;
+//                NSLog(@"789456465165456489466");
+//                //  执行这个查询请求
+//                NSError *error = nil;
+//                
+//                NSArray *resultx = [self.myAppDelegate.managedObjectContext executeFetchRequest:request error:&error];
+//                NSLog(@"--*-*-*-*--fsdfsdfdf----  %@",result);
+//                
+//                for (NSInteger i = 0; i < [resultx count]; i ++) {
+//                    
+//                    Mic *mic = resultx[0];
+//                    for (NSInteger i = 0; i < [userInfomationData.waitingSendMessageQunenMutableArr count]; i ++) {
+//                        if ([[[userInfomationData.waitingSendMessageQunenMutableArr objectAtIndex:i] objectForKey:@"message_id"] isEqualToString:mic.messageId] && [[[userInfomationData.waitingSendMessageQunenMutableArr objectAtIndex:i] objectForKey:@"room_id"] isEqualToString:[msg objectForKey:@"room_id"]]) {
+//                            [userInfomationData.waitingSendMessageQunenMutableArr removeObjectAtIndex:i];
+//                            return;
+//                        }
+//                    }
+//                    
+//                    
+//                    NSLog(@"xxxxxx-*-*-------  ^%@",mic.messageId);
+//                    mic.accountId = [[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID];
+//                    mic.userId = [msg objectForKey:@"user_id"];
+//                    mic.avatarImage = NULL_TO_NIL([msg objectForKey:@"user_avatar"]);
+//                    mic.roomId = [msg objectForKey:@"room_id"];
+//                    mic.isRead = 0;
+//                    mic.time = [NSNumber numberWithFloat:[[arr objectAtIndex:0] floatValue]];
+//                    mic.message = [arr objectAtIndex:1];
+//                    mic.messageId = [msg objectForKey:@"id"];
+//                    mic.fromUserName = [msg objectForKey:@"user_name"];
+//                    [self.myAppDelegate saveContext];
+//                }
             }
             
             
@@ -562,6 +567,7 @@
                 UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
                 userInfomationData.eventDic = [[NSDictionary alloc] init];
                 userInfomationData.eventDic = value;
+                [self.myAppDelegate subscribeToTopic:value];
                 NSLog(@"拉取活动成功----");
                 [self joinChatRoom];
                 [MMProgressHUD dismiss];

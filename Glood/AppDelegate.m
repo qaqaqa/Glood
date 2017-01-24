@@ -16,9 +16,13 @@
 #import <Bugly/Bugly.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 @import Firebase;
+@import FirebaseMessaging;
+@import UserNotifications;
 
+#define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
+#define SYSTEM_VERSION_LESS_THAN(v) ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
-@interface AppDelegate ()
+@interface AppDelegate ()<UNUserNotificationCenterDelegate>
 
 @property (strong, nonatomic) UIView *tipsView;
 @property (strong, nonatomic) UIView *networkDisBGView;
@@ -34,9 +38,9 @@
     
     [Bugly startWithAppId:@"900016269"];
     
+    
     [[FBSDKApplicationDelegate sharedInstance] application:application
                              didFinishLaunchingWithOptions:launchOptions];
-    [FIRApp configure];
     
     self.isEnterGroundStr = @"no";
     self.commonService = [[CommonService alloc] init];
@@ -83,7 +87,159 @@
     userInfomationData.yuMessageId = 99999999999000000;
     NSLog(@"*-*-*-*---xxxxx-*x-  %lld",userInfomationData.yuMessageId);
     
+    UNAuthorizationOptions authOptions =
+    UNAuthorizationOptionAlert
+    | UNAuthorizationOptionSound
+    | UNAuthorizationOptionBadge;
+    [[UNUserNotificationCenter currentNotificationCenter] requestAuthorizationWithOptions:authOptions completionHandler:^(BOOL granted, NSError * _Nullable error) {
+    }];
+    
+    // For iOS 10 display notification (sent via APNS)
+    [UNUserNotificationCenter currentNotificationCenter].delegate = self;
+    // For iOS 10 data message (sent via FCM)
+//    [FIRMessaging messaging].remoteMessageDelegate = self;
+    [[UIApplication sharedApplication] registerForRemoteNotifications];
+    [FIRApp configure];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tokenRefreshNotification:)
+                                                 name:kFIRInstanceIDTokenRefreshNotification object:nil];
+    
+    application.applicationIconBadgeNumber = 0;
+    if( SYSTEM_VERSION_LESS_THAN( @"10.0" ) )
+    {
+        [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeSound |    UIUserNotificationTypeAlert | UIUserNotificationTypeBadge) categories:nil]];
+        [[UIApplication sharedApplication] registerForRemoteNotifications];
+        
+        //if( option != nil )
+        //{
+        //    NSLog( @"registerForPushWithOptions:" );
+        //}
+    }
+    else
+    {
+        UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+        center.delegate = self;
+        [center requestAuthorizationWithOptions:(UNAuthorizationOptionSound | UNAuthorizationOptionAlert | UNAuthorizationOptionBadge) completionHandler:^(BOOL granted, NSError * _Nullable error)
+         {
+             if( !error )
+             {
+                 [[UIApplication sharedApplication] registerForRemoteNotifications];  // required to get the app to do anything at all about push notifications
+                 NSLog( @"Push registration success." );
+             }
+             else
+             {
+                 NSLog( @"Push registration FAILED" );
+                 NSLog( @"ERROR: %@ - %@", error.localizedFailureReason, error.localizedDescription );
+                 NSLog( @"SUGGESTIONS: %@ - %@", error.localizedRecoveryOptions, error.localizedRecoverySuggestion );  
+             }  
+         }];  
+    }
+    
     return YES;
+}
+
+#pragma mark ============    通知，订阅主题    ===========
+- (void)subscribeToTopic:(NSDictionary*)dic
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        for (NSInteger i = 0; i < [[dic objectForKey:@"result"] count]; i ++) {
+            [[FIRMessaging messaging] subscribeToTopic:[NSString stringWithFormat:@"/topics/events-%@",[[[dic objectForKey:@"result"] objectAtIndex:i] objectForKey:@"id"]]];
+            NSLog(@"Subscribed to news topic");
+        }
+        
+        
+    });
+}
+
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler {
+    NSLog(@"received-*-*-*--*-*-*-*%@",response.notification.request.content.userInfo);
+    [[NSUserDefaults standardUserDefaults] setObject:response.notification.request.content.userInfo forKey:@"pushUserInfo"];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"becomeActive" object:self];
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
+fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+    // If you are receiving a notification message while your app is in the background,
+    // this callback will not be fired till the user taps on the notification launching the application.
+    // TODO: Handle data of notification
+    
+    // Print message ID.
+    NSLog(@"Message ID: %@", userInfo[@"gcm.message_id"]);
+
+    // Print full message.
+    NSLog(@"hahahah---收到消息：%@", userInfo);
+    
+}
+
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center
+       willPresentNotification:(UNNotification *)notification
+         withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler {
+    // Print message ID.
+    NSDictionary *userInfo = notification.request.content.userInfo;
+    if (userInfo[@"com.aton.MyPushNotifications"]) {
+        NSLog(@"Message ID: %@", userInfo[@"com.aton.MyPushNotifications"]);
+    }
+    // Print full message.
+    NSLog(@"xxxxxxxxxx----收到消息：%@", userInfo);
+    
+    // Change this to your preferred presentation option
+    completionHandler(UNNotificationPresentationOptionNone);
+    
+}
+
+
+//- (void)applicationReceivedRemoteMessage:(FIRMessagingRemoteMessage *)remoteMessage {
+//    // Print full message
+//    UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
+//    
+//    content.title = @"Message received";
+//    content.body = @"Message body";
+//    content.sound = [UNNotificationSound defaultSound];
+//    
+//    UNTimeIntervalNotificationTrigger *trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:1 repeats:NO];
+//    
+//    UNNotificationRequest* request = [UNNotificationRequest
+//                                      requestWithIdentifier:@"MorningAlarm" content:content trigger:trigger];
+//    
+//    UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
+//    [center addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
+//        if (error != nil) {
+//            NSLog(@"%@", error.localizedDescription);
+//        }
+//    }];
+//    
+//}
+
+
+- (void)tokenRefreshNotification:(NSNotification *)notification {
+    // Note that this callback will be fired everytime a new token is generated, including the first
+    // time. So if you need to retrieve the token as soon as it is available this is where that
+    // should be done.
+    NSString *refreshedToken = [[FIRInstanceID instanceID] token];
+    NSLog(@"InstanceID token: %@", refreshedToken);
+    [[NSUserDefaults standardUserDefaults] setObject:refreshedToken forKey:@"deviceToken"];
+    // Connect to FCM since connection may have failed when attempted before having a token.
+    [self connectToFcm];
+    
+    // TODO: If necessary send token to application server.
+}
+
+- (void)connectToFcm {
+    // Won't connect since there is no token
+    if (![[FIRInstanceID instanceID] token]) {
+        return;
+    }
+    
+    // Disconnect previous FCM connection if it exists.
+    [[FIRMessaging messaging] disconnect];
+    
+    [[FIRMessaging messaging] connectWithCompletion:^(NSError * _Nullable error) {
+        if (error != nil) {
+            NSLog(@"Unable to connect to FCM. %@", error);
+        } else {
+            NSLog(@"Connected to FCM.");
+        }
+    }];
 }
 
 - (BOOL)application:(UIApplication *)application
@@ -129,6 +285,19 @@
     [[AFNetworkReachabilityManager sharedManager] startMonitoring];
 }
 
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+    NSLog(@"Unable to register for remote notifications: %@", error);
+}
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    NSLog(@"device token:%@",deviceToken);
+    [[FIRInstanceID instanceID] setAPNSToken:deviceToken type:FIRInstanceIDAPNSTokenTypeSandbox];
+    
+    NSString *tokenStr = [[NSString stringWithFormat:@"%@",deviceToken] stringByReplacingOccurrencesOfString:@"<" withString:@""];
+    tokenStr = [tokenStr stringByReplacingOccurrencesOfString:@">" withString:@""];
+    tokenStr = [tokenStr stringByReplacingOccurrencesOfString:@" " withString:@""];
+    NSLog(@"regisger success:%@",tokenStr);
+}
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -136,6 +305,8 @@
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
+    [[FIRMessaging messaging] disconnect];
+    NSLog(@"Disconnected from FCM");
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 }
@@ -145,6 +316,7 @@
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
+    [self connectToFcm];
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     [FBSDKAppEvents activateApp];
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];

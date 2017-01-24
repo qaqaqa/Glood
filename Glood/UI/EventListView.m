@@ -91,17 +91,17 @@
     
     
     if (indexPath.row == 0) {
-        self.eventListTabelViewCell.eventImageView.frame = CGRectMake((140-22)/2, (49-22)/2, 22, 22);
+        self.eventListTabelViewCell.eventImageView.frame = CGRectMake((120-22)/2, (49-22)/2, 22, 22);
         [self.eventListTabelViewCell.eventImageView setImage:[UIImage imageNamed:@"add.png"]];
-        self.eventListTabelViewCell.eventNameLabel.frame = CGRectMake(140+20, 0, SCREEN_WIDTH*170/320, 49);
+        self.eventListTabelViewCell.eventNameLabel.frame = CGRectMake(120+20, 0, SCREEN_WIDTH*170/320, 49);
         self.eventListTabelViewCell.eventNameLabel.text = @"Add new community";
         self.eventListTabelViewCell.eventNameLabel.font = [UIFont fontWithName:@"ProximaNova-Bold" size:17];
         self.eventListTabelViewCell.redImageView.frame = CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*10/320)-5, (49-10)/2, 0, 0);
     }
     else{
-        self.eventListTabelViewCell.eventImageView.frame = CGRectMake(0, 0, SCREEN_WIDTH*140/320, SCREEN_HEIGHT*49/568);
+        self.eventListTabelViewCell.eventImageView.frame = CGRectMake(0, 0, SCREEN_WIDTH*120/320, SCREEN_HEIGHT*49/568);
         [self.eventListTabelViewCell.eventImageView sd_setImageWithURL:[CommonClass showImage:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:indexPath.row-1] objectForKey:@"image_url"] x1:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:indexPath.row-1] objectForKey:@"image_crop_info"] objectForKey:@"x1"] y1:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:indexPath.row-1] objectForKey:@"image_crop_info"] objectForKey:@"y1"] x2:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:indexPath.row-1] objectForKey:@"image_crop_info"] objectForKey:@"x2"] y2:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:indexPath.row-1] objectForKey:@"image_crop_info"] objectForKey:@"y2"] width:[NSString stringWithFormat:@"%.f",self.eventListTabelViewCell.eventImageView.frame.size.width*2]] placeholderImage:[UIImage imageNamed:@"event_background.jpg"]];
-        self.eventListTabelViewCell.eventNameLabel.frame = CGRectMake((SCREEN_WIDTH*140/320)+20, 0, SCREEN_WIDTH*130/320, self.eventListTabelViewCell.eventImageView.frame.size.height);
+        self.eventListTabelViewCell.eventNameLabel.frame = CGRectMake((SCREEN_WIDTH*120/320)+20, 0, SCREEN_WIDTH*140/320, self.eventListTabelViewCell.eventImageView.frame.size.height);
         self.eventListTabelViewCell.eventNameLabel.text = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:indexPath.row-1] objectForKey:@"name"];
         self.eventListTabelViewCell.eventNameLabel.font = [UIFont fontWithName:@"ProximaNova-Light" size:17];
         self.eventListTabelViewCell.redImageView.frame = CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*10/320)-15, (49-10)/2, SCREEN_WIDTH*10/320, SCREEN_WIDTH*10/320);

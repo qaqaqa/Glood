@@ -7,5 +7,8 @@ pod 'KSDeferred', '~> 0.3.0'
 pod 'Blindside',  '~> 1.3.0'
 pod 'SDWebImage',  '~> 3.8.1'
 pod 'Firebase'
+pod 'Firebase/Messaging'
+pod 'Firebase/Core'
+pod 'Firebase/RemoteConfig'
 
 end

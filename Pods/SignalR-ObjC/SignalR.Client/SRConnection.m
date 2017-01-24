@@ -331,6 +331,7 @@
 }
 
 - (void)didReceiveError:(NSError *)ex {
+    [[NSUserDefaults standardUserDefaults] setObject:@"closed" forKey:@"signlarStauts"];
     SRLogConnectionError(@"connection did receive error %@",ex);
     if(self.error != nil) {
         self.error(ex);
@@ -343,7 +344,7 @@
 
 - (void)willReconnect {
     SRLogConnectionDebug(@"connection will reconnect");
-    // Only allow the client to attempt to reconnect for a _disconnectTimout TimeSpan which is set by
+    // Only allow the client to attempt to reconnect for a _disconectTimout TimeSpan which is set by
     // the server during negotiation.
     // If the client tries to reconnect for longer the server will likely have deleted its ConnectionId
     // topic along with the contained disconnect message.

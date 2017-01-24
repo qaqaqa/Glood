@@ -50,6 +50,7 @@
 @property (retain, nonatomic) UIButton *soundingRecoringButton;
 @property (retain, nonatomic) UIImageView *soundingRecoringImageView; //长按手势时，检查麦克风权限是否开启
 @property (retain, nonatomic) UIImageView *micTopImageView;
+
 @property (retain, nonatomic) UIImageView *micPlayerStatesImageView;
 @property (retain, nonatomic) UIButton *micShieldButton;
 @property (strong, nonatomic) NSMutableArray *dataArr;//活动list
@@ -475,6 +476,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"getMicHistoryList" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"shield" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"yesShield" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"becomeActive" object:nil];
     
     [self.mockView deallocNSNotificationCenter];
 }
@@ -495,12 +497,53 @@
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(onCoverFlowViewHeadBtnClick)name:@"onCoverFlowViewHeadBtnClick"object:nil];
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(getMicHistoryList)name:@"getMicHistoryList"object:nil];
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(getYesShield)name:@"yesShield"object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(becomeActive)name:@"becomeActive"object:nil];
     
     
     [self.mockView addNSNotificationCenter];
     
+    
+    
 //    [self.myAppDelegate deleteAllPreLoadingMessage];
     
+}
+
+- (void)becomeActive
+{
+    if ((NSNull *)[[NSUserDefaults standardUserDefaults] objectForKey:@"pushUserInfo"] != [NSNull null]) {
+        for (NSInteger i = 0; i < [(NSMutableArray *)[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] count]; i ++) {
+            if ([[[[NSUserDefaults standardUserDefaults] objectForKey:@"pushUserInfo"] objectForKey:@"eventId"] isEqualToString:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"id"]]) {
+                NSLog(@"*--*---*--*--xx-----  %@-+--%@",[[[NSUserDefaults standardUserDefaults] objectForKey:@"pushUserInfo"] objectForKey:@"eventId"],[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"id"]);
+                [[NSUserDefaults standardUserDefaults] setObject:nil forKey:@"pushUserInfo"];
+                [[NSUserDefaults standardUserDefaults] setInteger:i forKey:@"currentIndex"];
+                UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+                if ([userInfomationData.isEnterMicList isEqualToString:@"false"])
+                {
+                    [self pushChatRoom];
+                }
+                else
+                {
+                    [self exchangeChatRoom];
+                    NSString *roomId = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
+                    NSArray *result = [[NSArray alloc] initWithArray:[self.myAppDelegate selectCoreDataroomId:roomId]];
+                    //  给数据源数组中添加数据
+                    
+                    if ([result count] > 0) {
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
+                    }
+                    else
+                    {
+                        UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+                        [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
+                        [MMProgressHUD showWithTitle:@"拉取历史聊天记录" status:NSLocalizedString(@"Please wating", nil)];
+                        [userInfomationData.commonService getMessageInRoom:@"" roomId:roomId];
+                    }
+                }
+                
+            }
+        }
+        
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -508,6 +551,8 @@
     if([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
         self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     }
+    [self becomeActive];
+    
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -611,6 +656,7 @@
 #pragma mark ========= Ming ===========
 - (void)onMing
 {
+    
     [[NSNotificationCenter defaultCenter] postNotificationName:@"recordOrExchangeChatRoomStopAnimation" object:self];
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
     userInfomationData.refreshCount = 0;
@@ -646,14 +692,16 @@
         [self.mockView.lastBgView setHidden:NO];
         [UIView animateWithDuration:0.5 animations:^{
             self.mockView.lastBgView.transform = CGAffineTransformMakeScale(1, 1);
-            self.mockView.tableView.transform = CGAffineTransformMakeScale(1, 1);
+//            self.mockView.tableView.transform = CGAffineTransformMakeScale(1, 1);
+            self.mockView.micBottomImageView.transform = CGAffineTransformMakeScale(1, 1);
 //            self.mockView.refreshView.frame = CGRectMake(0,0,SCREEN_WIDTH*260/320,46);
 //            self.mockView.refreshView.backgroundColor = [UIColor clearColor];
 //            self.mockView.refreshView.transform = CGAffineTransformMakeScale(1, 1);
         } completion:^(BOOL finished) {
             self.hFlowView.alpha = 1;
             
-            self.mockView.tableView.frame = CGRectMake((SCREEN_WIDTH-(SCREEN_WIDTH*260/320))/2,SCREEN_HEIGHT*275/568,SCREEN_WIDTH*260/320,SCREEN_HEIGHT*220/568);
+            self.mockView.micBottomImageView.frame = CGRectMake((SCREEN_WIDTH-(SCREEN_WIDTH*260/320))/2,SCREEN_HEIGHT*275/568,SCREEN_WIDTH*260/320,SCREEN_HEIGHT*220/568);
+//            self.mockView.tableView.frame = CGRectMake(0,0,SCREEN_WIDTH*260/320,SCREEN_HEIGHT*220/568);
             [self.hFlowView removeFromSuperview];
             self.hFlowView = [[PagedFlowView alloc] initWithFrame:CGRectMake(0, (SCREEN_HEIGHT*50/568)-15, SCREEN_WIDTH, SCREEN_HEIGHT-(SCREEN_HEIGHT*50/568))];
             self.hFlowView.delegate = self;
@@ -1043,6 +1091,13 @@
 //进入聊天室场景
 - (void)pushChatRoom
 {
+    CAGradientLayer *gradientLayer = [CAGradientLayer layer];
+    gradientLayer.frame = self.mockView.micBottomImageView.bounds;
+    NSLog(@"*-*-sdf-sd*f-sd*f-sd----- %f---%f----%f----%f",gradientLayer.frame.origin.x,gradientLayer.frame.origin.y,gradientLayer.frame.size.width,gradientLayer.frame.size.height);
+    gradientLayer.colors = @[(__bridge id)[UIColor colorWithWhite:0 alpha:1].CGColor,(__bridge id)[UIColor colorWithWhite:0 alpha:1].CGColor];
+    gradientLayer.startPoint = CGPointMake(0, 0);
+    gradientLayer.endPoint = CGPointMake(0, 0.1);
+    [self.mockView.micBottomImageView.layer setMask:gradientLayer];
     //切换聊天室时，取消屏蔽
     [[NSUserDefaults standardUserDefaults] setBool:false forKey:@"isSelectShield"];
     [self.micShieldButton setImage:[UIImage imageNamed:@"people.png"] forState:UIControlStateNormal];
@@ -1109,12 +1164,14 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
     [UIView animateWithDuration:2.5 animations:^{
         self.mockView.lastBgView.alpha = 0;
-        self.mockView.tableView.frame = CGRectMake((SCREEN_WIDTH-(SCREEN_WIDTH*260/320))/2,SCREEN_HEIGHT*220/568,SCREEN_WIDTH*260/320,SCREEN_HEIGHT*220/568);
+        self.mockView.micBottomImageView.frame = CGRectMake((SCREEN_WIDTH-(SCREEN_WIDTH*260/320))/2,SCREEN_HEIGHT*220/568,SCREEN_WIDTH*260/320,SCREEN_HEIGHT*220/568);
+//        self.mockView.tableView.frame = CGRectMake(0,0,SCREEN_WIDTH*260/320,SCREEN_HEIGHT*220/568);
         self.mockView.lastBgView.transform = CGAffineTransformMakeScale(1.32, 1.32);
-        self.mockView.tableView.transform = CGAffineTransformMakeScale(self.cgAffineTransformMakeScale, self.cgAffineTransformMakeScale);
+//        self.mockView.tableView.transform = CGAffineTransformMakeScale(self.cgAffineTransformMakeScale, self.cgAffineTransformMakeScale);
+        self.mockView.micBottomImageView.transform = CGAffineTransformMakeScale(self.cgAffineTransformMakeScale, self.cgAffineTransformMakeScale);
 //        self.mockView.refreshView.frame = CGRectMake(0,-40,SCREEN_WIDTH*260/320,46);
 //        self.mockView.refreshView.backgroundColor = [UIColor clearColor];
-        self.mockView.refreshView.transform = CGAffineTransformMakeScale(self.cgAffineTransformMakeScale, self.cgAffineTransformMakeScale);
+//        self.mockView.refreshView.transform = CGAffineTransformMakeScale(self.cgAffineTransformMakeScale, self.cgAffineTransformMakeScale);
         
         
     } completion:^(BOOL finished) {
@@ -1139,15 +1196,22 @@
             self.micShieldButton.alpha = 1;
             self.micPlayerStatesImageView.alpha = 1;
             for (NSInteger i = 0; i < 20; i++) {
-                UILabel *find_nameLabel = (UILabel *)[self.mockView viewWithTag:nameLabelTag+i];
+                UILabel *find_nameLabel = (UILabel *)[self.mockView.micBottomImageView viewWithTag:nameLabelTag+i];
                 find_nameLabel.alpha = 1;
             }
-            
+            CAGradientLayer *gradientLayer = [CAGradientLayer layer];
+            gradientLayer.frame = self.mockView.micBottomImageView.bounds;
+            NSLog(@"*-*-sdf-sd*f-sd*f-sd----- %f---%f----%f----%f",gradientLayer.frame.origin.x,gradientLayer.frame.origin.y,gradientLayer.frame.size.width,gradientLayer.frame.size.height);
+            gradientLayer.colors = @[(__bridge id)[UIColor colorWithWhite:0 alpha:0.0].CGColor,(__bridge id)[UIColor colorWithWhite:0 alpha:1].CGColor];
+            gradientLayer.startPoint = CGPointMake(0, 0);
+            gradientLayer.endPoint = CGPointMake(0, 0.1);
+            [self.mockView.micBottomImageView.layer setMask:gradientLayer];
             self.view.userInteractionEnabled = YES;
             
         } completion:^(BOOL finished) {
             userInfomationData.mockViewNameLabelIsHiddenStr = @"yes";
             [self.mockView.tableView reloadData];
+            
         }];
     }];
 }

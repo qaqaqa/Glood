@@ -118,7 +118,13 @@
         [checkInButton addTarget:self action:@selector(onCheckInClick:) forControlEvents:UIControlEventTouchUpInside];
         [self.bgView addSubview:checkInButton];
         
-        self.tableView = [[UITableView alloc] initWithFrame:CGRectMake((SCREEN_WIDTH-(SCREEN_WIDTH*260/320))/2,SCREEN_HEIGHT*260/568,SCREEN_WIDTH*260/320,SCREEN_HEIGHT*220/568)];
+        self.micBottomImageView = [[UIImageView alloc] initWithFrame:CGRectMake((SCREEN_WIDTH-(SCREEN_WIDTH*260/320))/2,SCREEN_HEIGHT*260/568,SCREEN_WIDTH*260/320,SCREEN_HEIGHT*220/568)];
+        self.micBottomImageView.backgroundColor = [UIColor clearColor];
+        self.micBottomImageView.alpha = 1;
+        self.micBottomImageView.userInteractionEnabled = YES;
+        [self addSubview:self.micBottomImageView];
+        
+        self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0,0,SCREEN_WIDTH*260/320,SCREEN_HEIGHT*220/568)];
         self.tableView.backgroundColor = [UIColor clearColor];
         self.tableView.dataSource = self;
         self.tableView.delegate = self;
@@ -126,7 +132,7 @@
         self.tableView.allowsSelection = NO;
         self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         self.tableView.separatorInset = UIEdgeInsetsMake(15, 0, 15, 0);
-        [self addSubview:self.tableView];
+        [self.micBottomImageView addSubview:self.tableView];
         
         __weak typeof(self) wself = self;
         
@@ -376,10 +382,10 @@
     if (self.upHeadButtonTag != 0) {
         
         NSLog(@"sdfsd*--*-*-*------  %ld",(long)self.upHeadButtonTag);
-        UIImageView *find_bgImageView1 = (UIImageView *)[self viewWithTag:self.upHeadButtonTag-headImageButtonTag+bgImageViewTag];
-        UIImageView *find_circleOneImageView1 = (UIImageView *)[self viewWithTag:self.upHeadButtonTag-headImageButtonTag+circleOneImageViewTag];
-        UIImageView *find_circleTwoImageView1 = (UIImageView *)[self viewWithTag:self.upHeadButtonTag-headImageButtonTag+circleTwoImageViewTag];
-        UIButton *find_headImageButtonView1 = (UIButton *)[self viewWithTag:self.upHeadButtonTag-headImageButtonTag+headImageButtonTag];
+        UIImageView *find_bgImageView1 = (UIImageView *)[self.micBottomImageView viewWithTag:self.upHeadButtonTag-headImageButtonTag+bgImageViewTag];
+        UIImageView *find_circleOneImageView1 = (UIImageView *)[self.micBottomImageView viewWithTag:self.upHeadButtonTag-headImageButtonTag+circleOneImageViewTag];
+        UIImageView *find_circleTwoImageView1 = (UIImageView *)[self.micBottomImageView viewWithTag:self.upHeadButtonTag-headImageButtonTag+circleTwoImageViewTag];
+        UIButton *find_headImageButtonView1 = (UIButton *)[self.micBottomImageView viewWithTag:self.upHeadButtonTag-headImageButtonTag+headImageButtonTag];
         [find_bgImageView1 setImage:[UIImage imageNamed:@"background.png"]];
         find_circleTwoImageView1.transform = CGAffineTransformIdentity;
         find_circleOneImageView1.transform = CGAffineTransformIdentity;
@@ -420,10 +426,10 @@
             [userInfomationData.recordAudio palyRecord:mic.messageId];
             NSLog(@"点击头像播放------%ld----- %@--- %@",(long)button.tag,mic.messageId,mic.fromUserName);
             self.upHeadButtonTag = button.tag;
-            UIImageView *find_bgImageView = (UIImageView *)[self viewWithTag:button.tag-headImageButtonTag+bgImageViewTag];
-            UIImageView *find_circleOneImageView = (UIImageView *)[self viewWithTag:button.tag-headImageButtonTag+circleOneImageViewTag];
-            UIImageView *find_circleTwoImageView = (UIImageView *)[self viewWithTag:button.tag-headImageButtonTag+circleTwoImageViewTag];
-            UIButton *find_headImageButtonView = (UIButton *)[self viewWithTag:button.tag-headImageButtonTag+headImageButtonTag];
+            UIImageView *find_bgImageView = (UIImageView *)[self.micBottomImageView viewWithTag:button.tag-headImageButtonTag+bgImageViewTag];
+            UIImageView *find_circleOneImageView = (UIImageView *)[self.micBottomImageView viewWithTag:button.tag-headImageButtonTag+circleOneImageViewTag];
+            UIImageView *find_circleTwoImageView = (UIImageView *)[self.micBottomImageView viewWithTag:button.tag-headImageButtonTag+circleTwoImageViewTag];
+            UIButton *find_headImageButtonView = (UIButton *)[self.micBottomImageView viewWithTag:button.tag-headImageButtonTag+headImageButtonTag];
             [find_bgImageView setImage:[UIImage imageNamed:@"background2.png"]];
             [UIView animateWithDuration:0.5 animations:^{
                 find_headImageButtonView.transform = CGAffineTransformMakeScale(1.1,1.1);

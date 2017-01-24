@@ -1044,7 +1044,11 @@
 					CC258BDF1E10D24700491916 = {
 						CreatedOnToolsVersion = 7.3.1;
 						DevelopmentTeam = LT4WYE8BSE;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
 							com.apple.Push = {
 								enabled = 1;
 							};
@@ -1420,6 +1424,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = Glood/Glood.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer: wen yihui (DK9D762953)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = LT4WYE8BSE;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1437,7 +1442,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.sparxo.glood;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "851aa4e0-3e9d-452d-9224-c689c86f3f1d";
+				PROVISIONING_PROFILE = "9914d7b3-a144-40e6-b255-7d396939c012";
 				PROVISIONING_PROFILE_SPECIFIER = GloodDev;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -1451,6 +1456,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = Glood/Glood.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer: wen yihui (DK9D762953)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = LT4WYE8BSE;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1468,7 +1474,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.sparxo.glood;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "851aa4e0-3e9d-452d-9224-c689c86f3f1d";
+				PROVISIONING_PROFILE = "9914d7b3-a144-40e6-b255-7d396939c012";
 				PROVISIONING_PROFILE_SPECIFIER = GloodDev;
 				TARGETED_DEVICE_FAMILY = 1;
 			};

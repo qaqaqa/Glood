@@ -37,6 +37,8 @@
 
 @property (strong, nonatomic) NSString *currentRoomId;
 
+@property (retain, nonatomic) UIImageView *micBottomImageView; //test test
+
 
 - (void)getMicHistoryListMock;
 + (BOOL) isBlankString:(NSString *)string;

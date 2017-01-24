@@ -29,6 +29,9 @@
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;
 
+//通知，订阅主题
+- (void)subscribeToTopic:(NSDictionary*)dic;
+
 //插入聊天语音数据库
 - (void)insertCoreData:(NSString *)userIdx avatarImage:(NSString *)avatarImagex roomId:(NSString *)roomIdx time:(NSNumber *)timex
                message:(NSString *)messagex messageId:(NSString *)messageIdx fromUserName:(NSString *) fromUserNamex;
@@ -61,6 +64,7 @@
 
 //删除屏蔽人的信息
 -(void)deleteShieldMessage:(NSString *)roomIdx userId:(NSString *)userIdx;
+
 
 @end
 

@@ -289,13 +289,13 @@ static UIColor *kLGRefreshViewTintColor;
         UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
         CGRect circleFrame;
         if (userInfomationData.refreshCount >= 0) {
-            circleFrame = CGRectMake((self.frame.size.width-kLGRefreshViewCircleOutSize)/4.0,
+            circleFrame = CGRectMake((self.frame.size.width-kLGRefreshViewCircleOutSize)/2.0,
                                      (self.frame.size.height-kLGRefreshViewCircleOutSize)/1.5,
                                      kLGRefreshViewCircleOutSize,
                                      kLGRefreshViewCircleOutSize);
         }
         else{
-            circleFrame = CGRectMake((self.frame.size.width-kLGRefreshViewCircleOutSize)/2.8,
+            circleFrame = CGRectMake((self.frame.size.width-kLGRefreshViewCircleOutSize)/2.0,
                                      (self.frame.size.height-kLGRefreshViewCircleOutSize)/1.5,
                                      kLGRefreshViewCircleOutSize,
                                      kLGRefreshViewCircleOutSize);
@@ -306,14 +306,14 @@ static UIColor *kLGRefreshViewTintColor;
 
         
         if (userInfomationData.refreshCount >= 0) {
-            circleFrame = CGRectMake((self.frame.size.width-kLGRefreshViewCircleInSize)/4.0,
+            circleFrame = CGRectMake((self.frame.size.width-kLGRefreshViewCircleInSize)/2.0,
                                      (self.frame.size.height-kLGRefreshViewCircleInSize)/1.5,
                                      kLGRefreshViewCircleInSize,
                                      kLGRefreshViewCircleInSize);
         }
         else
         {
-            circleFrame = CGRectMake((self.frame.size.width-kLGRefreshViewCircleInSize)/2.8,
+            circleFrame = CGRectMake((self.frame.size.width-kLGRefreshViewCircleInSize)/2.0,
                                      (self.frame.size.height-kLGRefreshViewCircleInSize)/1.5,
                                      kLGRefreshViewCircleInSize,
                                      kLGRefreshViewCircleInSize);
@@ -327,11 +327,11 @@ static UIColor *kLGRefreshViewTintColor;
         if (_loadingView)
         {
             if (userInfomationData.refreshCount > 0) {
-                _loadingView.center = CGPointMake(self.frame.size.width/4.0, self.frame.size.height/1.5);
+                _loadingView.center = CGPointMake(self.frame.size.width/2.0, self.frame.size.height/1.5);
             }
             else
             {
-                _loadingView.center = CGPointMake(self.frame.size.width/2.8, self.frame.size.height/1.5);
+                _loadingView.center = CGPointMake(self.frame.size.width/2.0, self.frame.size.height/1.5);
             }
         }
         
@@ -419,11 +419,11 @@ static UIColor *kLGRefreshViewTintColor;
         if (_loadingView)
         {
             if (userInfomationData.refreshCount > 0) {
-                _loadingView.center = CGPointMake(self.frame.size.width/4.0, self.frame.size.height/1.5);
+                _loadingView.center = CGPointMake(self.frame.size.width/2.0, self.frame.size.height/1.5);
             }
             else
             {
-                _loadingView.center = CGPointMake(self.frame.size.width/2.8, self.frame.size.height/1.5);
+                _loadingView.center = CGPointMake(self.frame.size.width/2.0, self.frame.size.height/1.5);
             }
         }
     }
@@ -434,13 +434,13 @@ static UIColor *kLGRefreshViewTintColor;
     }
     
     if (userInfomationData.refreshCount > 0) {
-        _circleViewOut.center = CGPointMake(self.frame.size.width/4.0, self.frame.size.height/1.5);
-        _circleViewIn.center = CGPointMake(self.frame.size.width/4.0, self.frame.size.height/1.5);
+        _circleViewOut.center = CGPointMake(self.frame.size.width/2.0, self.frame.size.height/1.5);
+        _circleViewIn.center = CGPointMake(self.frame.size.width/2.0, self.frame.size.height/1.5);
     }
     else
     {
-        _circleViewOut.center = CGPointMake(self.frame.size.width/2.8, self.frame.size.height/1.5);
-        _circleViewIn.center = CGPointMake(self.frame.size.width/2.8, self.frame.size.height/1.5);
+        _circleViewOut.center = CGPointMake(self.frame.size.width/2.0, self.frame.size.height/1.5);
+        _circleViewIn.center = CGPointMake(self.frame.size.width/2.0, self.frame.size.height/1.5);
     }
 
 
@@ -572,35 +572,35 @@ static UIColor *kLGRefreshViewTintColor;
 
                     
                     if (userInfomationData.refreshCount >= 0) {
-                        _circleViewOut.frame = CGRectMake((self.frame.size.width-circleOutSize)/4.0, self.frame.size.height-circleOutSize/1.5+offsetY/1.5, circleOutSize, circleOutSize);
-                        _circleViewIn.frame = CGRectMake((self.frame.size.width-circleInSize)/4.0, self.frame.size.height-circleInSize/1.5+offsetY/1.5, circleInSize, circleInSize);
+                        _circleViewOut.frame = CGRectMake((self.frame.size.width-circleOutSize)/2.0, self.frame.size.height-circleOutSize/1.5+offsetY/1.5, circleOutSize, circleOutSize);
+                        _circleViewIn.frame = CGRectMake((self.frame.size.width-circleInSize)/2.0, self.frame.size.height-circleInSize/1.5+offsetY/1.5, circleInSize, circleInSize);
                     }
                     else{
-                        _circleViewOut.frame = CGRectMake((self.frame.size.width-circleOutSize)/2.8, self.frame.size.height-circleOutSize/1.5+offsetY/1.5, circleOutSize, circleOutSize);
-                        _circleViewIn.frame = CGRectMake((self.frame.size.width-circleInSize)/2.8, self.frame.size.height-circleInSize/1.5+offsetY/1.5, circleInSize, circleInSize);
+                        _circleViewOut.frame = CGRectMake((self.frame.size.width-circleOutSize)/2.0, self.frame.size.height-circleOutSize/1.5+offsetY/1.5, circleOutSize, circleOutSize);
+                        _circleViewIn.frame = CGRectMake((self.frame.size.width-circleInSize)/2.0, self.frame.size.height-circleInSize/1.5+offsetY/1.5, circleInSize, circleInSize);
                     }
                 }
                 else
                 {
                     if (userInfomationData.refreshCount >= 0) {
-                        _circleViewOut.center = CGPointMake(self.frame.size.width/4.0, self.frame.size.height+offsetY/1.5);
-                        _circleViewIn.center = CGPointMake(self.frame.size.width/4.0, self.frame.size.height+offsetY/1.5);
+                        _circleViewOut.center = CGPointMake(self.frame.size.width/2.0, self.frame.size.height+offsetY/1.5);
+                        _circleViewIn.center = CGPointMake(self.frame.size.width/2.0, self.frame.size.height+offsetY/1.5);
                     }
                     else
                     {
-                        _circleViewOut.center = CGPointMake(self.frame.size.width/2.8, self.frame.size.height+offsetY/1.5);
-                        _circleViewIn.center = CGPointMake(self.frame.size.width/2.8, self.frame.size.height+offsetY/1.5);
+                        _circleViewOut.center = CGPointMake(self.frame.size.width/2.0, self.frame.size.height+offsetY/1.5);
+                        _circleViewIn.center = CGPointMake(self.frame.size.width/2.0, self.frame.size.height+offsetY/1.5);
                     }
                     
 
                     if (_loadingView)
                     {
                         if (userInfomationData.refreshCount > 0) {
-                            _loadingView.center = CGPointMake(self.frame.size.width/4.0, self.frame.size.height/1.5);
+                            _loadingView.center = CGPointMake(self.frame.size.width/2.0, self.frame.size.height/1.5);
                         }
                         else
                         {
-                            _loadingView.center = CGPointMake(self.frame.size.width/2.8, self.frame.size.height/1.5);
+                            _loadingView.center = CGPointMake(self.frame.size.width/2.0, self.frame.size.height/1.5);
                         }
                     }
                 }
@@ -610,14 +610,14 @@ static UIColor *kLGRefreshViewTintColor;
             else
             {
                 if (userInfomationData.refreshCount > 0) {
-                    _circleViewOut.center = CGPointMake(self.frame.size.width/4.0, self.frame.size.height+offsetY/1.5);
-                    _circleViewIn.center = CGPointMake(self.frame.size.width/4.0, self.frame.size.height+offsetY/1.5);
+                    _circleViewOut.center = CGPointMake(self.frame.size.width/2.0, self.frame.size.height+offsetY/1.5);
+                    _circleViewIn.center = CGPointMake(self.frame.size.width/2.0, self.frame.size.height+offsetY/1.5);
                     
                 }
                 else
                 {
-                    _circleViewOut.center = CGPointMake(self.frame.size.width/2.8, self.frame.size.height+offsetY/1.5);
-                    _circleViewIn.center = CGPointMake(self.frame.size.width/2.8, self.frame.size.height+offsetY/1.5);
+                    _circleViewOut.center = CGPointMake(self.frame.size.width/2.0, self.frame.size.height+offsetY/1.5);
+                    _circleViewIn.center = CGPointMake(self.frame.size.width/2.0, self.frame.size.height+offsetY/1.5);
                     
                 }
                 
@@ -625,11 +625,11 @@ static UIColor *kLGRefreshViewTintColor;
                 if (_loadingView)
                 {
                     if (userInfomationData.refreshCount > 0) {
-                        _loadingView.center = CGPointMake(self.frame.size.width/4.0, self.frame.size.height/1.5);
+                        _loadingView.center = CGPointMake(self.frame.size.width/2.0, self.frame.size.height/1.5);
                     }
                     else
                     {
-                        _loadingView.center = CGPointMake(self.frame.size.width/2.8, self.frame.size.height/1.5);
+                        _loadingView.center = CGPointMake(self.frame.size.width/2.0, self.frame.size.height/1.5);
                     }
                 }
                 
