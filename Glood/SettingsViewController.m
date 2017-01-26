@@ -96,26 +96,26 @@
 
 - (void)stateChanged
 {
-    if(self.jtSwitch.isOn == YES) {
-        UILocalNotification *notification=[[UILocalNotification alloc] init];
-        if (notification!=nil) {//判断系统是否支持本地通知
-            notification.fireDate = [NSDate dateWithTimeIntervalSince1970:18*60*60*24];//本次开启立即执行的周期
-            notification.repeatInterval=kCFCalendarUnitWeekday;//循环通知的周期
-            notification.timeZone=[NSTimeZone defaultTimeZone];
-            notification.alertBody=@"you have a new message!";//弹出的提示信息
-            notification.applicationIconBadgeNumber=0; //应用程序的右上角小数字
-            notification.soundName= UILocalNotificationDefaultSoundName;//本地化通知的声音
-            notification.hasAction = NO;
-            [[UIApplication sharedApplication] scheduleLocalNotification:notification];
-        }
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:@"打开消息通知" delegate:self cancelButtonTitle:@"ok" otherButtonTitles:nil, nil];
-        [alertView show];
-    }
-    else {
-        [[UIApplication sharedApplication] unregisterForRemoteNotifications];
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:@"关闭消消息通知将不在收到任何推送" delegate:self cancelButtonTitle:@"ok" otherButtonTitles:nil, nil];
-        [alertView show];
-    }
+//    if(self.jtSwitch.isOn == YES) {
+//        UILocalNotification *notification=[[UILocalNotification alloc] init];
+//        if (notification!=nil) {//判断系统是否支持本地通知
+//            notification.fireDate = [NSDate dateWithTimeIntervalSince1970:18*60*60*24];//本次开启立即执行的周期
+//            notification.repeatInterval=kCFCalendarUnitWeekday;//循环通知的周期
+//            notification.timeZone=[NSTimeZone defaultTimeZone];
+//            notification.alertBody=@"you have a new message!";//弹出的提示信息
+//            notification.applicationIconBadgeNumber=0; //应用程序的右上角小数字
+//            notification.soundName= UILocalNotificationDefaultSoundName;//本地化通知的声音
+//            notification.hasAction = NO;
+//            [[UIApplication sharedApplication] scheduleLocalNotification:notification];
+//        }
+//        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:@"打开消息通知" delegate:self cancelButtonTitle:@"ok" otherButtonTitles:nil, nil];
+//        [alertView show];
+//    }
+//    else {
+//        [[UIApplication sharedApplication] unregisterForRemoteNotifications];
+//        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:@"关闭消消息通知将不在收到任何推送" delegate:self cancelButtonTitle:@"ok" otherButtonTitles:nil, nil];
+//        [alertView show];
+//    }
 }
 
 #pragma mark ==========侧滑菜单栏=========

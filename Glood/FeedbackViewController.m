@@ -108,7 +108,7 @@
             }
             else
             {
-                [ShowMessage showMessage:@"发送内容为空"];
+                [ShowMessage showMessage:@"send message cannot be empty"];
             }
             
         }];
@@ -133,7 +133,7 @@
         }
         else
         {
-            [ShowMessage showMessage:@"发送内容为空"];
+            [ShowMessage showMessage:@"send message cannot be empty"];
         }
         
     }];

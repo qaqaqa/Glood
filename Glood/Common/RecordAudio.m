@@ -90,7 +90,7 @@
     }else
         self.myAppDelegate = [UIApplication sharedApplication].delegate;
         [self performSelector:@selector(cancelTimer) withObject:nil afterDelay:0.5f];
-        [ShowMessage showMessage:@"发送的语音有问题"];
+        [ShowMessage showMessage:@"recording error"];
     return nil;
     
 }

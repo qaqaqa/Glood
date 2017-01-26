@@ -48,7 +48,7 @@
             
         }
         [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
-        [MMProgressHUD showWithTitle:@"拉取历史消息" status:NSLocalizedString(@"Please wating", nil)];
+        [MMProgressHUD showWithTitle:@"get chat history" status:NSLocalizedString(@"Please wating", nil)];
         dispatch_async(dispatch_get_global_queue(0, 0), ^{
             [userInfomationData.commonService getMessageInRoom:@"" roomId:roomId];
         });

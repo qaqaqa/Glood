@@ -82,7 +82,7 @@
     NSLog(@"xxxx-*-------  %@",[[NSUserDefaults standardUserDefaults] objectForKey:Exchange_OAUTH2_TOKEN]);
     if (![CommonService isBlankString:[[NSUserDefaults standardUserDefaults] objectForKey:Exchange_OAUTH2_TOKEN]]) {
         //又置换后的token，则直接登陆
-        [MMProgressHUD showWithTitle:@"正在连接聊天服务器" status:NSLocalizedString(@"Please wating", nil)];
+        [MMProgressHUD showWithTitle:@"connecting to the chat server" status:NSLocalizedString(@"Please wating", nil)];
         UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
         [userInfomationData.commonService connectionSignlar];
     }
@@ -132,7 +132,7 @@
 {
     if (![CommonService isBlankString:[[NSUserDefaults standardUserDefaults] objectForKey:Exchange_OAUTH2_TOKEN]]) {
         //又置换后的token，则直接登陆
-        [MMProgressHUD showWithTitle:@"正在连接聊天服务器" status:NSLocalizedString(@"Please wating", nil)];
+        [MMProgressHUD showWithTitle:@"connecting to the chat server" status:NSLocalizedString(@"Please wating", nil)];
         UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
         [userInfomationData.commonService connectionSignlar];
     }
@@ -235,7 +235,7 @@
     NSLog(@"--error--%@－－－%ld",error,(long)[error code]);
     if ([error code] == -1001)
     {
-        [MMProgressHUD dismissWithError:@"请求超时，请重新尝试" afterDelay:2.0f];
+        [MMProgressHUD dismissWithError:@"time out,try again!" afterDelay:2.0f];
     }
     if([error code] == NSURLErrorCancelled)  {
         return;
@@ -277,14 +277,14 @@
         {
             //调用外部注册
             [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
-            [MMProgressHUD showWithTitle:@"外部账号注册中" status:NSLocalizedString(@"Please wating", nil)];
+            [MMProgressHUD showWithTitle:@"register" status:NSLocalizedString(@"Please wating", nil)];
             [[userInfomationData.commonService signup_external:[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_TOKEN] provider:[mutableDic objectForKey:@"provider"]] then:^id(id value) {
                 NSLog(@"调用外部注册成功");
                 [self exchangeToken];
                 return value;
             } error:^id(NSError *error) {
                 NSLog(@"调用外部注册失败--- %@",error);
-                [MMProgressHUD dismissWithError:@"外部注册失败，请重新尝试" afterDelay:2.0f];
+                [MMProgressHUD dismissWithError:@"register error,try again!" afterDelay:2.0f];
                 return error;
             }];
             
@@ -305,17 +305,17 @@
 {
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
     [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
-    [MMProgressHUD showWithTitle:@"置换token" status:NSLocalizedString(@"Please wating", nil)];
+    [MMProgressHUD showWithTitle:@"exchange token" status:NSLocalizedString(@"Please wating", nil)];
     [[userInfomationData.commonService obtain_local_access_token:[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_TOKEN]] then:^id(id value) {
         NSLog(@"置换token成功----%@",[[value objectForKey:@"result"] objectForKey:@"access_token"]);
-        [MMProgressHUD showWithTitle:@"正在连接聊天服务器" status:NSLocalizedString(@"Please wating", nil)];
+        [MMProgressHUD showWithTitle:@"connecting to the chat server" status:NSLocalizedString(@"Please wating", nil)];
         [[NSUserDefaults standardUserDefaults] setObject:[[value objectForKey:@"result"] objectForKey:@"access_token"] forKey:Exchange_OAUTH2_TOKEN];
         [[NSUserDefaults standardUserDefaults] setObject:[[value objectForKey:@"result"] objectForKey:@"user_id"] forKey:FACEBOOK_OAUTH2_USERID];
         [userInfomationData.commonService connectionSignlar];
         return value;
     } error:^id(NSError *error) {
         NSLog(@"置换token失败--- %@",error.description);
-        [MMProgressHUD dismissWithError:@"置换token失败，请重新尝试" afterDelay:2.0f];
+        [MMProgressHUD dismissWithError:@"exchange token error,try again!" afterDelay:2.0f];
         //如果报账号不存在，则调用外部登陆
         
         return error;

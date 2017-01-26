@@ -129,7 +129,6 @@ typedef void (^SRWebSocketStartBlock)(id response, NSError *error);
     
     NSMutableURLRequest *request = [[AFHTTPRequestSerializer serializer] requestWithMethod:@"GET" URLString:[_connectionInfo.connection.url stringByAppendingString:reconnecting ? @"reconnect" : @"connect"] parameters:parameters error:nil];
     [_connectionInfo.connection prepareRequest:request]; //TODO: prepareRequest
-//    [[NSUserDefaults standardUserDefaults] setObject:@"closed" forKey:@"signlarStauts"];
     SRLogWSDebug(@"websocket will connect at url: %@",[request.URL absoluteString]);
     
     [self setStartBlock:block];

@@ -37,7 +37,7 @@
     // Override point for customization after application launch.
     
     [Bugly startWithAppId:@"900016269"];
-    
+//    [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"signlarStauts"];
     
     [[FBSDKApplicationDelegate sharedInstance] application:application
                              didFinishLaunchingWithOptions:launchOptions];
@@ -142,6 +142,7 @@
 - (void)subscribeToTopic:(NSDictionary*)dic
 {
     dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSUserDefaults standardUserDefaults] setObject:@"open" forKey:@"signlarStauts"];
         for (NSInteger i = 0; i < [[dic objectForKey:@"result"] count]; i ++) {
             [[FIRMessaging messaging] subscribeToTopic:[NSString stringWithFormat:@"/topics/events-%@",[[[dic objectForKey:@"result"] objectAtIndex:i] objectForKey:@"id"]]];
             NSLog(@"Subscribed to news topic");
@@ -263,6 +264,9 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     
     // 设置网络状态变化回调
     [[AFNetworkReachabilityManager sharedManager] setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
+        UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+        
+        
         if (status == AFNetworkReachabilityStatusNotReachable ||status ==  AFNetworkReachabilityStatusUnknown)
         {
             [[NSNotificationCenter defaultCenter] postNotificationName:@"showMenu" object:nil];
@@ -270,7 +274,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
             manager.requestSerializer.cachePolicy =  NSURLRequestReturnCacheDataDontLoad;
             [self.tipsView setHidden:NO];
             [self.networkDisBGView setHidden:NO];
-            
+            [[NSUserDefaults standardUserDefaults] setObject:@"closed" forKey:@"signlarStauts"];
         }
         else
         {

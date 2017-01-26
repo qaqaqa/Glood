@@ -325,7 +325,7 @@
         dispatch_async(dispatch_get_global_queue(0,0), ^{
             UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
             [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
-            [MMProgressHUD showWithTitle:@"拉取历史聊天记录" status:NSLocalizedString(@"Please wating", nil)];
+            [MMProgressHUD showWithTitle:@"get chat history" status:NSLocalizedString(@"Please wating", nil)];
             [userInfomationData.commonService getMessageInRoom:@"" roomId:roomId];
         });
         
@@ -438,7 +438,7 @@
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
     NSLog(@"check-in");
     [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
-    [MMProgressHUD showWithTitle:@"获取票列表" status:NSLocalizedString(@"Please wating", nil)];
+    [MMProgressHUD showWithTitle:@"get tickets list" status:NSLocalizedString(@"Please wating", nil)];
     [[userInfomationData.commonService getTicket:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"]] then:^id(id value) {
         NSLog(@"获取票列表成功");
         [MMProgressHUD dismiss];
@@ -454,7 +454,7 @@
         return value;
     } error:^id(NSError *error) {
         NSLog(@"获取票列表失败--- %@",error);
-        [MMProgressHUD dismissWithError:@"获取票列表失败，请重新尝试" afterDelay:2.0f];
+        [MMProgressHUD dismissWithError:@"get tickets list error,try again!" afterDelay:2.0f];
         return error;
     }];
 }
@@ -516,6 +516,7 @@
                 NSLog(@"*--*---*--*--xx-----  %@-+--%@",[[[NSUserDefaults standardUserDefaults] objectForKey:@"pushUserInfo"] objectForKey:@"eventId"],[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"id"]);
                 [[NSUserDefaults standardUserDefaults] setObject:nil forKey:@"pushUserInfo"];
                 [[NSUserDefaults standardUserDefaults] setInteger:i forKey:@"currentIndex"];
+                self.eventListView.frame = CGRectMake(0, -SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT);
                 UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
                 if ([userInfomationData.isEnterMicList isEqualToString:@"false"])
                 {
@@ -535,7 +536,7 @@
                     {
                         UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
                         [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
-                        [MMProgressHUD showWithTitle:@"拉取历史聊天记录" status:NSLocalizedString(@"Please wating", nil)];
+                        [MMProgressHUD showWithTitle:@"get chat history" status:NSLocalizedString(@"Please wating", nil)];
                         [userInfomationData.commonService getMessageInRoom:@"" roomId:roomId];
                     }
                 }
@@ -608,15 +609,10 @@
         {
             UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
             [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
-            [MMProgressHUD showWithTitle:@"拉取历史聊天记录" status:NSLocalizedString(@"Please wating", nil)];
+            [MMProgressHUD showWithTitle:@"get chat history" status:NSLocalizedString(@"Please wating", nil)];
             [userInfomationData.commonService getMessageInRoom:@"" roomId:roomId];
         }
 //        在列表中选择了那个roomid
-//        [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
-//        [MMProgressHUD showWithTitle:@"解析语音" status:NSLocalizedString(@"Please wating", nil)];
-//        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-//            [userInfomationData.commonService getMessageInRoom:@"" roomId:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"]];
-//        });
     }
     else
     {
@@ -633,17 +629,9 @@
         {
             UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
             [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
-            [MMProgressHUD showWithTitle:@"拉取历史聊天记录" status:NSLocalizedString(@"Please wating", nil)];
+            [MMProgressHUD showWithTitle:@"get chat history" status:NSLocalizedString(@"Please wating", nil)];
             [userInfomationData.commonService getMessageInRoom:@"" roomId:roomId];
         }
-        
-        
-//        [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
-//        [MMProgressHUD showWithTitle:@"解析语音" status:NSLocalizedString(@"Please wating", nil)];
-//        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-//            [userInfomationData.commonService getMessageInRoom:@"" roomId:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"]];
-//        });
-        
         
     }
     
@@ -1002,7 +990,7 @@
         }
         [self.myAppDelegate deletePreLoadingMessage:roomIdStr message:[NSString stringWithFormat:@"%lld",userInfomationData.yuMessageId]];
         NSLog(@"取消录音！");
-        [ShowMessage showMessage:@"取消录音"];
+        [ShowMessage showMessage:@"cancel recording"];
         [self.mockBgView setHidden:YES];
         UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
         [self.soundingRecoringButton setImage:[UIImage imageNamed:@"voice.png"] forState:UIControlStateNormal];
@@ -1080,9 +1068,11 @@
                                                              @"message_id":messageIdx
                                                              };
     [userInfomationData.waitingSendMessageQunenMutableArr addObject:userInfomationData.waitingSendMessageQunenMutableDic];
+    
     dispatch_async(dispatch_get_global_queue(0,0), ^{
         for (NSInteger i = 0; i < [userInfomationData.waitingSendMessageQunenMutableArr count]; i ++) {
             [userInfomationData.commonService sendMessageInRoom:[[userInfomationData.waitingSendMessageQunenMutableArr objectAtIndex:i] objectForKey:@"message"] roomId:[[userInfomationData.waitingSendMessageQunenMutableArr objectAtIndex:i] objectForKey:@"room_id"] messageType:3 messageId:[[userInfomationData.waitingSendMessageQunenMutableArr objectAtIndex:i] objectForKey:@"message_id"]];
+            [userInfomationData.waitingSendMessageQunenMutableArr removeObjectAtIndex:i];
         }
     });
 }

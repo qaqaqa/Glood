@@ -152,15 +152,15 @@
         NSLog(@"------- 扫描结果：%@--- %@",barcode,event_id);
         
         [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
-        [MMProgressHUD showWithTitle:@"正在添加票" status:NSLocalizedString(@"Please wating", nil)];
+        [MMProgressHUD showWithTitle:@"add ticket" status:NSLocalizedString(@"Please wating", nil)];
         [[userInfomationData.commonService addTicket:barcode eventId:event_id] then:^id(id value) {
-            [MMProgressHUD showWithTitle:@"进入聊天室" status:NSLocalizedString(@"Please wating", nil)];
+            [MMProgressHUD showWithTitle:@"join chatroom" status:NSLocalizedString(@"Please wating", nil)];
             NSLog(@"-------%@",value);
             [userInfomationData.commonService joinRoom:event_id];
             return value;
         } error:^id(NSError *error) {
             NSLog(@"添加票失败--- %@",error);
-            [MMProgressHUD dismissWithError:@"添加票失败，请重新再试" afterDelay:2.0f];
+            [MMProgressHUD dismissWithError:@"add ticket error,try again" afterDelay:2.0f];
             return error;
         }];
     }
@@ -175,15 +175,15 @@
             NSLog(@"------- 扫描结果：%@--- %@",barcode,event_id);
             
             [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
-            [MMProgressHUD showWithTitle:@"正在添加票" status:NSLocalizedString(@"Please wating", nil)];
+            [MMProgressHUD showWithTitle:@"add ticket" status:NSLocalizedString(@"Please wating", nil)];
             [[userInfomationData.commonService addTicket:barcode eventId:event_id] then:^id(id value) {
-                [MMProgressHUD showWithTitle:@"进入聊天室" status:NSLocalizedString(@"Please wating", nil)];
+                [MMProgressHUD showWithTitle:@"join chatroom" status:NSLocalizedString(@"Please wating", nil)];
                 NSLog(@"-------%@",value);
                 [userInfomationData.commonService joinRoom:event_id];
                 return value;
             } error:^id(NSError *error) {
                 NSLog(@"添加票失败--- %@",error);
-                [MMProgressHUD dismissWithError:@"添加票失败，请重新再试" afterDelay:2.0f];
+                [MMProgressHUD dismissWithError:@"add ticket error,try again" afterDelay:2.0f];
                 return error;
             }];
         }

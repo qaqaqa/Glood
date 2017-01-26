@@ -122,14 +122,14 @@
         if ([[[serializedData objectForKey:@"error"] objectForKey:@"message"] isEqualToString:@"NotRegisterExternalAccount"]) {
             //调用外部注册
             UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
-            [MMProgressHUD showWithTitle:@"外部账号注册中" status:NSLocalizedString(@"Please wating", nil)];
+            [MMProgressHUD showWithTitle:@"register" status:NSLocalizedString(@"Please wating", nil)];
             [[userInfomationData.commonService signup_external:[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_TOKEN] provider:@"Facebook"] then:^id(id value) {
                 NSLog(@"调用外部注册成功");
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"exchangeToken" object:self];
                 return value;
             } error:^id(NSError *error) {
                 NSLog(@"调用外部注册失败--- %@",error);
-                [MMProgressHUD dismissWithError:@"外部注册失败，请重新尝试" afterDelay:2.0f];
+                [MMProgressHUD dismissWithError:@"register error" afterDelay:2.0f];
                 return error;
             }];
         }
@@ -251,6 +251,7 @@
     self.chat = [hubConnection createHubProxy:@"chat"];
     
     userInfomationData.chat = self.chat;
+    userInfomationData.hubConnection = @"";
     userInfomationData.hubConnection = hubConnection;
     [self.chat on:@"onUserJoinRoom" perform:self selector:@selector(onUserJoinRoom:)];
     [self.chat on:@"onUserLeaveRoom" perform:self selector:@selector(onUserLeaveRoom:)];
@@ -261,7 +262,7 @@
         NSLog(@"Connection Started");
         
         [[NSUserDefaults standardUserDefaults] setObject:@"open" forKey:@"signlarStauts"];
-        [MMProgressHUD showWithTitle:@"拉取活动信息" status:NSLocalizedString(@"Please wating", nil)];
+        [MMProgressHUD showWithTitle:@"get event info" status:NSLocalizedString(@"Please wating", nil)];
         if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"open"]) {
             [[self getEventsList] then:^id(id value) {
                 UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
@@ -269,13 +270,13 @@
                 userInfomationData.eventDic = value;
                 [self.myAppDelegate subscribeToTopic:value];
                 NSLog(@"拉取活动成功----%@",[[[value objectForKey:@"result"] objectAtIndex:0] objectForKey:@"id"]);
-                [MMProgressHUD showWithTitle:@"正在加入聊天室" status:NSLocalizedString(@"Please wating", nil)];
+                [MMProgressHUD showWithTitle:@"join chatroom" status:NSLocalizedString(@"Please wating", nil)];
                 [self joinChatRoom];
                 return value;
             } error:^id(NSError *error) {
                 NSLog(@"拉取活动失败--- %@",error);
                 //拉取活动失败，继续拉取
-                [MMProgressHUD dismissWithError:@"拉取活动失败，请重新尝试" afterDelay:2.0f];
+                [MMProgressHUD dismissWithError:@"get event info error,try again!" afterDelay:2.0f];
                 if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"open"]) {
                     [[self getEventsList] then:^id(id value) {
                         UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
@@ -283,12 +284,12 @@
                         userInfomationData.eventDic = value;
                         [self.myAppDelegate subscribeToTopic:value];
                         NSLog(@"拉取活动成功----");
-                        [MMProgressHUD showWithTitle:@"正在加入聊天室" status:NSLocalizedString(@"Please wating", nil)];
+                        [MMProgressHUD showWithTitle:@"join chatroom" status:NSLocalizedString(@"Please wating", nil)];
                         [self joinChatRoom];
                         return value;
                     } error:^id(NSError *error) {
                         NSLog(@"拉取活动失败--- %@",error);
-                        [MMProgressHUD dismissWithError:@"拉取活动失败，请重新尝试" afterDelay:2.0f];
+                        [MMProgressHUD dismissWithError:@"get event info error,try again!" afterDelay:2.0f];
                         return error;
                     }];
                 }
@@ -297,36 +298,45 @@
         }
         else
         {
-            [ShowMessage showMessage:@"已断开聊天室"];
+            [ShowMessage showMessage:@"disconnect chatroom"];
         }
         
     }];
     [hubConnection setConnectionSlow:^{
+        [[NSUserDefaults standardUserDefaults] setObject:@"open" forKey:@"signlarStauts"];
         NSLog(@"Connection Slow");
-//        [userInfomationData.hubConnection disconnect];
-//        [[NSUserDefaults standardUserDefaults] setObject:@"closed" forKey:@"signlarStauts"];
-//        [self reconntionSignlar];
     }];
     [hubConnection setClosed:^{
         NSLog(@"Connection Closed");
+//        [userInfomationData.hubConnection stop];
 //        [userInfomationData.hubConnection disconnect];
-//        [[NSUserDefaults standardUserDefaults] setObject:@"closed" forKey:@"signlarStauts"];
         
-//        [self reconntionSignlar];
+        [self.myAppDelegate deleteAllPreLoadingMessage];
+//        [[NSUserDefaults standardUserDefaults] setObject:@"closed" forKey:@"signlarStauts"];
     }];
     [hubConnection setError:^(NSError *error) {
+//        [userInfomationData.hubConnection stop];
 //        [userInfomationData.hubConnection disconnect];
+        [self.myAppDelegate deleteAllPreLoadingMessage];
         NSLog(@"Connection Error %@",error.description);
         
         
-//        [[NSUserDefaults standardUserDefaults] setObject:@"closed" forKey:@"signlarStauts"];
+        
         if ([error.description rangeOfString:@"Code=-1001"].location !=NSNotFound) {
-            [MMProgressHUD dismissWithError:@"请求超时，马上重试"];
+            [MMProgressHUD dismissWithError:@"time out,try again"];
+            [[NSUserDefaults standardUserDefaults] setObject:@"closed" forKey:@"signlarStauts"];
         }
         else if([error.description rangeOfString:@"Code=-1005"].location !=NSNotFound)
         {
-            [MMProgressHUD dismissWithError:@"网络连接已中断"];
+            [MMProgressHUD dismissWithError:@"network error"];
+            [[NSUserDefaults standardUserDefaults] setObject:@"closed" forKey:@"signlarStauts"];
         }
+        else if([error.description rangeOfString:@"Code=-1009"].location !=NSNotFound)
+        {
+            [MMProgressHUD dismissWithError:@"network error"];
+            [[NSUserDefaults standardUserDefaults] setObject:@"closed" forKey:@"signlarStauts"];
+        }
+        
         else
         {
             [MMProgressHUD dismiss];
@@ -347,7 +357,7 @@
             if (error) {
                 //加入聊天室失败，继续尝试加入
                 [self joinChatRoom];
-                [MMProgressHUD dismissWithError:@"加入聊天室失败，请重新尝试" afterDelay:2.0f];
+                [MMProgressHUD dismissWithError:@"join chatroom,try again!" afterDelay:2.0f];
                 NSLog(@"xxxxxxxxxxx----%@",error.description);
             }
             if (response == NULL) {
@@ -392,7 +402,7 @@
     }
     else
     {
-        [ShowMessage showMessage:@"已断开聊天室"];
+        [ShowMessage showMessage:@"disconnect chatroom"];
     }
     
 }
@@ -403,7 +413,7 @@
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
     if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"closed"]){
 //        [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
-        [MMProgressHUD showWithTitle:@"断线重连中" status:NSLocalizedString(@"Please wating", nil)];
+        [MMProgressHUD showWithTitle:@"reConnection" status:NSLocalizedString(@"Please wating", nil)];
         [userInfomationData.timer invalidate];
         [self connectionSignlar];
         self.reConnectionTag = @"reConnetion";
@@ -484,7 +494,11 @@
             else
             {
                 [self.myAppDelegate insertCoreData:[msg objectForKey:@"user_id"] avatarImage:[msg objectForKey:@"user_avatar"] roomId:[msg objectForKey:@"room_id"] time:[NSNumber numberWithFloat:[[arr objectAtIndex:0] floatValue]] message:[arr objectAtIndex:1] messageId:[msg objectForKey:@"id"] fromUserName:[msg objectForKey:@"user_name"]];
-                [self.myAppDelegate deletePreLoadingMessage:roomId message:[NSString stringWithFormat:@"%lld",userInfomationData.yuMessageId]];
+                
+                for (NSInteger i = 0; i < 10; i++) {
+                    [self.myAppDelegate deletePreLoadingMessage:roomId message:[NSString stringWithFormat:@"%lld",userInfomationData.yuMessageId-i]];
+                }
+                
 //                NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Mic"];
 //                //  2.设置排序
 //                //  2.1创建排序描述对象
@@ -556,7 +570,7 @@
         [userInfomationData.chat invoke:@"joinRoom" withArgs:@[roomId] completionHandler:^(id response, NSError *error) {
             if (error) {
                 NSLog(@"加入聊天室失败--- %@",error.description);
-                [MMProgressHUD dismissWithError:@"加入聊天室失败，请重新再试" afterDelay:2.0f];
+                [MMProgressHUD dismissWithError:@"join chatroom,try again" afterDelay:2.0f];
                 return;
             }
             if (response == NULL) {
@@ -590,7 +604,7 @@
     }
     else
     {
-        [ShowMessage showMessage:@"已断开聊天室"];
+        [ShowMessage showMessage:@"disconnect chatroom"];
     }
     
 }
@@ -605,7 +619,7 @@
         [userInfomationData.chat invoke:@"sendMessageInRoom" withArgs:@[messgae,roomIdContent,[NSNumber numberWithInteger:messageType]] completionHandler:^(id response, NSError *error) {
             
             if (error) {
-                [ShowMessage showMessage:@"消息发送失败"];
+                [ShowMessage showMessage:@"message sending failed"];
                 [self.myAppDelegate deletePreLoadingMessage:roomIdContent message:messageIdx];
                 for (NSInteger i = 0; i < [userInfomationData.waitingSendMessageQunenMutableArr count]; i ++) {
                     if ([[[userInfomationData.waitingSendMessageQunenMutableArr objectAtIndex:i] objectForKey:@"message_id"] isEqualToString:messgae] && [[[userInfomationData.waitingSendMessageQunenMutableArr objectAtIndex:i] objectForKey:@"room_id"] isEqualToString:roomIdContent]) {
@@ -622,7 +636,7 @@
             }
             
             
-            [ShowMessage showMessage:@"消息发送成功"];
+            [ShowMessage showMessage:@"message sent successfully"];
             NSLog(@"发送消息-*-*-*-*-*-*-*-*-*-*  %@",response);
             
             for (NSInteger x = 0; x < [userInfomationData.waitingSendMessageQunenMutableArr count]; x ++) {
@@ -665,7 +679,7 @@
     }
     else
     {
-        [ShowMessage showMessage:@"已断开聊天室"];
+        [ShowMessage showMessage:@"disconnect chatroom"];
     }
     
 }
@@ -722,7 +736,7 @@
     }
     else
     {
-        [ShowMessage showMessage:@"已断开聊天室"];
+        [ShowMessage showMessage:@"disconnect chatroom"];
     }
     
 }
@@ -734,20 +748,20 @@
         UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
         [userInfomationData.chat invoke:@"sendFeedback" withArgs:@[feedbackContent] completionHandler:^(id response, NSError *error) {
             if (error) {
-                [ShowMessage showMessage:@"反馈发送失败"];
+                [ShowMessage showMessage:@"feedback sending fail"];
                 NSLog(@"xxxxxxxxxxx----%@",error.description);
                 return;
             }
             if (response == NULL) {
                 return;
             }
-            [ShowMessage showMessage:@"反馈发送成功"];
+            [ShowMessage showMessage:@"feedback sent successfully"];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"sendFeedbackScu" object:self];
         }];
     }
     else
     {
-        [ShowMessage showMessage:@"已断开聊天室"];
+        [ShowMessage showMessage:@"disconnect chatroom"];
     }
     
 }
