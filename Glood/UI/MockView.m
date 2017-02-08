@@ -211,6 +211,9 @@
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(sendMessageScu)name:@"sendMessageScu"object:nil];
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(recordOrExchangeChatRoomStopAnimation)name:@"recordOrExchangeChatRoomStopAnimation"object:nil];
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(startRecordAudio)name:@"startRecordAudio"object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(slideLeftShield)name:@"slideLeftShield"object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(slideRightLike)name:@"slideRightLike"object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(slideCenterRestore)name:@"slideCenterRestore"object:nil];
 }
 
 - (void)deallocNSNotificationCenter
@@ -221,6 +224,43 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"sendMessageScu" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"recordOrExchangeChatRoomStopAnimation" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"startRecordAudio" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"slideLeftShield" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"slideRightLike" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"slideCenterRestore" object:nil];
+}
+
+#pragma mark ==========  屏蔽 ===========
+- (void)slideLeftShield
+{
+    //屏蔽
+    self.userInteractionEnabled = NO;
+    self.tableView.scrollEnabled = NO;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        self.userInteractionEnabled = YES;
+        self.tableView.scrollEnabled = YES;
+        [self.tableView reloadData];
+    });
+}
+
+#pragma mark ==========  喜欢 ===========
+- (void)slideRightLike
+{
+    //喜欢
+    self.userInteractionEnabled = NO;
+    self.tableView.scrollEnabled = NO;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        self.userInteractionEnabled = YES;
+        self.tableView.scrollEnabled = YES;
+        [self.tableView reloadData];
+    });
+}
+
+#pragma mark ==========  复原 ===========
+- (void)slideCenterRestore
+{
+    //复原
+    self.userInteractionEnabled = YES;
+    self.tableView.scrollEnabled = YES;
 }
 
 - (void)beginRefreshingxx
@@ -336,6 +376,8 @@
     
     return self.micTableViewCell;
 }
+
+
 
 - (void)onCancelBtnClick
 {
@@ -596,10 +638,6 @@
         }
         
     }
-    
-    //消除活动列表后面未读消息的小红掉标记
-//    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:[NSString stringWithFormat:@"%@%@",@"red",[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"]]];
-    
 }
 
 - (void)sendMessageScu

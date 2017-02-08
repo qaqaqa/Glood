@@ -8,7 +8,7 @@
 
 #import "EventCoverFlowView.h"
 #import "Define.h"
-#import "MicTableViewCell.h"
+#import "CoverFlowTableViewCell.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 #import <SDWebImage/UIButton+WebCache.h>
 #import "AppDelegate.h"
@@ -21,7 +21,7 @@
 
 @interface EventCoverFlowView()
 
-@property (strong, nonatomic) MicTableViewCell *micTableViewCell;
+@property (strong, nonatomic) CoverFlowTableViewCell *micTableViewCell;
 @property (strong, nonatomic) UIActivityIndicatorView *spinner;
 @property (strong, nonatomic) AppDelegate *myAppDelegate;
 
@@ -219,7 +219,7 @@
     self.micTableViewCell = [tableView dequeueReusableCellWithIdentifier:@"MicTableViewCell"];
     if (self.micTableViewCell == nil)
     {
-        self.micTableViewCell = [[MicTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"MicTableViewCell" index:indexPath.row];
+        self.micTableViewCell = [[CoverFlowTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"CoverFlowTableViewCell" index:indexPath.row];
         [self.micTableViewCell setSelectionStyle:UITableViewCellSelectionStyleNone];
     }
     NSInteger xx;

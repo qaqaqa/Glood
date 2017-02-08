@@ -17,6 +17,7 @@
 		CC258BF31E10D24700491916 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CC258BF21E10D24700491916 /* Assets.xcassets */; };
 		CC258C011E10D24700491916 /* GloodTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CC258C001E10D24700491916 /* GloodTests.m */; };
 		CC258C0C1E10D24700491916 /* GloodUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = CC258C0B1E10D24700491916 /* GloodUITests.m */; };
+		CC28D72C1E4B174300E22200 /* CoverFlowTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CC28D72B1E4B174300E22200 /* CoverFlowTableViewCell.m */; };
 		CC3BB5841E2F2D0000992527 /* CoverFlowAlpahView.m in Sources */ = {isa = PBXBuildFile; fileRef = CC3BB5831E2F2D0000992527 /* CoverFlowAlpahView.m */; };
 		CC3BE4201E10D3D90034214B /* RecordAudio.m in Sources */ = {isa = PBXBuildFile; fileRef = CC3BE41D1E10D3D90034214B /* RecordAudio.m */; };
 		CC3BE4211E10D3D90034214B /* UserInfomationData.m in Sources */ = {isa = PBXBuildFile; fileRef = CC3BE41F1E10D3D90034214B /* UserInfomationData.m */; };
@@ -131,6 +132,7 @@
 		CC3BE56F1E10D6520034214B /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC3BE56E1E10D6520034214B /* CoreMedia.framework */; };
 		CC3BE5711E10D6610034214B /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CC3BE5701E10D6610034214B /* libiconv.tbd */; };
 		CC3BE5731E10D6850034214B /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC3BE5721E10D6850034214B /* QuartzCore.framework */; };
+		CC4AC6AD1E49D537001E3721 /* app_img_like2.png in Resources */ = {isa = PBXBuildFile; fileRef = CC4AC6AC1E49D537001E3721 /* app_img_like2.png */; };
 		CC5A1C211E1B95F70005963F /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC5A1C1D1E1B95F70005963F /* Bolts.framework */; };
 		CC5A1C221E1B95F70005963F /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC5A1C1E1E1B95F70005963F /* FBSDKCoreKit.framework */; };
 		CC5A1C231E1B95F70005963F /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC5A1C1F1E1B95F70005963F /* FBSDKLoginKit.framework */; };
@@ -179,6 +181,8 @@
 		CC258C071E10D24700491916 /* GloodUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GloodUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC258C0B1E10D24700491916 /* GloodUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GloodUITests.m; sourceTree = "<group>"; };
 		CC258C0D1E10D24700491916 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CC28D72A1E4B174300E22200 /* CoverFlowTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoverFlowTableViewCell.h; sourceTree = "<group>"; };
+		CC28D72B1E4B174300E22200 /* CoverFlowTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoverFlowTableViewCell.m; sourceTree = "<group>"; };
 		CC3BB5821E2F2D0000992527 /* CoverFlowAlpahView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoverFlowAlpahView.h; sourceTree = "<group>"; };
 		CC3BB5831E2F2D0000992527 /* CoverFlowAlpahView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoverFlowAlpahView.m; sourceTree = "<group>"; };
 		CC3BE41B1E10D3D90034214B /* Define.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Define.h; sourceTree = "<group>"; };
@@ -387,6 +391,7 @@
 		CC3BE56E1E10D6520034214B /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		CC3BE5701E10D6610034214B /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
 		CC3BE5721E10D6850034214B /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		CC4AC6AC1E49D537001E3721 /* app_img_like2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = app_img_like2.png; sourceTree = "<group>"; };
 		CC5A1C1D1E1B95F70005963F /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
 		CC5A1C1E1E1B95F70005963F /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		CC5A1C1F1E1B95F70005963F /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
@@ -930,6 +935,7 @@
 				CC3BE4D41E10D3E60034214B /* up.png */,
 				CC3BE4D51E10D3E60034214B /* voice.png */,
 				CC3BE4D61E10D3E60034214B /* voice2.png */,
+				CC4AC6AC1E49D537001E3721 /* app_img_like2.png */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -942,6 +948,8 @@
 				CC3BE4D91E10D3E60034214B /* CeHuaView.m */,
 				CC3BE4E11E10D3E60034214B /* CommonNavView.h */,
 				CC3BE4E21E10D3E60034214B /* CommonNavView.m */,
+				CC28D72A1E4B174300E22200 /* CoverFlowTableViewCell.h */,
+				CC28D72B1E4B174300E22200 /* CoverFlowTableViewCell.m */,
 				CC3BE4E31E10D3E60034214B /* EventCoverFlowView.h */,
 				CC3BE4E41E10D3E60034214B /* EventCoverFlowView.m */,
 				CC3BE4E51E10D3E60034214B /* EventListView.h */,
@@ -1114,6 +1122,7 @@
 				CC3BE5321E10D3E70034214B /* eye.png in Resources */,
 				CC3BE5371E10D3E70034214B /* like2.png in Resources */,
 				CC3BE53C1E10D3E70034214B /* play.png in Resources */,
+				CC4AC6AD1E49D537001E3721 /* app_img_like2.png in Resources */,
 				CC3BE5351E10D3E70034214B /* glood_text2.png in Resources */,
 				CC3BE5431E10D3E70034214B /* voice.png in Resources */,
 				CC3BE5421E10D3E70034214B /* up.png in Resources */,
@@ -1274,6 +1283,7 @@
 				CC3BE5171E10D3E70034214B /* MMVectorImage.m in Sources */,
 				CC3BE4F81E10D3E60034214B /* JTMaterialSwitch.m in Sources */,
 				CC3BE5491E10D3E70034214B /* CommonNavView.m in Sources */,
+				CC28D72C1E4B174300E22200 /* CoverFlowTableViewCell.m in Sources */,
 				CC3BE5001E10D3E60034214B /* qrspec.c in Sources */,
 				CC3BB5841E2F2D0000992527 /* CoverFlowAlpahView.m in Sources */,
 				CC3BE54E1E10D3E70034214B /* MockView.m in Sources */,

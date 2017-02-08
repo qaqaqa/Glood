@@ -67,6 +67,8 @@
 
 @property (strong, nonatomic) AppDelegate *myAppDelegate;
 
+@property (retain, nonatomic) NSTimer *animationtTimer;
+
 @end
 
 @implementation EventViewController
@@ -788,6 +790,20 @@
     }];
 }
 
+- (void)timerAnimation
+{
+    [UIView animateWithDuration:1.5 animations:^{
+        self.soundingRecoringButton.transform = CGAffineTransformMakeScale(1.1,1.1);
+        [self.soundingRecoringButton setImage:[UIImage imageNamed:@"voice.png"] forState:UIControlStateNormal];
+    } completion:^(BOOL finished) {
+        [UIView animateWithDuration:1.5 animations:^{
+            self.soundingRecoringButton.transform = CGAffineTransformMakeScale(1.0,1.0);
+            [self.soundingRecoringButton setImage:[UIImage imageNamed:@"voice2.png"] forState:UIControlStateNormal];
+        } completion:^(BOOL finished) {
+        }];
+    }];
+}
+
 #pragma mark ========== 开始录音 ============
 - (void)onStartSoundRecoringBtnClick:(id)sender
 {
@@ -804,6 +820,12 @@
         }
         else
         {
+            self.animationtTimer = [NSTimer scheduledTimerWithTimeInterval:1.0
+                                                             target:self
+                                                           selector:@selector(timerAnimation)
+                                                           userInfo:nil
+                                                            repeats:YES];
+            
             [self.mockBgView setHidden:NO];
             NSLog(@"开始录音！");
             [[NSNotificationCenter defaultCenter] postNotificationName:@"recordOrExchangeChatRoomStopAnimation" object:self];
@@ -972,6 +994,7 @@
 #pragma mark ========== 手指移开，取消录音 ============
 - (void)onCancelSoundRecoringBtnClick:(id)sender
 {
+    [self.animationtTimer invalidate];
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
     AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeAudio];
     if ([userInfomationData.isEnterMicList isEqualToString:@"true"] && (authStatus ==AVAuthorizationStatusNotDetermined || authStatus ==AVAuthorizationStatusAuthorized)) {
@@ -1003,6 +1026,7 @@
 
 - (void)recoverRecordButton
 {
+    [self.animationtTimer invalidate];
     [self.mockBgView setHidden:YES];
     self.soundingRecoringButton.userInteractionEnabled = YES;
 }
