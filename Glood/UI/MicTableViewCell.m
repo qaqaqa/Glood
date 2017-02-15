@@ -22,6 +22,15 @@
     {
         self.backgroundColor = [UIColor clearColor];
         
+        self.userIdLabel = [[UILabel alloc] init];
+        self.userIdLabel.textColor = [UIColor clearColor];
+        [self addSubview:self.userIdLabel];
+        
+        self.roomIdLabel = [[UILabel alloc] init];
+        self.roomIdLabel.backgroundColor = [UIColor clearColor];
+        self.roomIdLabel.textColor = [UIColor clearColor];
+        [self addSubview:self.roomIdLabel];
+        
         self.bgImageView = [[UIImageView alloc] init];
         self.bgImageView.backgroundColor = [UIColor clearColor];
 //        [self.bgImageView setImage:[UIImage imageNamed:@"background.png"]];
@@ -58,54 +67,67 @@
 }
 
 - (void)handlePan:(UIPanGestureRecognizer *)recognizer{
-    // Figure out where the user is trying to drag the view.
-    
-    CGPoint translation = [recognizer translationInView:self.bgImageView];
-    CGPoint newCenter = CGPointMake(recognizer.view.center.x+ translation.x,
-                                    recognizer.view.center.y + translation.y);//    限制屏幕范围：
-    newCenter.y = MAX(recognizer.view.frame.size.height/2, newCenter.y);
-    newCenter.y = MIN(self.bgImageView.frame.size.height - recognizer.view.frame.size.height/2,  newCenter.y);
-    newCenter.x = MAX(self.frame.size.width/2-self.bgImageView.frame.size.width/2+recognizer.view.frame.size.width/2, newCenter.x);
-    newCenter.x = MIN(self.frame.size.width/2+self.bgImageView.frame.size.width/2 - recognizer.view.frame.size.width/2,newCenter.x);
-    recognizer.view.center = newCenter;
-    [recognizer setTranslation:CGPointZero inView:self.bgImageView];
-    
-    
-    if (recognizer.state == UIGestureRecognizerStateBegan) {
-        [self.circleOneImageView setHidden:YES];
-        [self.circleTwoImageView setHidden:YES];
-        self.headImageButton.userInteractionEnabled = NO;
-    }
-    else if (recognizer.state == UIGestureRecognizerStateEnded || recognizer.state == UIGestureRecognizerStateCancelled ||
-             recognizer.state == UIGestureRecognizerStateFailed)
-    {
-        float leftX = self.bgImageView.frame.origin.x;
-        float rightX = self.bgImageView.frame.origin.x+self.bgImageView.frame.size.width;
-        if (newCenter.x+self.headImageButton.frame.size.width/2+1 >= rightX) {
-            NSLog(@"喜欢");
-            self.likeButton.frame = CGRectMake(self.bgImageView.frame.origin.x+self.bgImageView.frame.size.width-(SCREEN_WIDTH*15/320), self.bgImageView.frame.origin.y-self.likeButton.frame.size.height, SCREEN_WIDTH*19/320, SCREEN_WIDTH*15/320);
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"slideRightLike" object:self];
-        }
-        else if (newCenter.x-self.headImageButton.frame.size.width/2-1 <= leftX)
-        {
-            NSLog(@"屏蔽");
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"slideLeftShield" object:self];
-        }
-        else
-        {
-            self.headImageButton.frame = CGRectMake(self.circleOneImageView.frame.origin.x, self.headImageButton.frame.origin.y, self.headImageButton.frame.size.width, self.headImageButton.frame.size.height);
-            [UIView animateWithDuration:1.5 animations:^{
-                [recognizer setTranslation:CGPointZero inView:self.bgImageView];
-            } completion:^(BOOL finished) {
-                [self.circleOneImageView setHidden:NO];
-                [self.circleTwoImageView setHidden:NO];
-                self.headImageButton.userInteractionEnabled = YES;
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"slideCenterRestore" object:self];
-            }];
-        }
+    if (![[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID] isEqualToString:self.userIdLabel.text]) {
+        // Figure out where the user is trying to drag the view.
+        CGPoint translation = [recognizer translationInView:self.bgImageView];
+        CGPoint newCenter = CGPointMake(recognizer.view.center.x+ translation.x,
+                                        recognizer.view.center.y + translation.y);//    限制屏幕范围：
+        newCenter.y = MAX(recognizer.view.frame.size.height/2, newCenter.y);
+        newCenter.y = MIN(self.bgImageView.frame.size.height - recognizer.view.frame.size.height/2,  newCenter.y);
+        newCenter.x = MAX(self.frame.size.width/2-self.bgImageView.frame.size.width/2+recognizer.view.frame.size.width/2, newCenter.x);
+        newCenter.x = MIN(self.frame.size.width/2+self.bgImageView.frame.size.width/2 - recognizer.view.frame.size.width/2,newCenter.x);
+        recognizer.view.center = newCenter;
+        [recognizer setTranslation:CGPointZero inView:self.bgImageView];
         
         
+        if (recognizer.state == UIGestureRecognizerStateBegan) {
+            [self.circleOneImageView setHidden:YES];
+            [self.circleTwoImageView setHidden:YES];
+            self.headImageButton.userInteractionEnabled = NO;
+        }
+        else if (recognizer.state == UIGestureRecognizerStateEnded || recognizer.state == UIGestureRecognizerStateCancelled ||
+                 recognizer.state == UIGestureRecognizerStateFailed)
+        {
+            float leftX = self.bgImageView.frame.origin.x;
+            float rightX = self.bgImageView.frame.origin.x+self.bgImageView.frame.size.width;
+            if (newCenter.x+self.headImageButton.frame.size.width/2+1 >= rightX) {
+                NSLog(@"喜欢");
+                self.likeButton.frame = CGRectMake(self.bgImageView.frame.origin.x+self.bgImageView.frame.size.width-(SCREEN_WIDTH*8/320), self.bgImageView.frame.origin.y-self.likeButton.frame.size.height, SCREEN_WIDTH*10/320, SCREEN_WIDTH*8/320);
+                NSDictionary *dic = @{@"name":self.nameLabel.text,
+                                      @"headImage":self.headImageButton.currentImage,
+                                      @"userId":self.userIdLabel.text,
+                                      @"roomId":self.roomIdLabel.text
+                                      };
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"slideRightLike" object:dic];
+            }
+            else if (newCenter.x-self.headImageButton.frame.size.width/2-1 <= leftX)
+            {
+                NSLog(@"屏蔽");
+                NSDictionary *dic = @{@"name":self.nameLabel.text,
+                                      @"headImage":self.headImageButton.currentImage,
+                                      @"userId":self.userIdLabel.text,
+                                      @"roomId":self.roomIdLabel.text
+                                      };
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"slideLeftShield" object:dic];
+            }
+            else
+            {
+                self.headImageButton.frame = CGRectMake(self.circleOneImageView.frame.origin.x, self.headImageButton.frame.origin.y, self.headImageButton.frame.size.width, self.headImageButton.frame.size.height);
+                [UIView animateWithDuration:1.5 animations:^{
+                    [recognizer setTranslation:CGPointZero inView:self.bgImageView];
+                } completion:^(BOOL finished) {
+                    [self.circleOneImageView setHidden:NO];
+                    [self.circleTwoImageView setHidden:NO];
+                    self.headImageButton.userInteractionEnabled = YES;
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"slideCenterRestore" object:self];
+                }];
+            }
+            
+            
+        }
     }
+    
+    
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

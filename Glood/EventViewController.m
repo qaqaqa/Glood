@@ -60,6 +60,7 @@
 @property (retain, nonatomic) EventListView *eventListView;
 @property (retain, nonatomic) UIButton *rightButton;
 @property (retain, nonatomic) UIButton *largeRightButton;
+@property (retain, nonatomic) UIButton *addButton;
 
 @property (retain, nonatomic) UIView *mockBgView;
 
@@ -154,6 +155,7 @@
     [self.view addSubview:self.micPlayerStatesImageView];
     
     self.micShieldButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-21-(SCREEN_WIDTH*20/320), self.micPlayerStatesImageView.frame.origin.y+8, SCREEN_WIDTH*30/320, SCREEN_HEIGHT*30/568)];
+    [self.micShieldButton setHidden:YES];
     [self.micShieldButton setImage:[UIImage imageNamed:@"people.png"] forState:UIControlStateNormal];
     [self.micShieldButton addTarget:self action:@selector(onShieldBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     self.micShieldButton.alpha = 0;
@@ -176,14 +178,22 @@
     self.navtitleLabel.font = [UIFont fontWithName:@"ProximaNova-Regular" size:17];
     [self.view addSubview:self.navtitleLabel];
     
-    self.rightButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*54/320), SCREEN_HEIGHT*16/568, SCREEN_WIDTH*28/320, SCREEN_HEIGHT*28/568)];
+    self.rightButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*(54+50)/320), SCREEN_HEIGHT*16/568, SCREEN_WIDTH*28/320, SCREEN_HEIGHT*28/568)];
     [self.rightButton setImage:[UIImage imageNamed:@"down"] forState:UIControlStateNormal];
     [self.rightButton addTarget:self action:@selector(onRightBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.rightButton];
     
-    self.largeRightButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*54/320), 0, 54, 54)];
+    self.largeRightButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*(54+50)/320), 0, 54, 54)];
     [self.largeRightButton addTarget:self action:@selector(onRightBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.largeRightButton];
+    
+    self.addButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*54/320), 0, 54, 54)];
+    [self.addButton addTarget:self action:@selector(onAddQr) forControlEvents:UIControlEventTouchUpInside];
+    [self.addButton setTitle:@"+" forState:UIControlStateNormal];
+    [self.addButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    self.addButton.titleLabel.font = [UIFont boldSystemFontOfSize:25];
+    [self.view addSubview:self.addButton];
+    
     
     if ([userInfomationData.pushEventVCTypeStr isEqualToString:@"QR"]) {
 //        userInfomationData.historyMicArr = [[NSMutableArray alloc] initWithCapacity:10];
@@ -196,11 +206,10 @@
     
     self.gcdView = [[UIView alloc] init];
     self.gcdView.frame = CGRectMake((SCREEN_WIDTH-(SCREEN_WIDTH*200/320))/2, (SCREEN_HEIGHT-(SCREEN_WIDTH*200/320))/2, SCREEN_WIDTH*200/320, SCREEN_WIDTH*200/320);
-    self.gcdView.backgroundColor = [UIColor blackColor];
+    self.gcdView.backgroundColor = [UIColor whiteColor];
     self.gcdView.layer.cornerRadius = 8;
     self.gcdView.layer.masksToBounds = YES;
     [self.gcdView setHidden:YES];
-    self.gcdView.alpha = 0.5;
     [self.view addSubview:self.gcdView];
     
     self.gcdLabel = [[UILabel alloc] init];
@@ -208,7 +217,7 @@
     self.gcdLabel.textAlignment = NSTextAlignmentCenter;
     self.gcdLabel.font = [UIFont boldSystemFontOfSize:50];
     [self.gcdLabel setHidden:YES];
-    self.gcdLabel.textColor = [UIColor whiteColor];
+    self.gcdLabel.textColor = [UIColor blackColor];
     [self.view addSubview:self.gcdLabel];
     
     self.mockBgView = [[UIView alloc] init];
@@ -646,7 +655,7 @@
 #pragma mark ========= Ming ===========
 - (void)onMing
 {
-    
+    [self navigatorButton];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"recordOrExchangeChatRoomStopAnimation" object:self];
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
     userInfomationData.refreshCount = 0;
@@ -735,6 +744,7 @@
 #pragma mark ========= onSetting ===========
 - (void)onSetting
 {
+    [self navigatorButton];
     [self initUserDefaultsSourceAndRmoveEventListView];
     SettingsViewController *settingVC = [[SettingsViewController alloc] initWithNibName:nil bundle:nil];
     [self.navigationController pushViewController:settingVC animated:YES];
@@ -743,9 +753,17 @@
 #pragma mark ========= onFeedbak ===========
 - (void)onFeedbak
 {
+    [self navigatorButton];
     [self initUserDefaultsSourceAndRmoveEventListView];
     FeedbackViewController *feedbackVC = [[FeedbackViewController alloc] initWithNibName:nil bundle:nil];
     [self.navigationController pushViewController:feedbackVC animated:YES];
+}
+
+- (void)navigatorButton
+{
+    self.rightButton.frame = CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*(54+50)/320), SCREEN_HEIGHT*16/568, SCREEN_WIDTH*28/320, SCREEN_HEIGHT*28/568);
+    self.largeRightButton.frame = CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*(54+50)/320), 0, 54, 54);
+    [self.addButton setHidden:NO];
 }
 
 - (void)initUserDefaultsSourceAndRmoveEventListView
@@ -1054,6 +1072,8 @@
 
             });
         }else{
+            //找到语音列表里tag值最大的，也就是预加载的那条语音
+            
             NSString *strTime = [NSString stringWithFormat:@"%d秒",timeout];
             dispatch_async(dispatch_get_main_queue(), ^{
                 //设置界面的按钮显示 根据自己需求设置
@@ -1076,7 +1096,6 @@
                 
             });
             timeout--;
-            
         }  
     });  
     dispatch_resume(_timer);
@@ -1105,9 +1124,12 @@
 //进入聊天室场景
 - (void)pushChatRoom
 {
+    self.rightButton.frame = CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*54/320), SCREEN_HEIGHT*16/568, SCREEN_WIDTH*28/320, SCREEN_HEIGHT*28/568);
+    self.largeRightButton.frame = CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*54/320), 0, 54, 54);
+    [self.addButton setHidden:YES];
+    
     CAGradientLayer *gradientLayer = [CAGradientLayer layer];
     gradientLayer.frame = self.mockView.micBottomImageView.bounds;
-    NSLog(@"*-*-sdf-sd*f-sd*f-sd----- %f---%f----%f----%f",gradientLayer.frame.origin.x,gradientLayer.frame.origin.y,gradientLayer.frame.size.width,gradientLayer.frame.size.height);
     gradientLayer.colors = @[(__bridge id)[UIColor colorWithWhite:0 alpha:1].CGColor,(__bridge id)[UIColor colorWithWhite:0 alpha:1].CGColor];
     gradientLayer.startPoint = CGPointMake(0, 0);
     gradientLayer.endPoint = CGPointMake(0, 0.1);
@@ -1176,7 +1198,7 @@
     self.hFlowView.alpha = 0;
     [self.hFlowView removeFromSuperview];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
-    [UIView animateWithDuration:2.5 animations:^{
+    [UIView animateWithDuration:1.5 animations:^{
         self.mockView.lastBgView.alpha = 0;
         self.mockView.micBottomImageView.frame = CGRectMake((SCREEN_WIDTH-(SCREEN_WIDTH*260/320))/2,SCREEN_HEIGHT*220/568,SCREEN_WIDTH*260/320,SCREEN_HEIGHT*220/568);
 //        self.mockView.tableView.frame = CGRectMake(0,0,SCREEN_WIDTH*260/320,SCREEN_HEIGHT*220/568);
@@ -1215,7 +1237,6 @@
             }
             CAGradientLayer *gradientLayer = [CAGradientLayer layer];
             gradientLayer.frame = self.mockView.micBottomImageView.bounds;
-            NSLog(@"*-*-sdf-sd*f-sd*f-sd----- %f---%f----%f----%f",gradientLayer.frame.origin.x,gradientLayer.frame.origin.y,gradientLayer.frame.size.width,gradientLayer.frame.size.height);
             gradientLayer.colors = @[(__bridge id)[UIColor colorWithWhite:0 alpha:0.0].CGColor,(__bridge id)[UIColor colorWithWhite:0 alpha:1].CGColor];
             gradientLayer.startPoint = CGPointMake(0, 0);
             gradientLayer.endPoint = CGPointMake(0, 0.1);

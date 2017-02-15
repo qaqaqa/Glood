@@ -24,6 +24,8 @@
 @property (strong, nonatomic) CoverFlowTableViewCell *micTableViewCell;
 @property (strong, nonatomic) UIActivityIndicatorView *spinner;
 @property (strong, nonatomic) AppDelegate *myAppDelegate;
+@property (assign, nonatomic) CGFloat startY;
+@property (assign, nonatomic) CGFloat endY;
 
 @end
 
@@ -178,6 +180,9 @@
         
     }
     
+//    UIPanGestureRecognizer *recognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(onHandlepan:)];
+//    [self.tableView addGestureRecognizer:recognizer];
+    
     return self;
 }
 
@@ -280,6 +285,37 @@
 - (void)onHeadBtnClick:(id)sender
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:@"onCoverFlowViewHeadBtnClick" object:self];
+}
+
+- (void)onHandlepan:(UIPanGestureRecognizer *)recognizer{
+//    
+//    CGPoint translation = [recognizer translationInView:self.tableView];
+//    CGPoint newCenter = CGPointMake(recognizer.view.center.x+ translation.x,
+//                                    recognizer.view.center.y + translation.y);//    限制屏幕范围：
+//    newCenter.y = MAX(recognizer.view.frame.size.height, newCenter.y);
+//    newCenter.y = MIN(self.tableView.frame.size.height,  newCenter.y);
+//    newCenter.x = MAX(self.tableView.frame.size.width/2, newCenter.x);
+//    newCenter.x = MIN(self.tableView.frame.size.width/2,newCenter.x);
+//    recognizer.view.center = newCenter;
+//    [recognizer setTranslation:CGPointZero inView:self.tableView];
+    
+    if (recognizer.state == UIGestureRecognizerStateBegan) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"onCoverFlowViewHeadBtnClick" object:self];
+//        _startY = newCenter.y;
+//        NSLog(@"-*-ds*-f*sd-*fs-d*f-as*f-ad*-as---  %f",newCenter.y);
+        
+    }
+//    else if (recognizer.state == UIGestureRecognizerStateEnded)
+//    {
+//        _endY = newCenter.y;
+//        float xx=_endY-_startY;
+//        if (xx>50) {
+//            NSLog(@"xxxxxxxxx------xxxxxxxxxx");
+//            [[NSNotificationCenter defaultCenter] postNotificationName:@"onCoverFlowViewHeadBtnClick" object:self];
+//        }
+//    }
+    
+    
 }
 
 

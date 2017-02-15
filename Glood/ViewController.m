@@ -19,9 +19,13 @@
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 #import "AppDelegate.h"
 
+#import <MediaPlayer/MediaPlayer.h>
+
 @interface ViewController ()<FBSDKLoginButtonDelegate >
 
 @property (strong, nonatomic) AppDelegate *myAppDelegate;
+@property (retain, nonatomic) MPMoviePlayerController *moviePlayer;
+@property (retain, nonatomic) UIImageView *bgImageView;
 
 @end
 
@@ -31,20 +35,21 @@
     [super viewDidLoad];
     
     [self.navigationController.navigationBar setHidden:YES];
-    NSArray *array = @[@"bg", @"bg", @"bg", @"guied04.jpg"];
-    [XNGuideView showGudieView:array];
+    //    NSArray *array = @[@"bg", @"bg", @"bg", @"guied04.jpg"];
+    //    [XNGuideView showGudieView:array];
     
-    UIImageView *bgImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
-    [bgImageView setImage:[UIImage imageNamed:@"bg"]];
-    [self.view addSubview:bgImageView];
+    self.bgImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+    [self.bgImageView setImage:[UIImage imageNamed:@"bg"]];
+    [self.view addSubview:self.bgImageView];
     
     //facebook第三方登陆，服务器登陆
     UIButton *facebookButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*50/320, 200, SCREEN_WIDTH*220/320, 50)];
     [facebookButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [facebookButton setTitle:@"sign in with facebook" forState:UIControlStateNormal];
     facebookButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+    [facebookButton setHidden:YES];
     facebookButton.backgroundColor = [UIColor colorWithRed:68/255.0 green:81/255.0 blue:183/255.0 alpha:1.0];
-    [facebookButton addTarget:self action:@selector(onSignInBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+    [facebookButton addTarget:self action:@selector(onSignInBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:facebookButton];
     
     self.myAppDelegate = [UIApplication sharedApplication].delegate;
@@ -52,13 +57,44 @@
     //    self.commonService = [[CommonService alloc] init];
     
     //facebook第三方登陆 sdK登陆
-//    FBSDKLoginButton *loginButton = [[FBSDKLoginButton alloc] init];
-//    // Optional: Place the button in the center of your view.
-//    loginButton.readPermissions =
-//    @[@"public_profile", @"email", @"user_friends"];
-//    loginButton.delegate = self;
-//    loginButton.center = self.view.center;
-//    [self.view addSubview:loginButton];
+    //    FBSDKLoginButton *loginButton = [[FBSDKLoginButton alloc] init];
+    //    // Optional: Place the button in the center of your view.
+    //    loginButton.readPermissions =
+    //    @[@"public_profile", @"email", @"user_friends"];
+    //    loginButton.delegate = self;
+    //    loginButton.center = self.view.center;
+    //    [self.view addSubview:loginButton];
+    
+    
+    UITapGestureRecognizer *singleTapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(handleSingleTap:)];
+    singleTapGesture.numberOfTapsRequired = 1;
+    singleTapGesture.numberOfTouchesRequired  = 1;
+    [self.view addGestureRecognizer:singleTapGesture];
+    
+    UITapGestureRecognizer *doubleTapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(handleDoubleTap:)];
+    doubleTapGesture.numberOfTapsRequired = 2;
+    doubleTapGesture.numberOfTouchesRequired = 1;
+    [self.view addGestureRecognizer:doubleTapGesture];
+    [singleTapGesture requireGestureRecognizerToFail:doubleTapGesture];
+    
+    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(getEventList)name:@"getEventList"object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(exchangeToken)name:@"exchangeToken"object:nil];
+    
+    NSString*thePath=[[NSBundle mainBundle] pathForResource:@"glood_intro_animation2017_2" ofType:@"mov"];
+    NSURL*theurl=[NSURL fileURLWithPath:thePath];
+    
+    self.moviePlayer=[[MPMoviePlayerController alloc] initWithContentURL:theurl];
+    [self.moviePlayer.view setFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+    [self.moviePlayer prepareToPlay];
+    self.moviePlayer.controlStyle = MPMovieControlStyleNone;
+    [self.moviePlayer setShouldAutoplay:YES]; // And other options you can look through the documentation.
+    [self.moviePlayer.view setHidden:YES];
+    [self.view addSubview:self.moviePlayer.view];
+    
+    //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playBackFinished) name:MPMoviePlayerPlaybackDidFinishNotification object:self.moviePlayer];
+    
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(stateChange) name:MPMoviePlayerPlaybackStateDidChangeNotification object:nil];
+    
 }
 
 //- (void)loginButton:(FBSDKLoginButton *)loginButton didCompleteWithResult:(FBSDKLoginManagerLoginResult *)result
@@ -78,6 +114,65 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
+    
+    //    UITapGestureRecognizer *singleTapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(handleSingleTap:)];
+    //    singleTapGesture.numberOfTapsRequired = 1;
+    //    singleTapGesture.numberOfTouchesRequired  = 1;
+    //    [self.view addGestureRecognizer:singleTapGesture];
+    //
+    //    UITapGestureRecognizer *doubleTapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(handleDoubleTap:)];
+    //    doubleTapGesture.numberOfTapsRequired = 2;
+    //    doubleTapGesture.numberOfTouchesRequired = 1;
+    //    [self.view addGestureRecognizer:doubleTapGesture];
+    //    [singleTapGesture requireGestureRecognizerToFail:doubleTapGesture];
+    
+    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(getEventList)name:@"getEventList"object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(exchangeToken)name:@"exchangeToken"object:nil];
+    
+    //    NSString*thePath=[[NSBundle mainBundle] pathForResource:@"glood_intro_animation2017_2" ofType:@"mov"];
+    //    NSURL*theurl=[NSURL fileURLWithPath:thePath];
+    //
+    //    self.moviePlayer=[[MPMoviePlayerController alloc] initWithContentURL:theurl];
+    //    [self.moviePlayer.view setFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+    //    [self.moviePlayer prepareToPlay];
+    //    self.moviePlayer.controlStyle = MPMovieControlStyleNone;
+    //    [self.moviePlayer setShouldAutoplay:YES]; // And other options you can look through the documentation.
+    //    [self.moviePlayer.view setHidden:YES];
+    //    [self.view addSubview:self.moviePlayer.view];
+    
+    //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playBackFinished) name:MPMoviePlayerPlaybackDidFinishNotification object:self.moviePlayer];
+    
+    //    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(stateChange) name:MPMoviePlayerPlaybackStateDidChangeNotification object:nil];
+}
+
+- (void)stateChange
+{
+    switch (self.moviePlayer.playbackState) {
+        case MPMoviePlaybackStatePlaying:
+            [self.moviePlayer.view setHidden:NO];
+            break;
+            
+        default:
+            break;
+    }
+}
+
+-(void)handleSingleTap:(UIGestureRecognizer *)sender{
+    CGPoint touchPoint = [sender locationInView:self.view];
+    //...
+    
+}
+-(void)handleDoubleTap:(UIGestureRecognizer *)sender{
+    CGPoint touchPoint = [sender locationInView:self.view];
+    //...
+    [self playBackFinished];
+}
+
+- (void)playBackFinished
+{
+    [self.moviePlayer.view setHidden:YES];
+    [self.bgImageView setImage:[UIImage imageNamed:@"loginBG"]];
+    //准备登陆
     [self.myAppDelegate deleteAllPreLoadingMessage];
     NSLog(@"xxxx-*-------  %@",[[NSUserDefaults standardUserDefaults] objectForKey:Exchange_OAUTH2_TOKEN]);
     if (![CommonService isBlankString:[[NSUserDefaults standardUserDefaults] objectForKey:Exchange_OAUTH2_TOKEN]]) {
@@ -86,16 +181,20 @@
         UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
         [userInfomationData.commonService connectionSignlar];
     }
-    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(getEventList)name:@"getEventList"object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(exchangeToken)name:@"exchangeToken"object:nil];
+    else
+    {
+        [self onSignInBtnClick];
+    }
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerPlaybackStateDidChangeNotification object:nil];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:YES];
+    [self.bgImageView setImage:[UIImage imageNamed:@"loginBG"]];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"getEventList" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"exchangeToken" object:nil];
-//    [MMProgressHUD dismiss];
+    //    [MMProgressHUD dismiss];
 }
 
 - (void)getEventList
@@ -128,7 +227,7 @@
     }
 }
 #pragma  mark ==========  点击连接facebook SDK登陆 ==========
-- (void)onSignInBtnClick:(id)sender
+- (void)onSignInBtnClick
 {
     if (![CommonService isBlankString:[[NSUserDefaults standardUserDefaults] objectForKey:Exchange_OAUTH2_TOKEN]]) {
         //又置换后的token，则直接登陆
@@ -161,42 +260,42 @@
 
 #pragma  mark ==========  点击连接facebook 服务器登陆==========
 /*
-- (void)onSignInBtnClick:(id)sender
-{
-    UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
-    if([CommonService NetWorkIsOK])
-    {
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        if ([CommonService isBlankString:[[NSUserDefaults standardUserDefaults] objectForKey:Exchange_OAUTH2_TOKEN]]) {
-            //在webview上显示facebook登录页面
-            [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
-            [MMProgressHUD showWithTitle:@"连接Facebook" status:NSLocalizedString(@"Please wating", nil)];
-            self.facebookLoginWebView = [[UIWebView alloc] init];
-            self.facebookLoginWebView.backgroundColor = [UIColor whiteColor];
-            self.facebookLoginWebView.scalesPageToFit = YES;
-            self.facebookLoginWebView.delegate = self;
-            self.facebookLoginWebView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-            [self.facebookLoginWebView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:FACEBOOK_OAUTH2_LOGIN_URL]  cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:30]];
-            
-            [self.view addSubview:self.facebookLoginWebView];
-        }
-        else
-        {
-            [MMProgressHUD showWithTitle:@"正在连接聊天服务器" status:NSLocalizedString(@"Please wating", nil)];
-            [userInfomationData.commonService connectionSignlar];
-        }
-        
-        
-    }
-    else
-    {
-        [ShowMessage showMessage:self.navigationController.view setMessage:NETWORK_ERROR];
-    }
-    
-    //    免登录
-    //    EventViewController *eventVC = [[EventViewController alloc] initWithNibName:nil bundle:nil];
-    //    [self.navigationController pushViewController:eventVC animated:YES];
-}
+ - (void)onSignInBtnClick:(id)sender
+ {
+ UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+ if([CommonService NetWorkIsOK])
+ {
+ NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+ if ([CommonService isBlankString:[[NSUserDefaults standardUserDefaults] objectForKey:Exchange_OAUTH2_TOKEN]]) {
+ //在webview上显示facebook登录页面
+ [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
+ [MMProgressHUD showWithTitle:@"连接Facebook" status:NSLocalizedString(@"Please wating", nil)];
+ self.facebookLoginWebView = [[UIWebView alloc] init];
+ self.facebookLoginWebView.backgroundColor = [UIColor whiteColor];
+ self.facebookLoginWebView.scalesPageToFit = YES;
+ self.facebookLoginWebView.delegate = self;
+ self.facebookLoginWebView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+ [self.facebookLoginWebView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:FACEBOOK_OAUTH2_LOGIN_URL]  cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:30]];
+ 
+ [self.view addSubview:self.facebookLoginWebView];
+ }
+ else
+ {
+ [MMProgressHUD showWithTitle:@"正在连接聊天服务器" status:NSLocalizedString(@"Please wating", nil)];
+ [userInfomationData.commonService connectionSignlar];
+ }
+ 
+ 
+ }
+ else
+ {
+ [ShowMessage showMessage:self.navigationController.view setMessage:NETWORK_ERROR];
+ }
+ 
+ //    免登录
+ //    EventViewController *eventVC = [[EventViewController alloc] initWithNibName:nil bundle:nil];
+ //    [self.navigationController pushViewController:eventVC animated:YES];
+ }
  */
 
 - (void)cleanCacheAndCookie{

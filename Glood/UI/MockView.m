@@ -211,8 +211,8 @@
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(sendMessageScu)name:@"sendMessageScu"object:nil];
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(recordOrExchangeChatRoomStopAnimation)name:@"recordOrExchangeChatRoomStopAnimation"object:nil];
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(startRecordAudio)name:@"startRecordAudio"object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(slideLeftShield)name:@"slideLeftShield"object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(slideRightLike)name:@"slideRightLike"object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(slideLeftShield:)name:@"slideLeftShield"object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(slideRightLike:)name:@"slideRightLike"object:nil];
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(slideCenterRestore)name:@"slideCenterRestore"object:nil];
 }
 
@@ -230,25 +230,32 @@
 }
 
 #pragma mark ==========  屏蔽 ===========
-- (void)slideLeftShield
+- (void)slideLeftShield:(NSNotification*) notification
 {
+    NSString *slideName =  [[notification object] objectForKey:@"name"];
+    UIImage *slideHeadImage =  [[notification object] objectForKey:@"headImage"];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"shield" object:self];
+    UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+    userInfomationData.shieldUserId = [[notification object] objectForKey:@"userId"];
+    userInfomationData.shieldRoomId = [[notification object] objectForKey:@"roomId"];
+    [UIView animateWithDuration:0.5 animations:^{
+        self.shieldBgButton.alpha = 1.0;
+        [self.shieldHeadImageView setImage:slideHeadImage];
+        self.shieldTipLabel.text = [NSString stringWithFormat:@"block %@.?",slideName];
+        
+    } completion:^(BOOL finished) {
+    }];
     //屏蔽
-    self.userInteractionEnabled = NO;
-    self.tableView.scrollEnabled = NO;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        self.userInteractionEnabled = YES;
-        self.tableView.scrollEnabled = YES;
-        [self.tableView reloadData];
-    });
 }
 
 #pragma mark ==========  喜欢 ===========
-- (void)slideRightLike
+- (void)slideRightLike:(NSNotification*) notification
 {
     //喜欢
     self.userInteractionEnabled = NO;
     self.tableView.scrollEnabled = NO;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         self.userInteractionEnabled = YES;
         self.tableView.scrollEnabled = YES;
         [self.tableView reloadData];
@@ -261,6 +268,7 @@
     //复原
     self.userInteractionEnabled = YES;
     self.tableView.scrollEnabled = YES;
+    [self.tableView reloadData];
 }
 
 - (void)beginRefreshingxx
@@ -312,6 +320,8 @@
 #define circleOneImageViewTag 30001
 #define circleTwoImageViewTag 40001
 #define bgImageViewTag 50001
+#define userIdLabelTag 60001
+#define roomIdLabelTag 70001
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     self.micTableViewCell = [tableView dequeueReusableCellWithIdentifier:@"MicTableViewCell"];
@@ -323,7 +333,7 @@
     //语音时间计算
     Mic *mic = self.historyMicListArr[[self.historyMicListArr count] - indexPath.row-1];
     __block float timeF = [mic.time floatValue];
-
+    
     if (timeF <= 4 && timeF > 0) {
         timeF = 2.0;
     }
@@ -332,6 +342,9 @@
     }
     if (timeF>=20) {
         timeF = 6.5;
+    }
+    if (timeF == 0) {
+        timeF = 1.2;
     }
     self.micTableViewCell.bgImageView.layer.cornerRadius = (SCREEN_WIDTH*35/320)/2;
     self.micTableViewCell.bgImageView.layer.masksToBounds = YES;
@@ -368,16 +381,28 @@
     self.micTableViewCell.circleTwoImageView.tag = circleTwoImageViewTag+indexPath.row;
     self.micTableViewCell.circleTwoImageView.layer.cornerRadius = (SCREEN_WIDTH*35/320)/2;
     self.micTableViewCell.circleTwoImageView.layer.masksToBounds = YES;
-    
-    
     self.micTableViewCell.bgImageView.frame = CGRectMake((SCREEN_WIDTH*260/320-(SCREEN_WIDTH*30/320*timeF))/2, 0, SCREEN_WIDTH*30/320*timeF, SCREEN_WIDTH*35/320);
+    if ([mic.message isEqualToString:@"100"])
+    {
+        [UIView animateWithDuration:20 animations:^{
+//            self.micTableViewCell.bgImageView.transform = CGAffineTransformMakeScale(6, 1);
+            self.micTableViewCell.bgImageView.frame = CGRectMake((SCREEN_WIDTH*260/320-(SCREEN_WIDTH*30/320*6.5))/2, 0, SCREEN_WIDTH*30/320*6.5, SCREEN_WIDTH*35/320);
+        } completion:^(BOOL finished) {
+        }];
+        
+    }
+    
     [self.micTableViewCell.headImageButton sd_setImageWithURL:mic.avatarImage forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"171604419.jpg"]];
     self.micTableViewCell.nameLabel.text = mic.fromUserName;
     
+    self.micTableViewCell.userIdLabel.tag = userIdLabelTag+indexPath.row;
+    self.micTableViewCell.roomIdLabel.tag = roomIdLabelTag+indexPath.row;
+    self.micTableViewCell.userIdLabel.text = mic.userId;
+    self.micTableViewCell.roomIdLabel.text = mic.roomId;
+    NSLog(@"-*--*-*-*-xx---  %@----%@",self.micTableViewCell.userIdLabel.text,self.micTableViewCell.roomIdLabel.text);
+    
     return self.micTableViewCell;
 }
-
-
 
 - (void)onCancelBtnClick
 {
@@ -416,6 +441,7 @@
     [UIView animateWithDuration:0.5 animations:^{
         self.shieldBgButton.alpha = 0.0;
     } completion:^(BOOL finished) {
+        [self slideCenterRestore];
     }];
 }
 
