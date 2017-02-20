@@ -24,12 +24,18 @@
         
         self.userIdLabel = [[UILabel alloc] init];
         self.userIdLabel.textColor = [UIColor clearColor];
+        self.userIdLabel.backgroundColor = [UIColor clearColor];
         [self addSubview:self.userIdLabel];
         
         self.roomIdLabel = [[UILabel alloc] init];
         self.roomIdLabel.backgroundColor = [UIColor clearColor];
         self.roomIdLabel.textColor = [UIColor clearColor];
         [self addSubview:self.roomIdLabel];
+        
+        self.messageIdLabel = [[UILabel alloc] init];
+        self.messageIdLabel.backgroundColor = [UIColor clearColor];
+        self.messageIdLabel.textColor = [UIColor clearColor];
+        [self addSubview:self.messageIdLabel];
         
         self.bgImageView = [[UIImageView alloc] init];
         self.bgImageView.backgroundColor = [UIColor clearColor];
@@ -96,7 +102,8 @@
                 NSDictionary *dic = @{@"name":self.nameLabel.text,
                                       @"headImage":self.headImageButton.currentImage,
                                       @"userId":self.userIdLabel.text,
-                                      @"roomId":self.roomIdLabel.text
+                                      @"roomId":self.roomIdLabel.text,
+                                      @"messageId":self.messageIdLabel.text
                                       };
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"slideRightLike" object:dic];
             }
@@ -106,7 +113,8 @@
                 NSDictionary *dic = @{@"name":self.nameLabel.text,
                                       @"headImage":self.headImageButton.currentImage,
                                       @"userId":self.userIdLabel.text,
-                                      @"roomId":self.roomIdLabel.text
+                                      @"roomId":self.roomIdLabel.text,
+                                      @"messageId":self.messageIdLabel.text
                                       };
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"slideLeftShield" object:dic];
             }

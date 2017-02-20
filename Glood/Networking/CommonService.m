@@ -256,6 +256,9 @@
     [self.chat on:@"onUserJoinRoom" perform:self selector:@selector(onUserJoinRoom:)];
     [self.chat on:@"onUserLeaveRoom" perform:self selector:@selector(onUserLeaveRoom:)];
     [self.chat on:@"onSendMessageInRoom" perform:self selector:@selector(onSendMessageInRoom:)];
+    [self.chat on:@"onUserLikeMessage" perform:self selector:@selector(onUserLikeMessage:)];
+    [self.chat on:@"onBlockUser" perform:self selector:@selector(onBlockUser:)];
+    [self.chat on:@"onCancelBlockUser" perform:self selector:@selector(onCancelBlockUser:)];
 //    self.eventVC = [[EventViewController alloc] init];
     
     [hubConnection setStarted:^{
@@ -272,6 +275,7 @@
                 NSLog(@"拉取活动成功----%@",[[[value objectForKey:@"result"] objectAtIndex:0] objectForKey:@"id"]);
                 [MMProgressHUD showWithTitle:@"join chatroom" status:NSLocalizedString(@"Please wating", nil)];
                 [self joinChatRoom];
+                [self getBlockUsers];
                 return value;
             } error:^id(NSError *error) {
                 NSLog(@"拉取活动失败--- %@",error);
@@ -452,7 +456,7 @@
         userInfomationData.inRoomMessageForRoomIdStr = [msg objectForKey:@"room_id"];
         
         if (![[msg objectForKey:@"client_id"] isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:USER_CLIENT_ID]]) {
-            [self.myAppDelegate insertCoreData:[msg objectForKey:@"user_id"] avatarImage:[msg objectForKey:@"user_avatar"] roomId:[msg objectForKey:@"room_id"] time:[NSNumber numberWithFloat:[[arr objectAtIndex:0] floatValue]] message:[arr objectAtIndex:1] messageId:[msg objectForKey:@"id"] fromUserName:[msg objectForKey:@"user_name"]];
+            [self.myAppDelegate insertCoreData:[msg objectForKey:@"user_id"] avatarImage:[msg objectForKey:@"user_avatar"] roomId:[msg objectForKey:@"room_id"] time:[NSNumber numberWithFloat:[[arr objectAtIndex:0] floatValue]] message:[arr objectAtIndex:1] messageId:[msg objectForKey:@"id"] fromUserName:[msg objectForKey:@"user_name"] like:[msg objectForKey:@"like"]];
         }
         else
         {
@@ -483,7 +487,7 @@
                     mic.userId = [msg objectForKey:@"user_id"];
                     mic.avatarImage = NULL_TO_NIL([msg objectForKey:@"user_avatar"]);
                     mic.roomId = [msg objectForKey:@"room_id"];
-                    mic.isRead = 0;
+                    mic.isRead = [msg objectForKey:@"like"];
                     mic.time = [NSNumber numberWithFloat:[[arr objectAtIndex:0] floatValue]];
                     mic.message = [arr objectAtIndex:1];
                     mic.messageId = [msg objectForKey:@"id"];
@@ -493,7 +497,7 @@
             }
             else
             {
-                [self.myAppDelegate insertCoreData:[msg objectForKey:@"user_id"] avatarImage:[msg objectForKey:@"user_avatar"] roomId:[msg objectForKey:@"room_id"] time:[NSNumber numberWithFloat:[[arr objectAtIndex:0] floatValue]] message:[arr objectAtIndex:1] messageId:[msg objectForKey:@"id"] fromUserName:[msg objectForKey:@"user_name"]];
+                [self.myAppDelegate insertCoreData:[msg objectForKey:@"user_id"] avatarImage:[msg objectForKey:@"user_avatar"] roomId:[msg objectForKey:@"room_id"] time:[NSNumber numberWithFloat:[[arr objectAtIndex:0] floatValue]] message:[arr objectAtIndex:1] messageId:[msg objectForKey:@"id"] fromUserName:[msg objectForKey:@"user_name"] like:[msg objectForKey:@"like"]];
                 
                 for (NSInteger i = 0; i < 10; i++) {
                     [self.myAppDelegate deletePreLoadingMessage:roomId message:[NSString stringWithFormat:@"%lld",userInfomationData.yuMessageId-i]];
@@ -558,6 +562,27 @@
         }
     }
     
+}
+
+#pragma mark ======== 喜欢一条消息 =========
+- (void)onUserLikeMessage:(NSDictionary *)msg
+{
+    NSLog(@"----saaaadafdsfas--- %@",msg);
+    [ShowMessage showMessage:[NSString stringWithFormat:@"%@ like you message",msg]];
+}
+
+#pragma mark ======== 屏蔽一条消息 =========
+- (void)onBlockUser:(NSDictionary *)msg
+{
+    NSLog(@"----xxxxdfasdfsdfx--- %@",msg);
+//    [ShowMessage showMessage:[NSString stringWithFormat:@"%@ Leave",[msg objectForKey:@"user_name"]]];
+}
+
+#pragma mark ======== 取消屏蔽一条消息 =========
+- (void)onCancelBlockUser:(NSDictionary *)msg
+{
+    NSLog(@"---ssssssdfsdfsds---- %@",msg);
+//    [ShowMessage showMessage:[NSString stringWithFormat:@"%@ Leave",[msg objectForKey:@"user_name"]]];
 }
 
 #pragma mark ======== 扫描后，加入聊天室 =========
@@ -713,7 +738,7 @@
                     NSArray *arr = [[NSArray alloc] init];
                     arr = [[[(NSArray *)response objectAtIndex:i] objectForKey:@"content"] componentsSeparatedByString:@","];
                     if ([[[response objectAtIndex:i] objectForKey:@"message_type"] isEqualToString:@"Audio"] && [arr count]==2) {
-                        [self.myAppDelegate insertCoreData:[[response objectAtIndex:i] objectForKey:@"user_id"] avatarImage:[[response objectAtIndex:i] objectForKey:@"user_avatar"] roomId:[[response objectAtIndex:i] objectForKey:@"room_id"] time:[NSNumber numberWithFloat:[[arr objectAtIndex:0] floatValue]] message:[arr objectAtIndex:1] messageId:[[response objectAtIndex:i] objectForKey:@"id"] fromUserName:[[response objectAtIndex:i] objectForKey:@"user_name"]];
+                        [self.myAppDelegate insertCoreData:[[response objectAtIndex:i] objectForKey:@"user_id"] avatarImage:[[response objectAtIndex:i] objectForKey:@"user_avatar"] roomId:[[response objectAtIndex:i] objectForKey:@"room_id"] time:[NSNumber numberWithFloat:[[arr objectAtIndex:0] floatValue]] message:[arr objectAtIndex:1] messageId:[[response objectAtIndex:i] objectForKey:@"id"] fromUserName:[[response objectAtIndex:i] objectForKey:@"user_name"] like:[[response objectAtIndex:i] objectForKey:@"like"]];
                         [self.myAppDelegate insertCoraData:[[response objectAtIndex:i] objectForKey:@"room_id"] lastMessageId:[[response objectAtIndex:[response count]-1] objectForKey:@"id"] beginMessageId:[[response objectAtIndex:0] objectForKey:@"id"]];
                         userInfomationData.inRoomMessageForRoomIdStr = [[response objectAtIndex:i] objectForKey:@"room_id"];
                         
@@ -764,6 +789,104 @@
         [ShowMessage showMessage:@"disconnect chatroom"];
     }
     
+}
+
+#pragma mark ======== 喜欢一条消息 =========
+- (void)likeMessage:(NSString *)likeMessageId
+{
+    if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"open"]) {
+        UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+        [userInfomationData.chat invoke:@"likeMessage" withArgs:@[likeMessageId] completionHandler:^(id response, NSError *error) {
+            if (error) {
+                [ShowMessage showMessage:@"likeMessage fail"];
+                userInfomationData.likeMessageId = @"";
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"likeResultFaile" object:self];
+                NSLog(@"xxxxxxxxxxx----%@",error.description);
+                return;
+            }
+            if (response == NULL) {
+                return;
+            }
+            userInfomationData.likeMessageIdSucess = userInfomationData.likeMessageId;
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"likeResultSucess" object:self];
+            [ShowMessage showMessage:@"likeMessage successfully"];
+        }];
+    }
+    else
+    {
+        [ShowMessage showMessage:@"disconnect chatroom"];
+    }
+}
+
+#pragma mark ======== 屏蔽一个人的所有发言 =========
+- (void)blockUser:(NSString *)blockUserId
+{
+    if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"open"]) {
+        UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+        [userInfomationData.chat invoke:@"onBlockUser" withArgs:@[blockUserId] completionHandler:^(id response, NSError *error) {
+            if (error) {
+                [ShowMessage showMessage:@"blockUser fail"];
+                NSLog(@"xxxxxxxxxxx----%@",error.description);
+                return;
+            }
+            if (response == NULL) {
+                return;
+            }
+            [ShowMessage showMessage:@"blockUser successfully"];
+        }];
+    }
+    else
+    {
+        [ShowMessage showMessage:@"disconnect chatroom"];
+    }
+}
+
+#pragma mark ======== 取消屏蔽一个人的所有发言 =========
+- (void)cancelBlockUser:(NSString *)cancelBlockUserId
+{
+    if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"open"]) {
+        UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+        [userInfomationData.chat invoke:@"cancelBlockUser" withArgs:@[cancelBlockUserId] completionHandler:^(id response, NSError *error) {
+            if (error) {
+                [ShowMessage showMessage:@"cancelBlockUser fail"];
+                NSLog(@"xxxxxxxxxxx----%@",error.description);
+                return;
+            }
+            if (response == NULL) {
+                return;
+            }
+            [ShowMessage showMessage:@"cancelBlockUser successfully"];
+        }];
+    }
+    else
+    {
+        [ShowMessage showMessage:@"disconnect chatroom"];
+    }
+}
+
+#pragma mark ======== 获取当前用户屏蔽发言人的列表 =========
+- (void)getBlockUsers
+{
+    if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"open"]) {
+        UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+        [userInfomationData.chat invoke:@"getBlockUsers" withArgs:@[] completionHandler:^(id response, NSError *error) {
+            if (error) {
+                [ShowMessage showMessage:@"getBlockUsers fail"];
+                NSLog(@"xxxxxxxxxxx----%@",error.description);
+                return;
+            }
+            if (response == NULL) {
+                return;
+            }
+            NSLog(@"屏蔽用户列表:%@",response);
+            [[NSUserDefaults standardUserDefaults] setObject:response forKey:@"blockUsersList"];
+            [ShowMessage showMessage:@"getBlockUsers successfully"];
+        }];
+    }
+    else
+    {
+        [ShowMessage showMessage:@"disconnect chatroom"];
+    }
 }
 
 #pragma mark - Fetched results controller

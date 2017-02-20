@@ -68,7 +68,20 @@
 
 //进入聊天室时，获取历史消息
 - (void)getMessageInRoom:(NSString *)lastMessageId roomId:(NSString *)roomIdContent;
+
 //反馈意见
 - (void)sendFeedback:(NSString *)feedbackContent;
+
+//喜欢一条消息
+- (void)likeMessage:(NSString *)likeMessageId;
+
+//屏蔽一个人的所有发言
+- (void)blockUser:(NSString *)blockUserId;
+
+//取消屏蔽一个人的所有发言
+- (void)cancelBlockUser:(NSString *)cancelBlockUserId;
+
+//获取当前用户屏蔽发言人的列表
+- (void)getBlockUsers;
 
 @end

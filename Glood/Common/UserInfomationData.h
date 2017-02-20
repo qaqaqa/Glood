@@ -34,6 +34,8 @@
 
 @property (strong, nonatomic) NSString *shieldUserId;  //屏蔽人的的id
 @property (strong, nonatomic) NSString *shieldRoomId;  //屏蔽人的房间id
+@property (strong, nonatomic) NSString *likeMessageId;  //喜欢的这条消息的messageid
+@property (strong, nonatomic) NSString *likeMessageIdSucess;  //喜欢一条消息成功后，的messageid
 
 @property (strong, nonatomic) NSString *refushStr;  //是否加载更多历史记录
 

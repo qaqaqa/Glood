@@ -145,6 +145,8 @@
 		CCC01A651E163B46008A1F5D /* CommonClass.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC01A641E163B46008A1F5D /* CommonClass.m */; };
 		CCFAAA6B1E1224C100ACF992 /* Node+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = CCFAAA681E1224C100ACF992 /* Node+CoreDataProperties.m */; };
 		CCFAAA6C1E1224C100ACF992 /* Node.m in Sources */ = {isa = PBXBuildFile; fileRef = CCFAAA6A1E1224C100ACF992 /* Node.m */; };
+		CCFE86F81E5AA04000A5546D /* BlockUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CCFE86F71E5AA04000A5546D /* BlockUserViewController.m */; };
+		CCFE86FB1E5AA1B500A5546D /* BlockUsersTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CCFE86FA1E5AA1B500A5546D /* BlockUsersTableViewCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -412,6 +414,10 @@
 		CCFAAA681E1224C100ACF992 /* Node+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Node+CoreDataProperties.m"; sourceTree = "<group>"; };
 		CCFAAA691E1224C100ACF992 /* Node.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Node.h; sourceTree = "<group>"; };
 		CCFAAA6A1E1224C100ACF992 /* Node.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Node.m; sourceTree = "<group>"; };
+		CCFE86F61E5AA04000A5546D /* BlockUserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlockUserViewController.h; sourceTree = "<group>"; };
+		CCFE86F71E5AA04000A5546D /* BlockUserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlockUserViewController.m; sourceTree = "<group>"; };
+		CCFE86F91E5AA1B500A5546D /* BlockUsersTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlockUsersTableViewCell.h; sourceTree = "<group>"; };
+		CCFE86FA1E5AA1B500A5546D /* BlockUsersTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlockUsersTableViewCell.m; sourceTree = "<group>"; };
 		E098CE90632E472DD26E99AF /* Pods-Glood.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Glood.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Glood/Pods-Glood.debug.xcconfig"; sourceTree = "<group>"; };
 		FE9C48D0C173BD780652515D /* Pods-Glood.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Glood.release.xcconfig"; path = "Pods/Target Support Files/Pods-Glood/Pods-Glood.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -533,6 +539,8 @@
 				CC3BE55D1E10D4510034214B /* SettingsViewController.m */,
 				CC3BE55E1E10D4510034214B /* FeedbackViewController.h */,
 				CC3BE55F1E10D4510034214B /* FeedbackViewController.m */,
+				CCFE86F61E5AA04000A5546D /* BlockUserViewController.h */,
+				CCFE86F71E5AA04000A5546D /* BlockUserViewController.m */,
 				CC258BEC1E10D24700491916 /* Main.storyboard */,
 				CC258BF21E10D24700491916 /* Assets.xcassets */,
 				CC258BF71E10D24700491916 /* Info.plist */,
@@ -974,6 +982,8 @@
 				CC3BE4EE1E10D3E60034214B /* QRView.m */,
 				CC3BB5821E2F2D0000992527 /* CoverFlowAlpahView.h */,
 				CC3BB5831E2F2D0000992527 /* CoverFlowAlpahView.m */,
+				CCFE86F91E5AA1B500A5546D /* BlockUsersTableViewCell.h */,
+				CCFE86FA1E5AA1B500A5546D /* BlockUsersTableViewCell.m */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -1248,6 +1258,7 @@
 				CC3BE54C1E10D3E70034214B /* LoginView.m in Sources */,
 				CC3BE50B1E10D3E60034214B /* View+MASAdditions.m in Sources */,
 				CC3BE5191E10D3E70034214B /* UIColor+HEX.m in Sources */,
+				CCFE86F81E5AA04000A5546D /* BlockUserViewController.m in Sources */,
 				CC3BE5271E10D3E70034214B /* Reachability.m in Sources */,
 				CC3BE4FF1E10D3E60034214B /* qrinput.c in Sources */,
 				CC3BE5041E10D3E60034214B /* MASConstraint.m in Sources */,
@@ -1267,6 +1278,7 @@
 				CC3BE5471E10D3E70034214B /* CheckInTableViewCell.m in Sources */,
 				CC3BE5111E10D3E70034214B /* MMProgressHUD+Class.m in Sources */,
 				CC7925541E1103A300CD2BF3 /* Mic.m in Sources */,
+				CCFE86FB1E5AA1B500A5546D /* BlockUsersTableViewCell.m in Sources */,
 				CC3BE51A1E10D3E70034214B /* amrFileCodec.mm in Sources */,
 				CC3BE4FE1E10D3E60034214B /* qrencode.c in Sources */,
 				CC3BE5261E10D3E70034214B /* NetworkingTools.m in Sources */,

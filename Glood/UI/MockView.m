@@ -214,6 +214,8 @@
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(slideLeftShield:)name:@"slideLeftShield"object:nil];
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(slideRightLike:)name:@"slideRightLike"object:nil];
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(slideCenterRestore)name:@"slideCenterRestore"object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(onLikeResultSucess)name:@"likeResultSucess"object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(onLikeResultFaile)name:@"likeResultFaile"object:nil];
 }
 
 - (void)deallocNSNotificationCenter
@@ -227,6 +229,8 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"slideLeftShield" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"slideRightLike" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"slideCenterRestore" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"likeResultSucess" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"likeResultFaile" object:nil];
 }
 
 #pragma mark ==========  屏蔽 ===========
@@ -255,11 +259,32 @@
     //喜欢
     self.userInteractionEnabled = NO;
     self.tableView.scrollEnabled = NO;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        self.userInteractionEnabled = YES;
-        self.tableView.scrollEnabled = YES;
-        [self.tableView reloadData];
+    UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+    userInfomationData.likeMessageId = [[notification object] objectForKey:@"messageId"];
+    if (![userInfomationData.likeMessageId  isEqual: @""]) {
+        [self.myAppDelegate updateLikeMessageId:userInfomationData.likeMessageId isRead:@"1"];
+    }
+    [userInfomationData.commonService likeMessage:userInfomationData.likeMessageId];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self slideCenterRestore];
     });
+}
+
+#pragma mark ==========  喜欢返回的结果成功 ===========
+- (void)onLikeResultSucess
+{
+    [self.tableView reloadData];
+}
+
+#pragma mark ==========  喜欢返回的结果失败 ===========
+- (void)onLikeResultFaile
+{
+    UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+    if (![userInfomationData.likeMessageId  isEqual: @""]) {
+        [self.myAppDelegate updateLikeMessageId:userInfomationData.likeMessageId isRead:@"0"];
+        [self.tableView reloadData];
+    }
+    
 }
 
 #pragma mark ==========  复原 ===========
@@ -322,6 +347,8 @@
 #define bgImageViewTag 50001
 #define userIdLabelTag 60001
 #define roomIdLabelTag 70001
+#define messageIdLabelTag 80001
+#define likeButtonTag 90001
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     self.micTableViewCell = [tableView dequeueReusableCellWithIdentifier:@"MicTableViewCell"];
@@ -397,9 +424,26 @@
     
     self.micTableViewCell.userIdLabel.tag = userIdLabelTag+indexPath.row;
     self.micTableViewCell.roomIdLabel.tag = roomIdLabelTag+indexPath.row;
+    self.micTableViewCell.messageIdLabel.tag = messageIdLabelTag+indexPath.row;
     self.micTableViewCell.userIdLabel.text = mic.userId;
     self.micTableViewCell.roomIdLabel.text = mic.roomId;
-    NSLog(@"-*--*-*-*-xx---  %@----%@",self.micTableViewCell.userIdLabel.text,self.micTableViewCell.roomIdLabel.text);
+    self.micTableViewCell.messageIdLabel.text = mic.messageId;
+    
+    self.micTableViewCell.likeButton.frame = CGRectMake(self.micTableViewCell.bgImageView.frame.origin.x+self.micTableViewCell.bgImageView.frame.size.width-(SCREEN_WIDTH*8/320), self.micTableViewCell.bgImageView.frame.origin.y-self.micTableViewCell.likeButton.frame.size.height, SCREEN_WIDTH*10/320, SCREEN_WIDTH*8/320);
+    self.micTableViewCell.likeButton.tag = likeButtonTag+indexPath.row;
+    [self.micTableViewCell.likeButton setImage:[UIImage imageNamed:@"app_img_like2"] forState:UIControlStateNormal];
+//    if ([mic.messageId isEqualToString:userInfomationData.likeMessageIdSucess]) {
+//        NSLog(@"hahhahahahahhahasd*-*-*------- %@",mic.messageId);
+//        mic.isRead = @1;
+//        [self.myAppDelegate saveContext];
+//    }
+    if ([mic.isRead integerValue] == 1) {
+        [self.micTableViewCell.likeButton setHidden:NO];
+    }
+    else
+    {
+        [self.micTableViewCell.likeButton setHidden:YES];
+    }
     
     return self.micTableViewCell;
 }
@@ -434,6 +478,9 @@
     NSLog(@"Yes");
     [self hiddenShieldView];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"yesShield" object:self];
+    
+    //确认屏蔽
+    [userInfomationData.commonService blockUser:userInfomationData.shieldUserId];
 }
 
 - (void)hiddenShieldView
@@ -470,7 +517,7 @@
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
     userInfomationData.yuMessageId ++;
     NSString *roomId = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
-    [self.myAppDelegate insertCoreDataxx:[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID] avatarImage:[[NSUserDefaults standardUserDefaults] objectForKey:USER_AVATAR_URL] roomId:roomId time:@0 message:@"100" messageId:[NSString stringWithFormat:@"%lld",userInfomationData.yuMessageId] fromUserName:[[NSUserDefaults standardUserDefaults] objectForKey:USER_NAME]];
+    [self.myAppDelegate insertCoreDataxx:[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID] avatarImage:[[NSUserDefaults standardUserDefaults] objectForKey:USER_AVATAR_URL] roomId:roomId time:@0 message:@"100" messageId:[NSString stringWithFormat:@"%lld",userInfomationData.yuMessageId] fromUserName:[[NSUserDefaults standardUserDefaults] objectForKey:USER_NAME] like:0];
     NSLog(@"xxxxcx---mockview-%@===%@--- %lld",roomId,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID],userInfomationData.yuMessageId);
     //如果是用户自己发的信息，则跳转到底部
     userInfomationData.refushStr = @"no";

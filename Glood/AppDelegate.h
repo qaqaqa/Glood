@@ -34,7 +34,7 @@
 
 //插入聊天语音数据库
 - (void)insertCoreData:(NSString *)userIdx avatarImage:(NSString *)avatarImagex roomId:(NSString *)roomIdx time:(NSNumber *)timex
-               message:(NSString *)messagex messageId:(NSString *)messageIdx fromUserName:(NSString *) fromUserNamex;
+               message:(NSString *)messagex messageId:(NSString *)messageIdx fromUserName:(NSString *) fromUserNamex like:(NSNumber *)likeMessage;
 
 
 //查询数据
@@ -45,7 +45,7 @@
 
 //插入预加载数据库
 - (void)insertCoreDataxx:(NSString *)userIdx avatarImage:(NSString *)avatarImagex roomId:(NSString *)roomIdx time:(NSNumber *)timex
-                 message:(NSString *)messagex messageId:(NSString *)messageIdx fromUserName:(NSString *) fromUserNamex;
+                 message:(NSString *)messagex messageId:(NSString *)messageIdx fromUserName:(NSString *) fromUserNamex like:(NSNumber *)likeMessage;
 
 //查询是否需要历史记录是从服务器上拉取还是从本地数据库加载
 - (Boolean )selectCoreDataroomId:(NSString *)roomIdx refreshMessageId:(NSString *)refreshMessageIdx;
@@ -64,6 +64,10 @@
 
 //删除屏蔽人的信息
 -(void)deleteShieldMessage:(NSString *)roomIdx userId:(NSString *)userIdx;
+
+//更新 喜欢一条消息
+- (void)updateLikeMessageId:(NSString *)messageId isRead:(NSString *)isReadContent;
+
 
 
 @end

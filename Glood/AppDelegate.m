@@ -419,7 +419,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
 
 #pragma mark ====== 插入数据库======
 - (void)insertCoreData:(NSString *)userIdx avatarImage:(NSString *)avatarImagex roomId:(NSString *)roomIdx time:(NSNumber *)timex
-               message:(NSString *)messagex messageId:(NSString *)messageIdx fromUserName:(NSString *) fromUserNamex
+               message:(NSString *)messagex messageId:(NSString *)messageIdx fromUserName:(NSString *) fromUserNamex like:(NSNumber *)likeMessage
 {
     //查询数据库，如果当前需要插入的messageid在数据库不存在，则
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Mic"];
@@ -442,7 +442,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
         mic.userId = userIdx;
         mic.avatarImage = NULL_TO_NIL(avatarImagex);
         mic.roomId = roomIdx;
-        mic.isRead = 0;
+        mic.isRead = likeMessage;
         mic.time = timex;
         mic.message = messagex;
         mic.messageId = messageIdx;
@@ -453,7 +453,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
 
 #pragma mark ====== 插入预加载数据库======
 - (void)insertCoreDataxx:(NSString *)userIdx avatarImage:(NSString *)avatarImagex roomId:(NSString *)roomIdx time:(NSNumber *)timex
-               message:(NSString *)messagex messageId:(NSString *)messageIdx fromUserName:(NSString *) fromUserNamex
+               message:(NSString *)messagex messageId:(NSString *)messageIdx fromUserName:(NSString *) fromUserNamex like:(NSNumber *)likeMessage
 {
     //查询数据库，如果当前需要插入的messageid在数据库不存在，则
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Mic"];
@@ -476,7 +476,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
         mic.userId = userIdx;
         mic.avatarImage = NULL_TO_NIL(avatarImagex);
         mic.roomId = roomIdx;
-        mic.isRead = 0;
+        mic.isRead = likeMessage;
         mic.time = timex;
         mic.message = messagex;
         mic.messageId = messageIdx;
@@ -748,6 +748,31 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
             [self saveContext];
         }
         [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
+    }
+}
+
+#pragma mark ====== 更新 喜欢一条消息======
+- (void)updateLikeMessageId:(NSString *)messageId isRead:(NSString *)isReadContent
+{
+    //  查询数据
+    //  1.NSFetchRequst对象
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Mic"];
+    //  2.设置排序
+    //  2.1创建排序描述对象
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"messageId" ascending:NO];
+    request.sortDescriptors = @[sortDescriptor];
+    NSLog(@"asfasdfasdkfjlkll---------  %@",messageId);
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"messageId= %@",messageId]];
+    request.predicate = predicate;
+    
+    //  执行这个查询请求
+    NSError *error = nil;
+    
+    NSArray *result = [self.managedObjectContext executeFetchRequest:request error:&error];
+    if ([result count] != 0) {
+        Mic *mic = result[0];
+        mic.isRead =  @([isReadContent integerValue]);;
+        [self saveContext];
     }
 }
 

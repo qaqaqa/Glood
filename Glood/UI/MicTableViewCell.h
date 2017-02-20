@@ -17,6 +17,7 @@
 @property (retain, nonatomic) UIButton *likeButton;
 @property (retain, nonatomic) UILabel *userIdLabel;
 @property (retain, nonatomic) UILabel *roomIdLabel;
+@property (retain, nonatomic) UILabel *messageIdLabel;
 
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier index:(NSInteger )indexRow;
 @end

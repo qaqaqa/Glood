@@ -593,7 +593,6 @@
     [self.micShieldButton setImage:[UIImage imageNamed:@"people.png"] forState:UIControlStateNormal];
     self.soundingRecoringButton.userInteractionEnabled = YES;
     self.micShieldButton.userInteractionEnabled = YES;
-    
 }
 
 #pragma mark ========= eventListViewDelegate ======
