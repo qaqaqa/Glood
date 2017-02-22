@@ -216,6 +216,7 @@
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(slideCenterRestore)name:@"slideCenterRestore"object:nil];
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(onLikeResultSucess)name:@"likeResultSucess"object:nil];
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(onLikeResultFaile)name:@"likeResultFaile"object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(onBlockUserSucess)name:@"blockUserSucess"object:nil];
 }
 
 - (void)deallocNSNotificationCenter
@@ -231,6 +232,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"slideCenterRestore" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"likeResultSucess" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"likeResultFaile" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"blockUserSucess" object:nil];
 }
 
 #pragma mark ==========  屏蔽 ===========
@@ -268,6 +270,12 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self slideCenterRestore];
     });
+}
+
+#pragma mark ==========  屏蔽成功 ===========
+- (void)onBlockUserSucess
+{
+    [self getMicHistoryListMock];
 }
 
 #pragma mark ==========  喜欢返回的结果成功 ===========
@@ -432,11 +440,6 @@
     self.micTableViewCell.likeButton.frame = CGRectMake(self.micTableViewCell.bgImageView.frame.origin.x+self.micTableViewCell.bgImageView.frame.size.width-(SCREEN_WIDTH*8/320), self.micTableViewCell.bgImageView.frame.origin.y-self.micTableViewCell.likeButton.frame.size.height, SCREEN_WIDTH*10/320, SCREEN_WIDTH*8/320);
     self.micTableViewCell.likeButton.tag = likeButtonTag+indexPath.row;
     [self.micTableViewCell.likeButton setImage:[UIImage imageNamed:@"app_img_like2"] forState:UIControlStateNormal];
-//    if ([mic.messageId isEqualToString:userInfomationData.likeMessageIdSucess]) {
-//        NSLog(@"hahhahahahahhahasd*-*-*------- %@",mic.messageId);
-//        mic.isRead = @1;
-//        [self.myAppDelegate saveContext];
-//    }
     if ([mic.isRead integerValue] == 1) {
         [self.micTableViewCell.likeButton setHidden:NO];
     }
@@ -462,19 +465,19 @@
 {
     //保存屏蔽人的信息userid，roomid
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
-    NSMutableArray *mutableArr = [[NSMutableArray alloc] initWithCapacity:10];
-    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"Shield"] != nil) {
-        for (NSInteger i = 0; i < [[[NSUserDefaults standardUserDefaults] objectForKey:@"Shield"] count]; i ++) {
-            [mutableArr addObject:[[[NSUserDefaults standardUserDefaults] objectForKey:@"Shield"] objectAtIndex:i]];
-        }
-        
-    }
-    [mutableArr insertObject:@{
-                               @"user_id":userInfomationData.shieldUserId,
-                               @"room_id":userInfomationData.shieldRoomId,
-                               } atIndex:0];
-    [[NSUserDefaults standardUserDefaults] setObject:[CommonService processDictionaryIsNSNull:mutableArr] forKey:@"Shield"];
-    [self getMicHistoryListMock];
+//    NSMutableArray *mutableArr = [[NSMutableArray alloc] initWithCapacity:10];
+//    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"Shield"] != nil) {
+//        for (NSInteger i = 0; i < [[[NSUserDefaults standardUserDefaults] objectForKey:@"Shield"] count]; i ++) {
+//            [mutableArr addObject:[[[NSUserDefaults standardUserDefaults] objectForKey:@"Shield"] objectAtIndex:i]];
+//        }
+//        
+//    }
+//    [mutableArr insertObject:@{
+//                               @"user_id":userInfomationData.shieldUserId,
+//                               @"room_id":userInfomationData.shieldRoomId,
+//                               } atIndex:0];
+//    [[NSUserDefaults standardUserDefaults] setObject:[CommonService processDictionaryIsNSNull:mutableArr] forKey:@"Shield"];
+    
     NSLog(@"Yes");
     [self hiddenShieldView];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"yesShield" object:self];
@@ -642,7 +645,7 @@
         [self.historyMicListArr addObject:[result objectAtIndex:i]];
     }
     
-    
+    /*
     //在这个房间中被屏蔽的人的ID
     NSMutableArray *shieldMutableArr = [[NSMutableArray alloc] initWithCapacity:10];
     for (NSInteger x = 0; x < [(NSMutableArray *)[[NSUserDefaults standardUserDefaults] objectForKey:@"Shield"] count]; x++) {
@@ -663,10 +666,8 @@
         }
     }
     [self.historyMicListArr removeObjectsAtIndexes:indexSets];
-//    for (NSInteger i = 0; i < [self.historyMicListArr count]; i++) {
-//        //删除屏蔽人的数据
-//        [self.myAppDelegate deleteShieldMessage:nil userId:nil];
-//    }
+     */
+     
     if ([self.historyMicListArr count] == 0 ) {
         [MMProgressHUD dismiss];
     }

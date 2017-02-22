@@ -10,6 +10,7 @@
 #import "Define.h"
 #import "UserInfomationData.h"
 #import "CommonService.h"
+#import <SDWebImage/UIButton+WebCache.h>
 
 @interface BlockUserViewController ()
 
@@ -48,15 +49,17 @@
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     [self.view addSubview:self.tableView];
     
-    self.blockUsersMutableArr = [[NSMutableArray alloc] initWithCapacity:10];
+    UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+    userInfomationData.blockUsersMutableArr = [[NSMutableArray alloc] initWithCapacity:10];
     for (NSInteger i = 0; i < [[[NSUserDefaults standardUserDefaults] objectForKey:@"blockUsersList"] count]; i++) {
-        [self.blockUsersMutableArr addObject:[[[NSUserDefaults standardUserDefaults] objectForKey:@"blockUsersList"] objectAtIndex:i]];
+        [userInfomationData.blockUsersMutableArr addObject:[[[NSUserDefaults standardUserDefaults] objectForKey:@"blockUsersList"] objectAtIndex:i]];
     }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.blockUsersMutableArr count];
+    UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+    return [userInfomationData.blockUsersMutableArr count];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -75,17 +78,17 @@
         self.blockUsersTableViewCell = [[BlockUsersTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"BlockUsersTableViewCell" index:indexPath.row];
         [self.blockUsersTableViewCell setSelectionStyle:UITableViewCellSelectionStyleNone];
     }
-    
+    UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
     self.blockUsersTableViewCell.headImageButton.frame = CGRectMake(10, SCREEN_HEIGHT*5/568, SCREEN_HEIGHT*40/568, SCREEN_HEIGHT*40/568);
     self.blockUsersTableViewCell.headImageButton.tag = headImageButtonTag+indexPath.row;
     self.blockUsersTableViewCell.headImageButton.layer.masksToBounds = YES;
     self.blockUsersTableViewCell.headImageButton.layer.cornerRadius = self.blockUsersTableViewCell.headImageButton.frame.size.width/2;
-    [self.blockUsersTableViewCell.headImageButton setImage:[UIImage imageNamed:@"171604419.jpg"] forState:UIControlStateNormal];
+    [self.blockUsersTableViewCell.headImageButton sd_setImageWithURL:[[userInfomationData.blockUsersMutableArr objectAtIndex:indexPath.row] objectForKey:@"avatar"] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"171604419.jpg"]];
     
     self.blockUsersTableViewCell.nameLabel.frame = CGRectMake(self.blockUsersTableViewCell.headImageButton.frame.origin.x+self.blockUsersTableViewCell.headImageButton.frame.size.width+30, 0, SCREEN_HEIGHT*200/568, SCREEN_HEIGHT*50/568);
     self.blockUsersTableViewCell.nameLabel.tag = nameLabelTag+indexPath.row;
     self.blockUsersTableViewCell.nameLabel.font = [UIFont fontWithName:@"ProximaNova-Regular" size:15];
-    self.blockUsersTableViewCell.nameLabel.text = [self.blockUsersMutableArr objectAtIndex:indexPath.row];
+    self.blockUsersTableViewCell.nameLabel.text = [[userInfomationData.blockUsersMutableArr objectAtIndex:indexPath.row] objectForKey:@"user_name"];
     
     self.blockUsersTableViewCell.cancleBlockButton.frame  =  CGRectMake(SCREEN_WIDTH-10-(SCREEN_HEIGHT*60/568), SCREEN_HEIGHT*10/568, SCREEN_HEIGHT*60/568, SCREEN_HEIGHT*30/568);
     self.blockUsersTableViewCell.cancleBlockButton.tag = cancleBlockUserButttonTag+indexPath.row;
@@ -110,9 +113,9 @@
 - (void)cancelBlock:(NSInteger )indexRow
 {
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
-    [userInfomationData.commonService cancelBlockUser:[NSString stringWithFormat:@"%@",[self.blockUsersMutableArr objectAtIndex:indexRow]]];
-    [self.blockUsersMutableArr removeObjectAtIndex:indexRow];
-    [[NSUserDefaults standardUserDefaults] setObject:self.blockUsersMutableArr forKey:@"blockUsersList"];
+    [userInfomationData.commonService cancelBlockUser:[NSString stringWithFormat:@"%@",[[userInfomationData.blockUsersMutableArr objectAtIndex:indexRow] objectForKey:@"id"]]];
+    [userInfomationData.blockUsersMutableArr removeObjectAtIndex:indexRow];
+    [[NSUserDefaults standardUserDefaults] setObject:userInfomationData.blockUsersMutableArr forKey:@"blockUsersList"];
     [self.tableView reloadData];
 }
 

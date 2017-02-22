@@ -275,7 +275,7 @@
                 NSLog(@"拉取活动成功----%@",[[[value objectForKey:@"result"] objectAtIndex:0] objectForKey:@"id"]);
                 [MMProgressHUD showWithTitle:@"join chatroom" status:NSLocalizedString(@"Please wating", nil)];
                 [self joinChatRoom];
-                [self getBlockUsers];
+                [self getBlockUsers:@"yes"];
                 return value;
             } error:^id(NSError *error) {
                 NSLog(@"拉取活动失败--- %@",error);
@@ -755,7 +755,7 @@
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
                 }
             }
-            
+            [MMProgressHUD dismiss];
             
         }];
     }
@@ -823,7 +823,7 @@
 {
     if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"open"]) {
         UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
-        [userInfomationData.chat invoke:@"onBlockUser" withArgs:@[blockUserId] completionHandler:^(id response, NSError *error) {
+        [userInfomationData.chat invoke:@"blockUser" withArgs:@[blockUserId] completionHandler:^(id response, NSError *error) {
             if (error) {
                 [ShowMessage showMessage:@"blockUser fail"];
                 NSLog(@"xxxxxxxxxxx----%@",error.description);
@@ -832,6 +832,7 @@
             if (response == NULL) {
                 return;
             }
+            [self getBlockUsers:@"no"];
             [ShowMessage showMessage:@"blockUser successfully"];
         }];
     }
@@ -855,6 +856,7 @@
             if (response == NULL) {
                 return;
             }
+            [self getBlockUsers:@"no"];
             [ShowMessage showMessage:@"cancelBlockUser successfully"];
         }];
     }
@@ -865,13 +867,15 @@
 }
 
 #pragma mark ======== 获取当前用户屏蔽发言人的列表 =========
-- (void)getBlockUsers
+- (void)getBlockUsers:(NSString *)isShowMessage
 {
     if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"open"]) {
         UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
         [userInfomationData.chat invoke:@"getBlockUsers" withArgs:@[] completionHandler:^(id response, NSError *error) {
             if (error) {
-                [ShowMessage showMessage:@"getBlockUsers fail"];
+                if ([isShowMessage isEqualToString:@"yes"]) {
+                    [ShowMessage showMessage:@"getBlockUsers fail"];
+                }
                 NSLog(@"xxxxxxxxxxx----%@",error.description);
                 return;
             }
@@ -879,8 +883,19 @@
                 return;
             }
             NSLog(@"屏蔽用户列表:%@",response);
-            [[NSUserDefaults standardUserDefaults] setObject:response forKey:@"blockUsersList"];
-            [ShowMessage showMessage:@"getBlockUsers successfully"];
+            [[NSUserDefaults standardUserDefaults] setObject:[CommonService processDictionaryIsNSNull:response] forKey:@"blockUsersList"];
+            userInfomationData.blockUsersMutableArr = [[NSMutableArray alloc] initWithCapacity:10];
+            for (NSInteger i = 0; i < [[[NSUserDefaults standardUserDefaults] objectForKey:@"blockUsersList"] count]; i++) {
+                [userInfomationData.blockUsersMutableArr addObject:[[[NSUserDefaults standardUserDefaults] objectForKey:@"blockUsersList"] objectAtIndex:i]];
+            }
+            if ([isShowMessage isEqualToString:@"yes"]) {
+                [ShowMessage showMessage:@"getBlockUsers successfully"];
+            }
+            else
+            {
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"blockUserSucess" object:self];
+            }
+            
         }];
     }
     else

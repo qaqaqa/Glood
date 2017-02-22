@@ -598,7 +598,11 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     //  2.1创建排序描述对象
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"messageId" ascending:NO];
     request.sortDescriptors = @[sortDescriptor];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"roomId = %@ AND accountId = %@",roomIdx,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID]]];
+    NSString *str = @"";
+    for (NSInteger i = 0; i < [userInfomationData.blockUsersMutableArr count]; i ++) {
+        str = [NSString stringWithFormat:@"%@ AND userId != %@",str,[[userInfomationData.blockUsersMutableArr objectAtIndex:i] objectForKey:@"id"]];
+    }
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"roomId = %@ AND accountId = %@ %@",roomIdx,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID],str]];
     request.fetchOffset=0; //分页起始索引
     request.fetchLimit=20*userInfomationData.micMockListPageIndex; //每页条数
     request.predicate = predicate;
@@ -606,6 +610,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     NSError *error = nil;
     
     NSArray *result = [self.managedObjectContext executeFetchRequest:request error:&error];
+    NSLog(@"--*-*-*-*-*-sd*fs-d*-xc*c-x*v------  %ld",[result count]);
     
     return result;
 }

@@ -19,6 +19,4 @@
 @property (retain, nonatomic) UITableView *tableView;
 @property (retain, nonatomic) BlockUsersTableViewCell *blockUsersTableViewCell;
 
-@property (retain, nonatomic) NSMutableArray *blockUsersMutableArr;
-
 @end

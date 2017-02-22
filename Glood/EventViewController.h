@@ -20,6 +20,8 @@
 @property (strong, nonatomic)   NSString         *recordFileName;
 @property (strong, nonatomic)   NSString         *recordFilePath;
 @property (strong, nonatomic) UILabel *navtitleLabel;
+@property (strong, nonatomic) UIButton *leftButton;
+@property (strong, nonatomic) UIButton *largeLeftButton;
 
 @property (strong, nonatomic) UIView *gcdView;
 @property (strong, nonatomic) UILabel *gcdLabel;

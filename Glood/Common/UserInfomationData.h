@@ -62,4 +62,6 @@
 
 @property (retain, nonatomic) NSTimer *timer; //断线重连计时器
 
+@property (retain, nonatomic) NSMutableArray *blockUsersMutableArr;//本地解析屏蔽列表的存储结果
+
 @end

@@ -82,6 +82,6 @@
 - (void)cancelBlockUser:(NSString *)cancelBlockUserId;
 
 //获取当前用户屏蔽发言人的列表
-- (void)getBlockUsers;
+- (void)getBlockUsers:(NSString *)isShowMessage;
 
 @end

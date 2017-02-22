@@ -161,15 +161,15 @@
     self.micShieldButton.alpha = 0;
     [self.view addSubview: self.micShieldButton];
     
-    UIButton *leftButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*16/320, SCREEN_HEIGHT*10/568, SCREEN_WIDTH*34/320, SCREEN_HEIGHT*36/568)];
-    [leftButton setImage:[UIImage imageNamed:@"menu"] forState:UIControlStateNormal];
-    [leftButton addTarget:self action:@selector(onLeftBtnClick) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:leftButton];
+    self.leftButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*16/320, SCREEN_HEIGHT*10/568, SCREEN_WIDTH*34/320, SCREEN_HEIGHT*36/568)];
+    [self.leftButton setImage:[UIImage imageNamed:@"menu"] forState:UIControlStateNormal];
+    [self.leftButton addTarget:self action:@selector(onLeftBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.leftButton];
     
-    UIButton *largeLeftButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH*54/320, SCREEN_HEIGHT*56/568)];
-    [largeLeftButton addTarget:self action:@selector(onLeftBtnClick) forControlEvents:UIControlEventTouchUpInside];
-    largeLeftButton.backgroundColor = [UIColor clearColor];
-    [self.view addSubview:largeLeftButton];
+    self.largeLeftButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH*54/320, SCREEN_HEIGHT*56/568)];
+    [self.largeLeftButton addTarget:self action:@selector(onLeftBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    self.largeLeftButton.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:self.largeLeftButton];
     
     self.navtitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*60/320, SCREEN_HEIGHT*12/568, SCREEN_WIDTH*200/320, SCREEN_HEIGHT*36/568)];
     self.navtitleLabel.text = @"Communities";
@@ -237,34 +237,42 @@
     }];
 }
 
-#pragma mark ========== left more button ========
+#pragma mark ========== left more button 活动卡片页面========
 - (void)onLeftBtnClick
 {
     if (self.mockView.shieldBgButton.alpha != 1.0) {
-        NSLog(@"left");
-        //侧滑菜单栏
-        [self.cehuaView removeFromSuperview];
-        self.cehuaView = [[UIView alloc] initWithFrame:CGRectMake(-SCREEN_WIDTH, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
-        self.cehuaView.backgroundColor = [UIColor clearColor];
-        [self.view addSubview:self.cehuaView];
-        
-        CeHuaView *ceHuav = [[CeHuaView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
-        [self.cehuaView addSubview:ceHuav];
-        
-        UIButton *ceHuaMoreButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*34/320)-32, SCREEN_HEIGHT*15/568, SCREEN_WIDTH*34/320, SCREEN_HEIGHT*36/568)];
-        [ceHuaMoreButton setImage:[UIImage imageNamed:@"menu"] forState:UIControlStateNormal];
-        [ceHuaMoreButton addTarget:self action:@selector(onCeHuaMoreBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-        [self.cehuaView addSubview:ceHuaMoreButton];
-        
-        UIButton *largeLeftButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*34/320)-40, 0, SCREEN_WIDTH*54/320, SCREEN_HEIGHT*56/568)];
-        [largeLeftButton addTarget:self action:@selector(onCeHuaMoreBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-        largeLeftButton.backgroundColor = [UIColor clearColor];
-        [self.cehuaView addSubview:largeLeftButton];
-        
-        [UIView animateWithDuration:0.5 animations:^{
-            self.cehuaView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-        } completion:^(BOOL finished) {
-        }];
+        UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+        if (![userInfomationData.isEnterMicList isEqualToString:@"false"]) {
+            [self.leftButton setImage:[UIImage imageNamed:@"menu"] forState:UIControlStateNormal];
+            [self onMing];
+        }
+        else
+        {
+            NSLog(@"left");
+            //侧滑菜单栏
+            [self.cehuaView removeFromSuperview];
+            self.cehuaView = [[UIView alloc] initWithFrame:CGRectMake(-SCREEN_WIDTH, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+            self.cehuaView.backgroundColor = [UIColor clearColor];
+            [self.view addSubview:self.cehuaView];
+            
+            CeHuaView *ceHuav = [[CeHuaView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+            [self.cehuaView addSubview:ceHuav];
+            
+            UIButton *ceHuaMoreButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*34/320)-32, SCREEN_HEIGHT*15/568, SCREEN_WIDTH*34/320, SCREEN_HEIGHT*36/568)];
+            [ceHuaMoreButton setImage:[UIImage imageNamed:@"menu"] forState:UIControlStateNormal];
+            [ceHuaMoreButton addTarget:self action:@selector(onCeHuaMoreBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+            [self.cehuaView addSubview:ceHuaMoreButton];
+            
+            UIButton *largeLeftButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*34/320)-40, 0, SCREEN_WIDTH*54/320, SCREEN_HEIGHT*56/568)];
+            [largeLeftButton addTarget:self action:@selector(onCeHuaMoreBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+            largeLeftButton.backgroundColor = [UIColor clearColor];
+            [self.cehuaView addSubview:largeLeftButton];
+            
+            [UIView animateWithDuration:0.5 animations:^{
+                self.cehuaView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+            } completion:^(BOOL finished) {
+            }];
+        }
     }
     
 }
@@ -391,6 +399,7 @@
         [find_eventCoverFlowView.historyMicListArr addObject:[result objectAtIndex:i]];
     }
     
+    /*
     //在这个房间中被屏蔽的人的ID
     NSMutableArray *shieldMutableArr = [[NSMutableArray alloc] initWithCapacity:10];
     for (NSInteger x = 0; x < [(NSMutableArray *)[[NSUserDefaults standardUserDefaults] objectForKey:@"Shield"] count]; x++) {
@@ -412,20 +421,9 @@
         }
     }
     [find_eventCoverFlowView.historyMicListArr removeObjectsAtIndexes:indexSets];
-    
-//    for (NSInteger i = 0; i < [find_eventCoverFlowView.historyMicListArr count]; i++) {
-//        //删除屏蔽人的数据
-//        [self.myAppDelegate deleteShieldMessage:nil userId:nil];
-//    }
+     */
     
     [find_eventCoverFlowView.tableView reloadData];
-    
-//    NSIndexPath *lastPath;
-//    if([find_eventCoverFlowView.historyMicListArr count] > 4)
-//    {
-//        lastPath = [NSIndexPath indexPathForRow: [find_eventCoverFlowView.historyMicListArr count]-1 inSection: 0 ];
-//        [find_eventCoverFlowView.tableView scrollToRowAtIndexPath:lastPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
-//    }
     
     [MMProgressHUD dismiss];
     
@@ -732,7 +730,6 @@
         
     }
     
-    
     [UIView animateWithDuration:0.5 animations:^{
         self.cehuaView.frame = CGRectMake(-SCREEN_WIDTH, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
         self.eventListView.frame = CGRectMake(0, -SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -763,6 +760,7 @@
     self.rightButton.frame = CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*(54+50)/320), SCREEN_HEIGHT*16/568, SCREEN_WIDTH*28/320, SCREEN_HEIGHT*28/568);
     self.largeRightButton.frame = CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*(54+50)/320), 0, 54, 54);
     [self.addButton setHidden:NO];
+    
 }
 
 - (void)initUserDefaultsSourceAndRmoveEventListView
@@ -1123,6 +1121,7 @@
 //进入聊天室场景
 - (void)pushChatRoom
 {
+    [self.leftButton setImage:[UIImage imageNamed:@"backqr"] forState:UIControlStateNormal];
     self.rightButton.frame = CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*54/320), SCREEN_HEIGHT*16/568, SCREEN_WIDTH*28/320, SCREEN_HEIGHT*28/568);
     self.largeRightButton.frame = CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*54/320), 0, 54, 54);
     [self.addButton setHidden:YES];
@@ -1197,7 +1196,7 @@
     self.hFlowView.alpha = 0;
     [self.hFlowView removeFromSuperview];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
-    [UIView animateWithDuration:1.5 animations:^{
+    [UIView animateWithDuration:1.0 animations:^{
         self.mockView.lastBgView.alpha = 0;
         self.mockView.micBottomImageView.frame = CGRectMake((SCREEN_WIDTH-(SCREEN_WIDTH*260/320))/2,SCREEN_HEIGHT*220/568,SCREEN_WIDTH*260/320,SCREEN_HEIGHT*220/568);
 //        self.mockView.tableView.frame = CGRectMake(0,0,SCREEN_WIDTH*260/320,SCREEN_HEIGHT*220/568);
