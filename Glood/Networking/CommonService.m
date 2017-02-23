@@ -594,7 +594,21 @@
 - (void)onUserLikeMessage:(NSDictionary *)msg
 {
     NSLog(@"----saaaadafdsfas--- %@",msg);
-    [ShowMessage showMessage:[NSString stringWithFormat:@"%@ like you message",msg]];
+//    [ShowMessage showMessage:[NSString stringWithFormat:@"%@ like you message",msg]];
+    self.myAppDelegate.showTipsLabel.text = [NSString stringWithFormat:@"%@ like you message",msg];
+    [UIView animateWithDuration:0.5 animations:^{
+        self.myAppDelegate.showTipsView.frame = CGRectMake(0, -10, SCREEN_WIDTH, 60);
+    } completion:^(BOOL finished) {
+    }];
+    [self performSelector:@selector(closedShowTipsView) withObject:nil afterDelay:2.0f];
+}
+
+- (void)closedShowTipsView
+{
+    [UIView animateWithDuration:0.5 animations:^{
+        self.myAppDelegate.showTipsView.frame = CGRectMake(0, -70, SCREEN_WIDTH, 60);
+    } completion:^(BOOL finished) {
+    }];
 }
 
 #pragma mark ======== 屏蔽一条消息 =========

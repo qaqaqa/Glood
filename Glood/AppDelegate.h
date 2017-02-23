@@ -21,6 +21,9 @@
 @property (strong, nonatomic) RecordAudio *recordAudio;
 @property (strong, nonatomic) NSString *networkStatus;
 
+@property (retain, nonatomic) UIView *showTipsView;
+@property (retain, nonatomic) UILabel *showTipsLabel;
+
 
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;

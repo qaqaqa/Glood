@@ -135,7 +135,34 @@
          }];  
     }
     
+    self.showTipsView = [[UIView alloc] init];
+    self.showTipsView.frame = CGRectMake(0, -70, SCREEN_WIDTH, 60);
+    self.showTipsView.layer.masksToBounds = YES;
+    self.showTipsView.layer.cornerRadius = 5;
+    self.showTipsView.backgroundColor = [UIColor whiteColor];
+    self.showTipsView.alpha = 0.9;
+    [self.window addSubview:self.showTipsView];
+    
+    self.showTipsLabel = [[UILabel alloc] init];
+    self.showTipsLabel.frame = CGRectMake(0, 10, self.showTipsView.frame.size.width, self.showTipsView.frame.size.height-10);
+    self.showTipsLabel.textAlignment = NSTextAlignmentCenter;
+    self.showTipsLabel.font = [UIFont fontWithName:@"ProximaNova-Regular" size:16];
+    self.showTipsLabel.userInteractionEnabled = YES;
+    [self.showTipsView addSubview:self.showTipsLabel];
+    
+    UISwipeGestureRecognizer *recognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipe:)];
+    recognizer.direction = UISwipeGestureRecognizerDirectionUp;
+    [self.showTipsLabel addGestureRecognizer:recognizer];
+    
     return YES;
+}
+
+- (void)handleSwipe:(UISwipeGestureRecognizer *)recognizer
+{
+    [UIView animateWithDuration:0.5 animations:^{
+        self.showTipsView.frame = CGRectMake(0, -70, SCREEN_WIDTH, 60);
+    } completion:^(BOOL finished) {
+    }];
 }
 
 #pragma mark ============    通知，订阅主题 推送消息    ===========
