@@ -48,6 +48,7 @@
 @property (retain, nonatomic) PagedFlowView *hFlowView;
 @property (retain, nonatomic) MockView *mockView;
 @property (retain, nonatomic) UIButton *soundingRecoringButton;
+@property (retain, nonatomic) UIButton *soundingRecoringVoiceButton;
 @property (retain, nonatomic) UIImageView *soundingRecoringImageView; //长按手势时，检查麦克风权限是否开启
 @property (retain, nonatomic) UIImageView *micTopImageView;
 
@@ -130,13 +131,23 @@
     [self.view addSubview:self.hFlowView];
     
     self.soundingRecoringButton = [[UIButton alloc] initWithFrame:CGRectMake((SCREEN_WIDTH-(SCREEN_WIDTH*75/320))/2, SCREEN_HEIGHT-(SCREEN_WIDTH*80/320), SCREEN_WIDTH*75/320, SCREEN_WIDTH*75/320)];
-    [self.soundingRecoringButton setImage:[UIImage imageNamed:@"voice.png"] forState:UIControlStateNormal];
-    [self.soundingRecoringButton setBackgroundColor:[UIColor clearColor]];
+    self.soundingRecoringButton.layer.masksToBounds = YES;
+    self.soundingRecoringButton.layer.cornerRadius = self.soundingRecoringButton.frame.size.height/2;
+    self.soundingRecoringButton.backgroundColor = [UIColor colorWithRed:27/255.0 green:127/255.0 blue:254/255.0 alpha:1.0];
     self.soundingRecoringButton.alpha = 1.0;
     [self.soundingRecoringButton addTarget:self action:@selector(onStartSoundRecoringBtnClick:) forControlEvents:UIControlEventTouchDown];
     [self.soundingRecoringButton addTarget:self action:@selector(onEndSoundRecoringBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.soundingRecoringButton addTarget:self action:@selector(onCancelSoundRecoringBtnClick:) forControlEvents:UIControlEventTouchUpOutside];
     [self.view addSubview:self.soundingRecoringButton];
+    
+    self.soundingRecoringVoiceButton = [[UIButton alloc] initWithFrame:CGRectMake((SCREEN_WIDTH-(SCREEN_WIDTH*65/320))/2, SCREEN_HEIGHT-(SCREEN_WIDTH*75/320), SCREEN_WIDTH*65/320, SCREEN_WIDTH*65/320)];
+    self.soundingRecoringVoiceButton.alpha = 1.0;
+    self.soundingRecoringVoiceButton.backgroundColor = [UIColor clearColor];
+    [self.soundingRecoringVoiceButton setImage:[UIImage imageNamed:@"voice"] forState:UIControlStateNormal];
+    [self.soundingRecoringVoiceButton addTarget:self action:@selector(onStartSoundRecoringBtnClick:) forControlEvents:UIControlEventTouchDown];
+    [self.soundingRecoringVoiceButton addTarget:self action:@selector(onEndSoundRecoringBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+    [self.soundingRecoringVoiceButton addTarget:self action:@selector(onCancelSoundRecoringBtnClick:) forControlEvents:UIControlEventTouchUpOutside];
+    [self.view addSubview:self.soundingRecoringVoiceButton];
     
     
     self.soundingRecoringImageView = [[UIImageView alloc] initWithFrame:CGRectMake((SCREEN_WIDTH-(SCREEN_WIDTH*75/320))/2, SCREEN_HEIGHT-(SCREEN_WIDTH*80/320), SCREEN_WIDTH*75/320, SCREEN_WIDTH*75/320)];
@@ -312,11 +323,13 @@
         [[NSUserDefaults standardUserDefaults] setBool:true forKey:@"isSelectShield"];
         [self.micShieldButton setImage:[UIImage imageNamed:@"like2.png"] forState:UIControlStateNormal];
         self.soundingRecoringButton.userInteractionEnabled = NO;
+        self.soundingRecoringVoiceButton.userInteractionEnabled = NO;
     }
     else{
         [[NSUserDefaults standardUserDefaults] setBool:false forKey:@"isSelectShield"];
         [self.micShieldButton setImage:[UIImage imageNamed:@"people.png"] forState:UIControlStateNormal];
         self.soundingRecoringButton.userInteractionEnabled = YES;
+        self.soundingRecoringVoiceButton.userInteractionEnabled = YES;
     }
     
 }
@@ -579,12 +592,14 @@
 - (void)onShield
 {
     self.soundingRecoringButton.userInteractionEnabled = NO;
+    self.soundingRecoringVoiceButton.userInteractionEnabled = NO;
     self.micShieldButton.userInteractionEnabled = NO;
 }
 
 - (void)onCancelShield
 {
     self.soundingRecoringButton.userInteractionEnabled = YES;
+    self.soundingRecoringVoiceButton.userInteractionEnabled = YES;
     self.micShieldButton.userInteractionEnabled = YES;
 }
 
@@ -593,6 +608,7 @@
     [[NSUserDefaults standardUserDefaults] setBool:false forKey:@"isSelectShield"];
     [self.micShieldButton setImage:[UIImage imageNamed:@"people.png"] forState:UIControlStateNormal];
     self.soundingRecoringButton.userInteractionEnabled = YES;
+    self.soundingRecoringVoiceButton.userInteractionEnabled = YES;
     self.micShieldButton.userInteractionEnabled = YES;
 }
 
@@ -681,6 +697,7 @@
         
         //在聊天室里
         [self.soundingRecoringButton removeFromSuperview];
+        [self.soundingRecoringVoiceButton removeFromSuperview];
         userInfomationData.isEnterMicList = @"false";
         self.mockView.alpha = 0;
         self.navtitleLabel.text = @"Communities";
@@ -710,13 +727,23 @@
             [self.view addSubview:self.hFlowView];
             
             self.soundingRecoringButton = [[UIButton alloc] initWithFrame:CGRectMake((SCREEN_WIDTH-(SCREEN_WIDTH*75/320))/2, SCREEN_HEIGHT-(SCREEN_WIDTH*80/320), SCREEN_WIDTH*75/320, SCREEN_WIDTH*75/320)];
-            [self.soundingRecoringButton setImage:[UIImage imageNamed:@"voice.png"] forState:UIControlStateNormal];
-            [self.soundingRecoringButton setBackgroundColor:[UIColor clearColor]];
+            self.soundingRecoringButton.layer.masksToBounds = YES;
+            self.soundingRecoringButton.layer.cornerRadius = self.soundingRecoringButton.frame.size.height/2;
+            self.soundingRecoringButton.backgroundColor = [UIColor colorWithRed:27/255.0 green:127/255.0 blue:254/255.0 alpha:1.0];
             self.soundingRecoringButton.alpha = 1.0;
             [self.soundingRecoringButton addTarget:self action:@selector(onStartSoundRecoringBtnClick:) forControlEvents:UIControlEventTouchDown];
             [self.soundingRecoringButton addTarget:self action:@selector(onEndSoundRecoringBtnClick:) forControlEvents:UIControlEventTouchUpInside];
             [self.soundingRecoringButton addTarget:self action:@selector(onCancelSoundRecoringBtnClick:) forControlEvents:UIControlEventTouchUpOutside];
             [self.view addSubview:self.soundingRecoringButton];
+            
+            self.soundingRecoringVoiceButton = [[UIButton alloc] initWithFrame:CGRectMake((SCREEN_WIDTH-(SCREEN_WIDTH*65/320))/2, SCREEN_HEIGHT-(SCREEN_WIDTH*75/320), SCREEN_WIDTH*65/320, SCREEN_WIDTH*65/320)];
+            self.soundingRecoringVoiceButton.backgroundColor = [UIColor clearColor];
+            [self.soundingRecoringVoiceButton setImage:[UIImage imageNamed:@"voice"] forState:UIControlStateNormal];
+            self.soundingRecoringVoiceButton.alpha = 1.0;
+            [self.soundingRecoringVoiceButton addTarget:self action:@selector(onStartSoundRecoringBtnClick:) forControlEvents:UIControlEventTouchDown];
+            [self.soundingRecoringVoiceButton addTarget:self action:@selector(onEndSoundRecoringBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+            [self.soundingRecoringVoiceButton addTarget:self action:@selector(onCancelSoundRecoringBtnClick:) forControlEvents:UIControlEventTouchUpOutside];
+            [self.view addSubview:self.soundingRecoringVoiceButton];
             
             self.soundingRecoringImageView = [[UIImageView alloc] initWithFrame:CGRectMake((SCREEN_WIDTH-(SCREEN_WIDTH*75/320))/2, SCREEN_HEIGHT-(SCREEN_WIDTH*80/320), SCREEN_WIDTH*75/320, SCREEN_WIDTH*75/320)];
             self.soundingRecoringImageView.backgroundColor = [UIColor clearColor];
@@ -796,6 +823,7 @@
     self.mockView.alpha = 0;
     [UIView animateWithDuration:0.4 animations:^{
         self.soundingRecoringButton.alpha = 0.0;
+        self.soundingRecoringVoiceButton.alpha = 0.0;
     } completion:^(BOOL finished) {
     }];
 }
@@ -804,22 +832,78 @@
     
     [UIView animateWithDuration:0.4 animations:^{
         self.soundingRecoringButton.alpha = 1.0;
+        self.soundingRecoringVoiceButton.alpha = 1.0;
     } completion:^(BOOL finished) {
     }];
 }
 
 - (void)timerAnimation
 {
-    [UIView animateWithDuration:1.5 animations:^{
-        self.soundingRecoringButton.transform = CGAffineTransformMakeScale(1.1,1.1);
-        [self.soundingRecoringButton setImage:[UIImage imageNamed:@"voice.png"] forState:UIControlStateNormal];
-    } completion:^(BOOL finished) {
-        [UIView animateWithDuration:1.5 animations:^{
-            self.soundingRecoringButton.transform = CGAffineTransformMakeScale(1.0,1.0);
-            [self.soundingRecoringButton setImage:[UIImage imageNamed:@"voice.png"] forState:UIControlStateNormal];
-        } completion:^(BOOL finished) {
-        }];
-    }];
+    self.timerCount += 1;
+    switch (self.timerCount) {
+        case 1:
+                {
+                    [UIView animateWithDuration:1.5 animations:^{
+                        self.soundingRecoringButton.transform = CGAffineTransformMakeScale(1.1,1.1);
+                        self.soundingRecoringButton.backgroundColor = [UIColor colorWithRed:27/255.0 green:127/255.0 blue:254/255.0 alpha:1.0];
+                    } completion:^(BOOL finished) {
+                    }];
+                }
+            break;
+        case 2:
+                {
+                    [UIView animateWithDuration:1.5 animations:^{
+                        self.soundingRecoringButton.transform = CGAffineTransformMakeScale(1.0,1.0);
+                        self.soundingRecoringButton.backgroundColor = [UIColor colorWithRed:253/255.0 green:65/255.0 blue:75/255.0 alpha:1.0];
+                    } completion:^(BOOL finished) {
+                    }];
+                }
+            break;
+        case 3:
+                {
+                    [UIView animateWithDuration:1.5 animations:^{
+                        self.soundingRecoringButton.transform = CGAffineTransformMakeScale(1.1,1.1);
+                        self.soundingRecoringButton.backgroundColor = [UIColor greenColor];
+                    } completion:^(BOOL finished) {
+                    }];
+                }
+            break;
+        case 4:
+                {
+                    [UIView animateWithDuration:1.5 animations:^{
+                        self.soundingRecoringButton.transform = CGAffineTransformMakeScale(1.0,1.0);
+                        self.soundingRecoringButton.backgroundColor = [UIColor yellowColor];
+                    } completion:^(BOOL finished) {
+                    }];
+                    self.timerCount = 0;
+                }
+            break;
+            
+        default:
+            break;
+    }
+    NSLog(@"sdfasdf*a-sd*f-asd*f-asd*f-*---------- %ld",self.timerCount);
+    
+    //    [UIView animateWithDuration:1.5 animations:^{
+    //        self.soundingRecoringButton.transform = CGAffineTransformMakeScale(1.1,1.1);
+    //        self.soundingRecoringButton.backgroundColor = [UIColor colorWithRed:27/255.0 green:127/255.0 blue:254/255.0 alpha:1.0];
+    //    } completion:^(BOOL finished) {
+    //        [UIView animateWithDuration:1.5 animations:^{
+    //            self.soundingRecoringButton.transform = CGAffineTransformMakeScale(1.0,1.0);
+    //            self.soundingRecoringButton.backgroundColor = [UIColor colorWithRed:253/255.0 green:65/255.0 blue:75/255.0 alpha:1.0];
+    //        } completion:^(BOOL finished) {
+    //            [UIView animateWithDuration:1.5 animations:^{
+    //                self.soundingRecoringButton.transform = CGAffineTransformMakeScale(1.1,1.1);
+    //                self.soundingRecoringButton.backgroundColor = [UIColor greenColor];
+    //            } completion:^(BOOL finished) {
+    //                [UIView animateWithDuration:1.5 animations:^{
+    //                    self.soundingRecoringButton.transform = CGAffineTransformMakeScale(1.0,1.0);
+    //                    self.soundingRecoringButton.backgroundColor = [UIColor yellowColor];
+    //                } completion:^(BOOL finished) {
+    //                }];
+    //            }];
+    //        }];
+    //    }];
 }
 
 #pragma mark ========== 开始录音 ============
@@ -838,11 +922,12 @@
         }
         else
         {
-            self.animationtTimer = [NSTimer scheduledTimerWithTimeInterval:1.0
+            self.animationtTimer = [NSTimer scheduledTimerWithTimeInterval:1.5
                                                              target:self
                                                            selector:@selector(timerAnimation)
                                                            userInfo:nil
                                                             repeats:YES];
+            self.timerCount = 0;
             
             [self.mockBgView setHidden:NO];
             NSLog(@"开始录音！");
@@ -855,7 +940,8 @@
                                                         selector:@selector(yuLoad)
                                                         userInfo:nil
                                                          repeats:NO];
-            [self.soundingRecoringButton setImage:[UIImage imageNamed:@"voice.png"] forState:UIControlStateNormal];
+//            [self.soundingRecoringButton setImage:[UIImage imageNamed:@"voice.png"] forState:UIControlStateNormal];
+            self.soundingRecoringButton.backgroundColor = [UIColor colorWithRed:27/255.0 green:127/255.0 blue:254/255.0 alpha:1.0];
             [userInfomationData.recordAudio startRecoring:@"IOS"];
             self.recordAudioTimeOutStr = @"no";
             [self gcdTimeRecordAudio];
@@ -967,7 +1053,8 @@
         [self.yuLoadTimer invalidate];
         [self performSelector:@selector(cancelTimer) withObject:nil afterDelay:0.5f];
             if ([self.recordAudioTimeOutStr isEqualToString:@"no"]) {
-                [self.soundingRecoringButton setImage:[UIImage imageNamed:@"voice.png"] forState:UIControlStateNormal];
+//                [self.soundingRecoringButton setImage:[UIImage imageNamed:@"voice.png"] forState:UIControlStateNormal];
+                self.soundingRecoringButton.backgroundColor = [UIColor colorWithRed:27/255.0 green:127/255.0 blue:254/255.0 alpha:1.0];
                 if (![CommonService isBlankString:[userInfomationData.recordAudio stopRecoring]]) {
                     if ([CommonService isBlankString:userInfomationData.QRRoomId]) {
 //                        [userInfomationData.commonService sendMessageInRoom:[userInfomationData.recordAudio stopRecoring] roomId:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"] messageType:3];
@@ -986,6 +1073,7 @@
                     }
                     
                     self.soundingRecoringButton.userInteractionEnabled = NO;
+                    self.soundingRecoringVoiceButton.userInteractionEnabled = NO;
                     [self performSelector:@selector(recoverRecordButton) withObject:nil afterDelay:0.8f];
                 }
                 
@@ -999,7 +1087,8 @@
 
 - (void)cancelTimer
 {
-    [self.soundingRecoringButton setImage:[UIImage imageNamed:@"voice.png"] forState:UIControlStateNormal];
+//    [self.soundingRecoringButton setImage:[UIImage imageNamed:@"voice.png"] forState:UIControlStateNormal];
+    self.soundingRecoringButton.backgroundColor = [UIColor colorWithRed:27/255.0 green:127/255.0 blue:254/255.0 alpha:1.0];
     if (_timer != nil) {
         dispatch_source_cancel(_timer);
 //        [self.myAppDelegate deletePreLoadingMessage];
@@ -1034,7 +1123,8 @@
         [ShowMessage showMessage:@"cancel recording"];
         [self.mockBgView setHidden:YES];
         UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
-        [self.soundingRecoringButton setImage:[UIImage imageNamed:@"voice.png"] forState:UIControlStateNormal];
+//        [self.soundingRecoringButton setImage:[UIImage imageNamed:@"voice.png"] forState:UIControlStateNormal];
+        self.soundingRecoringButton.backgroundColor = [UIColor colorWithRed:27/255.0 green:127/255.0 blue:254/255.0 alpha:1.0];
         dispatch_source_cancel(_timer);
         [userInfomationData.recordAudio stopRecoringCancel];
     }
@@ -1052,6 +1142,12 @@
     [self.animationtTimer invalidate];
     [self.mockBgView setHidden:YES];
     self.soundingRecoringButton.userInteractionEnabled = YES;
+    self.soundingRecoringVoiceButton.userInteractionEnabled = YES;
+    [UIView animateWithDuration:0.1 animations:^{
+        self.soundingRecoringButton.transform = CGAffineTransformMakeScale(1.0,1.0);
+        self.soundingRecoringButton.backgroundColor = [UIColor colorWithRed:27/255.0 green:127/255.0 blue:254/255.0 alpha:1.0];
+    } completion:^(BOOL finished) {
+    }];
 }
 
 //录音倒计时
@@ -1070,7 +1166,8 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 //设置界面的按钮显示 根据自己需求设置
                 
-                [self.soundingRecoringButton setImage:[UIImage imageNamed:@"voice.png"] forState:UIControlStateNormal];
+//                [self.soundingRecoringButton setImage:[UIImage imageNamed:@"voice.png"] forState:UIControlStateNormal];
+                self.soundingRecoringButton.backgroundColor = [UIColor colorWithRed:27/255.0 green:127/255.0 blue:254/255.0 alpha:1.0];
                 [self.gcdView setHidden:YES];
                 [self.gcdLabel setHidden:YES];
                 [self performSelector:@selector(recoverRecordButton) withObject:nil afterDelay:0.8f];
@@ -1144,6 +1241,7 @@
     [[NSUserDefaults standardUserDefaults] setBool:false forKey:@"isSelectShield"];
     [self.micShieldButton setImage:[UIImage imageNamed:@"people.png"] forState:UIControlStateNormal];
     self.soundingRecoringButton.userInteractionEnabled = YES;
+    self.soundingRecoringVoiceButton.userInteractionEnabled = YES;
     //每次进入聊天室页面检查麦克风权限是否开启
     AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeAudio];
     NSLog(@"*-*-*--*hahhah--- %ld",(long)authStatus);
@@ -1265,6 +1363,7 @@
     [[NSUserDefaults standardUserDefaults] setBool:false forKey:@"isSelectShield"];
     [self.micShieldButton setImage:[UIImage imageNamed:@"people.png"] forState:UIControlStateNormal];
     self.soundingRecoringButton.userInteractionEnabled = YES;
+    self.soundingRecoringVoiceButton.userInteractionEnabled = YES;
     //每次进入聊天室页面检查麦克风权限是否开启
     AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeAudio];
     NSLog(@"*-*-*--*hahhah--- %ld",(long)authStatus);

@@ -28,6 +28,8 @@
 
 @property (strong, nonatomic) NSString *recordAudioTimeOutStr;
 
+@property (assign, nonatomic) NSInteger timerCount;
+
 //- (void)saveRecord:(NSString *)base64 messageId:(NSString *)messageIdx;
 //- (void)palyRecord:(NSString *)playName;
 

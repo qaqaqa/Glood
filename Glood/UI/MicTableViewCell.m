@@ -66,6 +66,11 @@
         self.likeButton.backgroundColor = [UIColor clearColor];
         [self.likeButton setImage:[UIImage imageNamed:@"app_img_like2"] forState:UIControlStateNormal];
         [self addSubview:self.likeButton];
+        
+        self.blockLogoButton = [[UIButton alloc] init];
+        self.blockLogoButton.backgroundColor = [UIColor clearColor];
+        [self.blockLogoButton setImage:[UIImage imageNamed:@"ban_sign"] forState:UIControlStateNormal];
+        [self.headImageButton addSubview:self.blockLogoButton];
 
         
     }
@@ -110,6 +115,7 @@
             else if (newCenter.x-self.headImageButton.frame.size.width/2-1 <= leftX)
             {
                 NSLog(@"屏蔽");
+                self.blockLogoButton.frame = CGRectMake(-4, -4, self.headImageButton.frame.size.width+8, self.headImageButton.frame.size.width+8);
                 NSDictionary *dic = @{@"name":self.nameLabel.text,
                                       @"headImage":self.headImageButton.currentImage,
                                       @"userId":self.userIdLabel.text,

@@ -437,7 +437,7 @@
     self.micTableViewCell.roomIdLabel.text = mic.roomId;
     self.micTableViewCell.messageIdLabel.text = mic.messageId;
     
-    self.micTableViewCell.likeButton.frame = CGRectMake(self.micTableViewCell.bgImageView.frame.origin.x+self.micTableViewCell.bgImageView.frame.size.width-(SCREEN_WIDTH*8/320), self.micTableViewCell.bgImageView.frame.origin.y, SCREEN_WIDTH*30/320, SCREEN_WIDTH*30/320);
+    self.micTableViewCell.likeButton.frame = CGRectMake(self.micTableViewCell.bgImageView.frame.origin.x+self.micTableViewCell.bgImageView.frame.size.width-(SCREEN_WIDTH*15/320), self.micTableViewCell.bgImageView.frame.origin.y-(SCREEN_HEIGHT*4/568), SCREEN_WIDTH*25/320, SCREEN_WIDTH*25/320);
     self.micTableViewCell.likeButton.tag = likeButtonTag+indexPath.row;
     [self.micTableViewCell.likeButton setImage:[UIImage imageNamed:@"app_img_like2"] forState:UIControlStateNormal];
     if ([mic.isRead integerValue] == 1) {
