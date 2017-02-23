@@ -187,11 +187,12 @@
     [self.largeRightButton addTarget:self action:@selector(onRightBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.largeRightButton];
     
-    self.addButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*54/320), 0, 54, 54)];
+    self.addButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*30/320)-20, 12, 30, 30)];
     [self.addButton addTarget:self action:@selector(onAddQr) forControlEvents:UIControlEventTouchUpInside];
-    [self.addButton setTitle:@"+" forState:UIControlStateNormal];
-    [self.addButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    self.addButton.titleLabel.font = [UIFont boldSystemFontOfSize:25];
+//    [self.addButton setTitle:@"+" forState:UIControlStateNormal];
+    [self.addButton setImage:[UIImage imageNamed:@"plus_icon"] forState:UIControlStateNormal];
+//    [self.addButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+//    self.addButton.titleLabel.font = [UIFont boldSystemFontOfSize:25];
     [self.view addSubview:self.addButton];
     
     
@@ -486,6 +487,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"shield" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"yesShield" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"becomeActive" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"stopRecording" object:nil];
     
     [self.mockView deallocNSNotificationCenter];
 }
@@ -507,6 +509,7 @@
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(getMicHistoryList)name:@"getMicHistoryList"object:nil];
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(getYesShield)name:@"yesShield"object:nil];
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(becomeActive)name:@"becomeActive"object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(onStopRecording)name:@"stopRecording"object:nil];
     
     
     [self.mockView addNSNotificationCenter];
@@ -813,7 +816,7 @@
     } completion:^(BOOL finished) {
         [UIView animateWithDuration:1.5 animations:^{
             self.soundingRecoringButton.transform = CGAffineTransformMakeScale(1.0,1.0);
-            [self.soundingRecoringButton setImage:[UIImage imageNamed:@"voice2.png"] forState:UIControlStateNormal];
+            [self.soundingRecoringButton setImage:[UIImage imageNamed:@"voice.png"] forState:UIControlStateNormal];
         } completion:^(BOOL finished) {
         }];
     }];
@@ -852,7 +855,7 @@
                                                         selector:@selector(yuLoad)
                                                         userInfo:nil
                                                          repeats:NO];
-            [self.soundingRecoringButton setImage:[UIImage imageNamed:@"voice2.png"] forState:UIControlStateNormal];
+            [self.soundingRecoringButton setImage:[UIImage imageNamed:@"voice.png"] forState:UIControlStateNormal];
             [userInfomationData.recordAudio startRecoring:@"IOS"];
             self.recordAudioTimeOutStr = @"no";
             [self gcdTimeRecordAudio];
@@ -1037,6 +1040,11 @@
     }
     
     
+}
+
+- (void)onStopRecording
+{
+    [self recoverRecordButton];
 }
 
 - (void)recoverRecordButton

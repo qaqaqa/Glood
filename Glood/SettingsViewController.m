@@ -62,18 +62,22 @@
     self.jtSwitch = [[JTMaterialSwitch alloc] initWithSize:JTMaterialSwitchSizeNormal
                                                 style:JTMaterialSwitchStyleLight
                                                 state:JTMaterialSwitchStateOn];
-    self.jtSwitch.center = CGPointMake(SCREEN_WIDTH-50-10, notificationTitleLabel.frame.origin.y+20);
+    self.jtSwitch.center = CGPointMake(SCREEN_WIDTH-30-10, notificationTitleLabel.frame.origin.y+20);
     [self.jtSwitch addTarget:self action:@selector(stateChanged) forControlEvents:UIControlEventValueChanged];
     [self.view addSubview:self.jtSwitch];
     
+    UILabel *blockUserListTitleLabel = [[UILabel alloc] init];
+    blockUserListTitleLabel.frame = CGRectMake(leftButton.frame.size.height+leftButton.frame.origin.x-20, 64+80, SCREEN_WIDTH*220/320, 35);
+    blockUserListTitleLabel.text = @"Manage Blocked Users";
+    blockUserListTitleLabel.font = [UIFont systemFontOfSize:18];
+    [self.view addSubview:blockUserListTitleLabel];
+    
     UIButton *blockUserListButton = [[UIButton alloc] init];
-    blockUserListButton.frame = CGRectMake(notificationTitleLabel.frame.origin.x, notificationTitleLabel.frame.size.height+notificationTitleLabel.frame.origin.y+10, 350*SCREEN_WIDTH/568, 50*SCREEN_WIDTH/568);
-    [blockUserListButton setTitle:@"open blockUserList" forState:UIControlStateNormal];
-    [blockUserListButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [blockUserListButton setBackgroundColor:[UIColor whiteColor]];
+    blockUserListButton.frame = CGRectMake(SCREEN_WIDTH-25-35, blockUserListTitleLabel.frame.origin.y, 40, 35);
+    [blockUserListButton setImage:[UIImage imageNamed:@"timg.jpeg"] forState:UIControlStateNormal];
+    [blockUserListButton setBackgroundColor:[UIColor clearColor]];
     [blockUserListButton addTarget:self action:@selector(onOpenBlockButton:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:blockUserListButton];
-    
     
     UIButton *logoutButton = [[UIButton alloc] initWithFrame:CGRectMake(0, SCREEN_HEIGHT-50, SCREEN_WIDTH, 50)];
     [logoutButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];

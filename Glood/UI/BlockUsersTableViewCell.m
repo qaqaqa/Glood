@@ -28,13 +28,13 @@
         self.nameLabel = [[UILabel alloc] init];
         [self addSubview:self.nameLabel];
         
-        self.cancleBlockButton = [[UIButton alloc] init];
-        [self.cancleBlockButton setTitle:@"cancel" forState:UIControlStateNormal];
-        [self.cancleBlockButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        self.cancleBlockButton.backgroundColor = [UIColor whiteColor];
-        self.cancleBlockButton.layer.cornerRadius = 8;
-        self.cancleBlockButton.layer.masksToBounds = YES;
-        [self addSubview:self.cancleBlockButton];
+//        self.cancleBlockButton = [[UIButton alloc] init];
+//        [self.cancleBlockButton setTitle:@"cancel" forState:UIControlStateNormal];
+//        [self.cancleBlockButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+//        self.cancleBlockButton.backgroundColor = [UIColor whiteColor];
+//        self.cancleBlockButton.layer.cornerRadius = 8;
+//        self.cancleBlockButton.layer.masksToBounds = YES;
+//        [self addSubview:self.cancleBlockButton];
         
     }
     return self;

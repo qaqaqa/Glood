@@ -64,6 +64,7 @@
 //停止录音
 - (NSString *)stopRecoring
 {
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"stopRecording" object:self];
     [self.recorder stop];
     NSDate *date = [NSDate date];
     NSString *amrPath = [self GetPathByFileName:self.recordFileName ofType:@"amr"];

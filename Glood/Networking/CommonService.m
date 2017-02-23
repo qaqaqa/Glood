@@ -280,23 +280,23 @@
             } error:^id(NSError *error) {
                 NSLog(@"拉取活动失败--- %@",error);
                 //拉取活动失败，继续拉取
-                [MMProgressHUD dismissWithError:@"get event info error,try again!" afterDelay:2.0f];
-                if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"open"]) {
-                    [[self getEventsList] then:^id(id value) {
-                        UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
-                        userInfomationData.eventDic = [[NSDictionary alloc] init];
-                        userInfomationData.eventDic = value;
-                        [self.myAppDelegate subscribeToTopic:value];
-                        NSLog(@"拉取活动成功----");
-                        [MMProgressHUD showWithTitle:@"join chatroom" status:NSLocalizedString(@"Please wating", nil)];
-                        [self joinChatRoom];
-                        return value;
-                    } error:^id(NSError *error) {
-                        NSLog(@"拉取活动失败--- %@",error);
-                        [MMProgressHUD dismissWithError:@"get event info error,try again!" afterDelay:2.0f];
-                        return error;
-                    }];
-                }
+//                [MMProgressHUD dismissWithError:@"get event info error,try again!" afterDelay:2.0f];
+//                if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"open"]) {
+//                    [[self getEventsList] then:^id(id value) {
+//                        UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+//                        userInfomationData.eventDic = [[NSDictionary alloc] init];
+//                        userInfomationData.eventDic = value;
+//                        [self.myAppDelegate subscribeToTopic:value];
+//                        NSLog(@"拉取活动成功----");
+//                        [MMProgressHUD showWithTitle:@"join chatroom" status:NSLocalizedString(@"Please wating", nil)];
+////                        [self joinChatRoom];
+//                        return value;
+//                    } error:^id(NSError *error) {
+//                        NSLog(@"拉取活动失败--- %@",error);
+//                        [MMProgressHUD dismissWithError:@"get event info error,try again!" afterDelay:2.0f];
+//                        return error;
+//                    }];
+//                }
                 return error;
             }];
         }
@@ -345,7 +345,7 @@
         {
             [MMProgressHUD dismiss];
         }
-//        [self reconntionSignlar];
+        [self reconntionSignlar];
         
     }];
     hubConnection.delegate = self;
@@ -360,7 +360,7 @@
         [self.chat invoke:@"join" withArgs:@[] completionHandler:^(id response, NSError *error) {
             if (error) {
                 //加入聊天室失败，继续尝试加入
-                [self joinChatRoom];
+//                [self joinChatRoom];
                 [MMProgressHUD dismissWithError:@"join chatroom,try again!" afterDelay:2.0f];
                 NSLog(@"xxxxxxxxxxx----%@",error.description);
             }
@@ -419,6 +419,7 @@
 //        [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
         [MMProgressHUD showWithTitle:@"reConnection" status:NSLocalizedString(@"Please wating", nil)];
         [userInfomationData.timer invalidate];
+        userInfomationData.hubConnection = nil;
         [self connectionSignlar];
         self.reConnectionTag = @"reConnetion";
     }

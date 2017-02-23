@@ -60,12 +60,12 @@
 - (id)initWithSize:(JTMaterialSwitchSize)size state:(JTMaterialSwitchState)state
 {
   // initialize parameters
-  self.thumbOnTintColor  = [UIColor colorWithRed:52./255. green:109./255. blue:241./255. alpha:1.0];
-  self.thumbOffTintColor = [UIColor colorWithRed:249./255. green:249./255. blue:249./255. alpha:1.0];
-  self.trackOnTintColor = [UIColor colorWithRed:143./255. green:179./255. blue:247./255. alpha:1.0];
-  self.trackOffTintColor = [UIColor colorWithRed:193./255. green:193./255. blue:193./255. alpha:1.0];
-  self.thumbDisabledTintColor = [UIColor colorWithRed:174./255. green:174./255. blue:174./255. alpha:1.0];
-  self.trackDisabledTintColor = [UIColor colorWithRed:203./255. green:203./255. blue:203./255. alpha:1.0];
+  self.thumbOnTintColor  = [UIColor colorWithRed:107/255. green:218/255. blue:191/255. alpha:1.0];
+  self.thumbOffTintColor = [UIColor colorWithRed:107/255. green:218/255. blue:191/255. alpha:1.0];
+  self.trackOnTintColor = [UIColor colorWithRed:107/255. green:218/255. blue:191/255. alpha:1.0];
+  self.trackOffTintColor = [UIColor colorWithRed:107/255. green:218/255. blue:191/255. alpha:1.0];
+  self.thumbDisabledTintColor = [UIColor colorWithRed:107/255. green:218/255. blue:191/255. alpha:1.0];
+  self.trackDisabledTintColor = [UIColor colorWithRed:107/255. green:218/255. blue:191/255. alpha:1.0];
   self.isEnabled = YES;
   self.isRippleEnabled = YES;
   self.isBounceEnabled = YES;

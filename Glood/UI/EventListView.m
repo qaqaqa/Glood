@@ -24,7 +24,7 @@
         [self.bgView setImage:[UIImage imageNamed:@"bg"]];
         [self addSubview:self.bgView];
         
-        self.leftButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*17/320, SCREEN_HEIGHT*10/568, SCREEN_WIDTH*34/320, SCREEN_HEIGHT*36/568)];
+        self.leftButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*0/320, SCREEN_HEIGHT*10/568, SCREEN_WIDTH*48/320, SCREEN_HEIGHT*45/568)];
         [self.leftButton setImage:[UIImage imageNamed:@"menu"] forState:UIControlStateNormal];
         [self.leftButton addTarget:self action:@selector(onLeftBtnClick:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:self.leftButton];

@@ -15,6 +15,12 @@
 @property (retain, nonatomic) UIImageView *bgView;
 @property (retain, nonatomic) UIButton *leftButton;
 @property (retain, nonatomic) UILabel *titleLabel;
+@property (retain, nonatomic) UIButton *shieldBgButton;
+@property (retain, nonatomic) UIView *shieldbgView;
+@property (retain, nonatomic) UIImageView *shieldHeadImageView;
+@property (retain, nonatomic) UILabel *shieldTipLabel;
+
+@property (assign, nonatomic) NSInteger indexRow;
 
 @property (retain, nonatomic) UITableView *tableView;
 @property (retain, nonatomic) BlockUsersTableViewCell *blockUsersTableViewCell;
