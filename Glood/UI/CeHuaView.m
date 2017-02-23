@@ -23,8 +23,8 @@
     if (self)
     {
         self.bgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
-        self.bgView.backgroundColor = [UIColor clearColor];
         [self.bgView setImage:[UIImage imageNamed:@"bg"]];
+        self.bgView.alpha = 0.95;
         [self addSubview:self.bgView];
         
         UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH-35, SCREEN_HEIGHT)];

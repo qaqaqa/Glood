@@ -189,6 +189,10 @@
     self.navtitleLabel.font = [UIFont fontWithName:@"ProximaNova-Regular" size:17];
     [self.view addSubview:self.navtitleLabel];
     
+    UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+    self.navtitleLabel.userInteractionEnabled = YES;
+    [self.navtitleLabel addGestureRecognizer:recognizer];
+    
     self.rightButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*(54+50)/320), SCREEN_HEIGHT*16/568, SCREEN_WIDTH*28/320, SCREEN_HEIGHT*28/568)];
     [self.rightButton setImage:[UIImage imageNamed:@"down"] forState:UIControlStateNormal];
     [self.rightButton addTarget:self action:@selector(onRightBtnClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -240,6 +244,11 @@
     
 }
 
+- (void)handleTap:(UITapGestureRecognizer *)recognizer
+{
+    [self onRightBtnClick:nil];
+}
+
 #pragma mark ==========侧滑菜单栏=========
 - (void)onCeHuaMoreBtnClick:(id)sender
 {
@@ -284,9 +293,18 @@
                 self.cehuaView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
             } completion:^(BOOL finished) {
             }];
+            
+            UISwipeGestureRecognizer *recognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipe:)];
+            recognizer.direction = UISwipeGestureRecognizerDirectionLeft; //设置轻扫方向；默认是 UISwipeGestureRecognizerDirectionRight，即向右轻扫
+            [self.cehuaView addGestureRecognizer:recognizer];
         }
     }
     
+}
+
+- (void)handleSwipe:(UISwipeGestureRecognizer *)recognizer
+{
+    [self onCeHuaMoreBtnClick:nil];
 }
 
 #pragma mark ========== right eventlist button ========
@@ -1314,8 +1332,8 @@
 //        self.mockView.refreshView.transform = CGAffineTransformMakeScale(self.cgAffineTransformMakeScale, self.cgAffineTransformMakeScale);
         
         
-    } completion:^(BOOL finished) {
         
+        //进入房间动画以后开始显示顶部活动图片和消息名字
         [self.mockView.lastBgView setHidden:YES];
         if ([CommonService isBlankString:userInfomationData.QRRoomId]) {
             self.navtitleLabel.text = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"name"];
@@ -1331,27 +1349,24 @@
             
         }
         
-        [UIView animateWithDuration:0.5 animations:^{
-            self.micTopImageView.alpha = 1;
-            self.micShieldButton.alpha = 1;
-            self.micPlayerStatesImageView.alpha = 1;
-            for (NSInteger i = 0; i < 20; i++) {
-                UILabel *find_nameLabel = (UILabel *)[self.mockView.micBottomImageView viewWithTag:nameLabelTag+i];
-                find_nameLabel.alpha = 1;
-            }
-            CAGradientLayer *gradientLayer = [CAGradientLayer layer];
-            gradientLayer.frame = self.mockView.micBottomImageView.bounds;
-            gradientLayer.colors = @[(__bridge id)[UIColor colorWithWhite:0 alpha:0.0].CGColor,(__bridge id)[UIColor colorWithWhite:0 alpha:1].CGColor];
-            gradientLayer.startPoint = CGPointMake(0, 0);
-            gradientLayer.endPoint = CGPointMake(0, 0.1);
-            [self.mockView.micBottomImageView.layer setMask:gradientLayer];
-            self.view.userInteractionEnabled = YES;
-            
-        } completion:^(BOOL finished) {
-            userInfomationData.mockViewNameLabelIsHiddenStr = @"yes";
-            [self.mockView.tableView reloadData];
-            
-        }];
+        self.micTopImageView.alpha = 1;
+        self.micShieldButton.alpha = 1;
+        self.micPlayerStatesImageView.alpha = 1;
+        for (NSInteger i = 0; i < 20; i++) {
+            UILabel *find_nameLabel = (UILabel *)[self.mockView.micBottomImageView viewWithTag:nameLabelTag+i];
+            find_nameLabel.alpha = 1;
+        }
+        CAGradientLayer *gradientLayer = [CAGradientLayer layer];
+        gradientLayer.frame = self.mockView.micBottomImageView.bounds;
+        gradientLayer.colors = @[(__bridge id)[UIColor colorWithWhite:0 alpha:0.0].CGColor,(__bridge id)[UIColor colorWithWhite:0 alpha:1].CGColor];
+        gradientLayer.startPoint = CGPointMake(0, 0);
+        gradientLayer.endPoint = CGPointMake(0, 0.1);
+        [self.mockView.micBottomImageView.layer setMask:gradientLayer];
+        self.view.userInteractionEnabled = YES;
+        userInfomationData.mockViewNameLabelIsHiddenStr = @"yes";
+        [self.mockView.tableView reloadData];
+    } completion:^(BOOL finished) {
+        
     }];
 }
 

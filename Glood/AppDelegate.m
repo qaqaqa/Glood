@@ -138,7 +138,7 @@
     return YES;
 }
 
-#pragma mark ============    通知，订阅主题    ===========
+#pragma mark ============    通知，订阅主题 推送消息    ===========
 - (void)subscribeToTopic:(NSDictionary*)dic
 {
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -150,6 +150,20 @@
         
         
     });
+}
+
+#pragma mark ============    通知，订阅主题 推送喜欢信息    ===========
+- (void)subscribeToTopicLikeMessage:(NSDictionary *)dicLikeMessage
+{
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        [[NSUserDefaults standardUserDefaults] setObject:@"open" forKey:@"signlarStauts"];
+//        for (NSInteger i = 0; i < [[dicLikeMessage objectForKey:@"result"] count]; i ++) {
+//            [[FIRMessaging messaging] subscribeToTopic:[NSString stringWithFormat:@"/topics/events-%@",[[[dicLikeMessage objectForKey:@"result"] objectAtIndex:i] objectForKey:@"id"]]];
+//            NSLog(@"Subscribed to like message");
+//        }
+//        
+//        
+//    });
 }
 
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler {

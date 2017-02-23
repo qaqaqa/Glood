@@ -180,6 +180,15 @@
         self.cehuaView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
     } completion:^(BOOL finished) {
     }];
+    
+    UISwipeGestureRecognizer *recognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipe:)];
+    recognizer.direction = UISwipeGestureRecognizerDirectionLeft; //设置轻扫方向；默认是 UISwipeGestureRecognizerDirectionRight，即向右轻扫
+    [self.cehuaView addGestureRecognizer:recognizer];
+}
+
+- (void)handleSwipe:(UISwipeGestureRecognizer *)recognizer
+{
+    [self onCeHuaMoreBtnClick];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
