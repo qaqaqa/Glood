@@ -134,7 +134,7 @@
     self.blockUsersTableViewCell.nameLabel.tag = nameLabelTag+indexPath.row;
     self.blockUsersTableViewCell.nameLabel.font = [UIFont fontWithName:@"ProximaNova-Regular" size:15];
 //    self.blockUsersTableViewCell.nameLabel.text = [[userInfomationData.blockUsersMutableArr objectAtIndex:indexPath.row] objectForKey:@"user_name"];
-    self.blockUsersTableViewCell.nameLabel.text =  [NSString stringWithFormat:@"%@%@.",[[userInfomationData.blockUsersMutableArr objectAtIndex:indexPath.row] objectForKey:@"name"],[[[userInfomationData.blockUsersMutableArr objectAtIndex:indexPath.row] objectForKey:@"surname"] substringToIndex:1]];
+    self.blockUsersTableViewCell.nameLabel.text =  [NSString stringWithFormat:@"%@ %@.",[[userInfomationData.blockUsersMutableArr objectAtIndex:indexPath.row] objectForKey:@"name"],[[[userInfomationData.blockUsersMutableArr objectAtIndex:indexPath.row] objectForKey:@"surname"] substringToIndex:1].uppercaseString];
     
 //    self.blockUsersTableViewCell.cancleBlockButton.frame  =  CGRectMake(SCREEN_WIDTH-10-(SCREEN_HEIGHT*60/568), SCREEN_HEIGHT*10/568, SCREEN_HEIGHT*60/568, SCREEN_HEIGHT*30/568);
 //    self.blockUsersTableViewCell.cancleBlockButton.tag = cancleBlockUserButttonTag+indexPath.row;
@@ -181,7 +181,7 @@
     [UIView animateWithDuration:0.5 animations:^{
         self.shieldBgButton.alpha = 1.0;
         [self.shieldHeadImageView sd_setImageWithURL:[[userInfomationData.blockUsersMutableArr objectAtIndex:indexRow] objectForKey:@"avatar"] placeholderImage:[UIImage imageNamed:@"171604419.jpg"]];
-        self.shieldTipLabel.text = [NSString stringWithFormat:@"%@%@.?",[[userInfomationData.blockUsersMutableArr objectAtIndex:indexRow] objectForKey:@"name"],[[[userInfomationData.blockUsersMutableArr objectAtIndex:indexRow] objectForKey:@"surname"] substringToIndex:1]];
+        self.shieldTipLabel.text = [NSString stringWithFormat:@"%@ %@.?",[[userInfomationData.blockUsersMutableArr objectAtIndex:indexRow] objectForKey:@"name"],[[[userInfomationData.blockUsersMutableArr objectAtIndex:indexRow] objectForKey:@"surname"] substringToIndex:1].uppercaseString];
         
     } completion:^(BOOL finished) {
     }];

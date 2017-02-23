@@ -396,10 +396,18 @@
             
             NSLog(@"join-*-*-*-*-*-*-*-*-*-*  %@",response);
             if ([response count]>=5) {
+                
+                NSString *nameStr;
+                if ([CommonService isBlankString:[[[response objectForKey:@"connected_clients"] objectAtIndex:0] objectForKey:@"name"]] || [CommonService isBlankString:[[[response objectForKey:@"connected_clients"] objectAtIndex:0] objectForKey:@"surname"]]) {
+                    nameStr = [[[response objectForKey:@"connected_clients"] objectAtIndex:0] objectForKey:@"user_name"];
+                }
+                else
+                {
+                    nameStr = [NSString stringWithFormat:@"%@ %@.",[[[response objectForKey:@"connected_clients"] objectAtIndex:0] objectForKey:@"name"],[[[[response objectForKey:@"connected_clients"] objectAtIndex:0] objectForKey:@"surname"] substringToIndex:1].uppercaseString];
+                }
                 [[NSUserDefaults standardUserDefaults] setObject:[response objectForKey:@"avatar"] forKey:USER_AVATAR_URL];
-                [[NSUserDefaults standardUserDefaults] setObject:[[[response objectForKey:@"connected_clients"] objectAtIndex:0] objectForKey:@"user_name"] forKey:USER_NAME];
+                [[NSUserDefaults standardUserDefaults] setObject:nameStr forKey:USER_NAME];
                 [[NSUserDefaults standardUserDefaults] setObject:[response objectForKey:@"current_client_id"] forKey:USER_CLIENT_ID];
-                NSLog(@"hahahhahahahaha===------  %@",[[[response objectForKey:@"connected_clients"] objectAtIndex:0] objectForKey:@"user_name"]);
             }
             
         }];
@@ -457,7 +465,15 @@
         userInfomationData.inRoomMessageForRoomIdStr = [msg objectForKey:@"room_id"];
         
         if (![[msg objectForKey:@"client_id"] isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:USER_CLIENT_ID]]) {
-            [self.myAppDelegate insertCoreData:[msg objectForKey:@"user_id"] avatarImage:[msg objectForKey:@"user_avatar"] roomId:[msg objectForKey:@"room_id"] time:[NSNumber numberWithFloat:[[arr objectAtIndex:0] floatValue]] message:[arr objectAtIndex:1] messageId:[msg objectForKey:@"id"] fromUserName:[msg objectForKey:@"user_name"] like:[msg objectForKey:@"like"]];
+            NSString *nameStr;
+            if ([CommonService isBlankString:[msg objectForKey:@"name"]] || [CommonService isBlankString:[msg objectForKey:@"surname"]]) {
+                nameStr = [msg objectForKey:@"user_name"];
+            }
+            else
+            {
+                nameStr = [NSString stringWithFormat:@"%@ %@.",[msg objectForKey:@"name"],[[msg objectForKey:@"surname"] substringToIndex:1].uppercaseString];
+            }
+            [self.myAppDelegate insertCoreData:[msg objectForKey:@"user_id"] avatarImage:[msg objectForKey:@"user_avatar"] roomId:[msg objectForKey:@"room_id"] time:[NSNumber numberWithFloat:[[arr objectAtIndex:0] floatValue]] message:[arr objectAtIndex:1] messageId:[msg objectForKey:@"id"] fromUserName:nameStr like:[msg objectForKey:@"like"]];
         }
         else
         {
@@ -498,7 +514,16 @@
             }
             else
             {
-                [self.myAppDelegate insertCoreData:[msg objectForKey:@"user_id"] avatarImage:[msg objectForKey:@"user_avatar"] roomId:[msg objectForKey:@"room_id"] time:[NSNumber numberWithFloat:[[arr objectAtIndex:0] floatValue]] message:[arr objectAtIndex:1] messageId:[msg objectForKey:@"id"] fromUserName:[msg objectForKey:@"user_name"] like:[msg objectForKey:@"like"]];
+                NSString *nameStr;
+                if ([CommonService isBlankString:[msg objectForKey:@"name"]] || [CommonService isBlankString:[msg objectForKey:@"surname"]]) {
+                    nameStr = [msg objectForKey:@"user_name"];
+                }
+                else
+                {
+                    nameStr = [NSString stringWithFormat:@"%@ %@.",[msg objectForKey:@"name"],[[msg objectForKey:@"surname"] substringToIndex:1].uppercaseString];
+                }
+                
+                [self.myAppDelegate insertCoreData:[msg objectForKey:@"user_id"] avatarImage:[msg objectForKey:@"user_avatar"] roomId:[msg objectForKey:@"room_id"] time:[NSNumber numberWithFloat:[[arr objectAtIndex:0] floatValue]] message:[arr objectAtIndex:1] messageId:[msg objectForKey:@"id"] fromUserName:nameStr like:[msg objectForKey:@"like"]];
                 
                 for (NSInteger i = 0; i < 10; i++) {
                     [self.myAppDelegate deletePreLoadingMessage:roomId message:[NSString stringWithFormat:@"%lld",userInfomationData.yuMessageId-i]];
@@ -739,7 +764,16 @@
                     NSArray *arr = [[NSArray alloc] init];
                     arr = [[[(NSArray *)response objectAtIndex:i] objectForKey:@"content"] componentsSeparatedByString:@","];
                     if ([[[response objectAtIndex:i] objectForKey:@"message_type"] isEqualToString:@"Audio"] && [arr count]==2) {
-                        [self.myAppDelegate insertCoreData:[[response objectAtIndex:i] objectForKey:@"user_id"] avatarImage:[[response objectAtIndex:i] objectForKey:@"user_avatar"] roomId:[[response objectAtIndex:i] objectForKey:@"room_id"] time:[NSNumber numberWithFloat:[[arr objectAtIndex:0] floatValue]] message:[arr objectAtIndex:1] messageId:[[response objectAtIndex:i] objectForKey:@"id"] fromUserName:[[response objectAtIndex:i] objectForKey:@"user_name"] like:[[response objectAtIndex:i] objectForKey:@"like"]];
+                        NSString *nameStr;
+                        if ([CommonService isBlankString:[[response objectAtIndex:i] objectForKey:@"name"]] || [CommonService isBlankString:[[response objectAtIndex:i] objectForKey:@"surname"]]) {
+                            nameStr = [[response objectAtIndex:i] objectForKey:@"user_name"];
+                            
+                        }
+                        else
+                        {
+                            nameStr = [NSString stringWithFormat:@"%@ %@.",[[response objectAtIndex:i] objectForKey:@"name"],[[[response objectAtIndex:i] objectForKey:@"surname"] substringToIndex:1].uppercaseString];
+                        }
+                        [self.myAppDelegate insertCoreData:[[response objectAtIndex:i] objectForKey:@"user_id"] avatarImage:[[response objectAtIndex:i] objectForKey:@"user_avatar"] roomId:[[response objectAtIndex:i] objectForKey:@"room_id"] time:[NSNumber numberWithFloat:[[arr objectAtIndex:0] floatValue]] message:[arr objectAtIndex:1] messageId:[[response objectAtIndex:i] objectForKey:@"id"] fromUserName:nameStr like:[[response objectAtIndex:i] objectForKey:@"like"]];
                         [self.myAppDelegate insertCoraData:[[response objectAtIndex:i] objectForKey:@"room_id"] lastMessageId:[[response objectAtIndex:[response count]-1] objectForKey:@"id"] beginMessageId:[[response objectAtIndex:0] objectForKey:@"id"]];
                         userInfomationData.inRoomMessageForRoomIdStr = [[response objectAtIndex:i] objectForKey:@"room_id"];
                         

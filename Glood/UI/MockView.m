@@ -248,7 +248,7 @@
     [UIView animateWithDuration:0.5 animations:^{
         self.shieldBgButton.alpha = 1.0;
         [self.shieldHeadImageView setImage:slideHeadImage];
-        self.shieldTipLabel.text = [NSString stringWithFormat:@"block %@.?",slideName];
+        self.shieldTipLabel.text = [NSString stringWithFormat:@"block %@?",slideName];
         
     } completion:^(BOOL finished) {
     }];
@@ -393,7 +393,7 @@
     //    [self.micTableViewCell.headImageButton setImage:[UIImage imageNamed:@"171604419.jpg"] forState:UIControlStateNormal];
     [self.micTableViewCell.headImageButton addTarget:self action:@selector(onHeadBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     
-    self.micTableViewCell.nameLabel.frame = CGRectMake(0, SCREEN_WIDTH*35/320-5, SCREEN_WIDTH*260/320, 35);
+    self.micTableViewCell.nameLabel.frame = CGRectMake(0, SCREEN_WIDTH*35/320-8, SCREEN_WIDTH*260/320, 35);
     self.micTableViewCell.nameLabel.tag = nameLabelTag+indexPath.row;
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
     if ([userInfomationData.mockViewNameLabelIsHiddenStr isEqualToString:@"no"]) {

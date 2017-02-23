@@ -161,7 +161,7 @@
     self.micShieldButton.alpha = 0;
     [self.view addSubview: self.micShieldButton];
     
-    self.leftButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*16/320, SCREEN_HEIGHT*10/568, SCREEN_WIDTH*34/320, SCREEN_HEIGHT*36/568)];
+    self.leftButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*0/320, SCREEN_HEIGHT*10/568, SCREEN_WIDTH*48/320, SCREEN_HEIGHT*45/568)];
     [self.leftButton setImage:[UIImage imageNamed:@"menu"] forState:UIControlStateNormal];
     [self.leftButton addTarget:self action:@selector(onLeftBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.leftButton];
@@ -259,7 +259,7 @@
             CeHuaView *ceHuav = [[CeHuaView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
             [self.cehuaView addSubview:ceHuav];
             
-            UIButton *ceHuaMoreButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*34/320)-32, SCREEN_HEIGHT*15/568, SCREEN_WIDTH*34/320, SCREEN_HEIGHT*36/568)];
+            UIButton *ceHuaMoreButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*34/320)-52, SCREEN_HEIGHT*15/568, SCREEN_WIDTH*48/320, SCREEN_HEIGHT*45/568)];
             [ceHuaMoreButton setImage:[UIImage imageNamed:@"menu"] forState:UIControlStateNormal];
             [ceHuaMoreButton addTarget:self action:@selector(onCeHuaMoreBtnClick:) forControlEvents:UIControlEventTouchUpInside];
             [self.cehuaView addSubview:ceHuaMoreButton];

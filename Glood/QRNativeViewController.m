@@ -342,7 +342,7 @@ static const char *kScanQRCodeQueueName = "ScanQRCodeQueue";
     _QrCodeline1.backgroundColor = [UIColor greenColor];
     [_scanView addSubview:_QrCodeline1];
     
-    UIButton *cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 10, 34, 34)];
+    UIButton *cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 10, 48, 45)];
     [cancelButton setImage:[UIImage imageNamed:@"backqr"] forState:UIControlStateNormal];
     [cancelButton addTarget:self action:@selector(onCancelBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:cancelButton];
