@@ -307,6 +307,11 @@
     [self onCeHuaMoreBtnClick:nil];
 }
 
+- (void)handleSwipePushChatRoom:(UISwipeGestureRecognizer *)recognizer
+{
+    [self pushChatRoom];
+}
+
 #pragma mark ========== right eventlist button ========
 - (void)onRightBtnClick:(id)sender
 {
@@ -405,6 +410,13 @@
         eventCoverFlowView.tag = eventCoverFlowTag+index;
         [eventCoverFlowView.infoButton addTarget:self action:@selector(onInfoClick:) forControlEvents:UIControlEventTouchUpInside];
         [eventCoverFlowView.checkInButton addTarget:self action:@selector(onCheckInClick:) forControlEvents:UIControlEventTouchUpInside];
+    UISwipeGestureRecognizer *recognizerUp = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipePushChatRoom:)];
+    recognizerUp.direction = UISwipeGestureRecognizerDirectionUp; //设置轻扫方向；默认是 UISwipeGestureRecognizerDirectionRight，即向右轻扫
+    [eventCoverFlowView addGestureRecognizer:recognizerUp];
+    
+    UISwipeGestureRecognizer *recognizerDown = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipePushChatRoom:)];
+    recognizerDown.direction = UISwipeGestureRecognizerDirectionDown; //设置轻扫方向；默认是 UISwipeGestureRecognizerDirectionRight，即向右轻扫
+    [eventCoverFlowView addGestureRecognizer:recognizerDown];
     return eventCoverFlowView;
 }
 
