@@ -175,22 +175,11 @@
             NSLog(@"Subscribed to news topic");
         }
         
+        //订阅喜欢消息的通知
+        NSLog(@"xxxixixixixxiiiii---------%@",[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID]);
+        [[FIRMessaging messaging] subscribeToTopic:[NSString stringWithFormat:@"/topics/users-%@-like",[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID]]];
         
     });
-}
-
-#pragma mark ============    通知，订阅主题 推送喜欢信息    ===========
-- (void)subscribeToTopicLikeMessage:(NSDictionary *)dicLikeMessage
-{
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//        [[NSUserDefaults standardUserDefaults] setObject:@"open" forKey:@"signlarStauts"];
-//        for (NSInteger i = 0; i < [[dicLikeMessage objectForKey:@"result"] count]; i ++) {
-//            [[FIRMessaging messaging] subscribeToTopic:[NSString stringWithFormat:@"/topics/events-%@",[[[dicLikeMessage objectForKey:@"result"] objectAtIndex:i] objectForKey:@"id"]]];
-//            NSLog(@"Subscribed to like message");
-//        }
-//        
-//        
-//    });
 }
 
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler {

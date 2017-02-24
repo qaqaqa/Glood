@@ -35,9 +35,6 @@
 //通知，订阅主题 推送消息
 - (void)subscribeToTopic:(NSDictionary*)dic;
 
-//通知，订阅主题 推送喜欢信息
-- (void)subscribeToTopicLikeMessage:(NSDictionary *)dicLikeMessage;
-
 //插入聊天语音数据库
 - (void)insertCoreData:(NSString *)userIdx avatarImage:(NSString *)avatarImagex roomId:(NSString *)roomIdx time:(NSNumber *)timex
                message:(NSString *)messagex messageId:(NSString *)messageIdx fromUserName:(NSString *) fromUserNamex like:(NSNumber *)likeMessage;

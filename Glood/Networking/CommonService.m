@@ -312,13 +312,15 @@
     }];
     [hubConnection setClosed:^{
         NSLog(@"Connection Closed");
+        userInfomationData.hubConnection = nil;
 //        [userInfomationData.hubConnection stop];
 //        [userInfomationData.hubConnection disconnect];
         
         [self.myAppDelegate deleteAllPreLoadingMessage];
-//        [[NSUserDefaults standardUserDefaults] setObject:@"closed" forKey:@"signlarStauts"];
+        [[NSUserDefaults standardUserDefaults] setObject:@"closedsocket" forKey:@"signlarStauts"];
     }];
     [hubConnection setError:^(NSError *error) {
+        userInfomationData.hubConnection = nil;
 //        [userInfomationData.hubConnection stop];
 //        [userInfomationData.hubConnection disconnect];
         [self.myAppDelegate deleteAllPreLoadingMessage];
@@ -345,7 +347,7 @@
         {
             [MMProgressHUD dismiss];
         }
-        [self reconntionSignlar];
+//        [self reconntionSignlar];
         
     }];
     hubConnection.delegate = self;
@@ -423,7 +425,7 @@
 - (void)reconntionSignlar
 {
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
-    if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"closed"]){
+    if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"closedsocket"]){
 //        [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
         [MMProgressHUD showWithTitle:@"reConnection" status:NSLocalizedString(@"Please wating", nil)];
         [userInfomationData.timer invalidate];
@@ -497,7 +499,14 @@
             
             if ([result count] != 0) {
                 for (NSInteger i = 0; i < [result count]; i ++) {
-                    
+                    NSString *nameStr;
+                    if ([CommonService isBlankString:[msg objectForKey:@"name"]] || [CommonService isBlankString:[msg objectForKey:@"surname"]]) {
+                        nameStr = [msg objectForKey:@"user_name"];
+                    }
+                    else
+                    {
+                        nameStr = [NSString stringWithFormat:@"%@ %@.",[msg objectForKey:@"name"],[[msg objectForKey:@"surname"] substringToIndex:1].uppercaseString];
+                    }
                     Mic *mic = result[0];
                     NSLog(@"xxxxxx-*-*-------  ^%@",mic.messageId);
                     mic.accountId = [[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID];
@@ -508,7 +517,7 @@
                     mic.time = [NSNumber numberWithFloat:[[arr objectAtIndex:0] floatValue]];
                     mic.message = [arr objectAtIndex:1];
                     mic.messageId = [msg objectForKey:@"id"];
-                    mic.fromUserName = [msg objectForKey:@"user_name"];
+                    mic.fromUserName = nameStr;
                     [self.myAppDelegate saveContext];
                 }
             }
@@ -931,19 +940,23 @@
             if (response == NULL) {
                 return;
             }
-            NSLog(@"屏蔽用户列表:%@",response);
-            [[NSUserDefaults standardUserDefaults] setObject:[CommonService processDictionaryIsNSNull:response] forKey:@"blockUsersList"];
-            userInfomationData.blockUsersMutableArr = [[NSMutableArray alloc] initWithCapacity:10];
-            for (NSInteger i = 0; i < [[[NSUserDefaults standardUserDefaults] objectForKey:@"blockUsersList"] count]; i++) {
-                [userInfomationData.blockUsersMutableArr addObject:[[[NSUserDefaults standardUserDefaults] objectForKey:@"blockUsersList"] objectAtIndex:i]];
+            if (!error && [response isKindOfClass:[NSArray class]]) {
+                NSLog(@"屏蔽用户列表:%@",response);
+                [[NSUserDefaults standardUserDefaults] setObject:[CommonService processDictionaryIsNSNull:response] forKey:@"blockUsersList"];
+                userInfomationData.blockUsersMutableArr = [[NSMutableArray alloc] initWithCapacity:10];
+                NSLog(@"x-*-df*s-d*f-s*f-s*d-a*------- %ld---%@",[[[NSUserDefaults standardUserDefaults] objectForKey:@"blockUsersList"] count],[[NSUserDefaults standardUserDefaults] objectForKey:@"blockUsersList"]);
+                for (NSInteger i = 0; i < [[[NSUserDefaults standardUserDefaults] objectForKey:@"blockUsersList"] count]; i++) {
+                    [userInfomationData.blockUsersMutableArr addObject:[[[NSUserDefaults standardUserDefaults] objectForKey:@"blockUsersList"] objectAtIndex:i]];
+                }
+                if ([isShowMessage isEqualToString:@"yes"]) {
+                    [ShowMessage showMessage:@"getBlockUsers successfully"];
+                }
+                else
+                {
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"blockUserSucess" object:self];
+                }
             }
-            if ([isShowMessage isEqualToString:@"yes"]) {
-                [ShowMessage showMessage:@"getBlockUsers successfully"];
-            }
-            else
-            {
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"blockUserSucess" object:self];
-            }
+            
             
         }];
     }

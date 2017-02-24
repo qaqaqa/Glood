@@ -86,7 +86,7 @@ typedef void (^SRWebSocketStartBlock)(id response, NSError *error);
 }
 
 - (void)lostConnection:(id<SRConnectionInterface>)connection {
-    [[NSUserDefaults standardUserDefaults] setObject:@"closed" forKey:@"signlarStauts"];
+    [[NSUserDefaults standardUserDefaults] setObject:@"closedsocket" forKey:@"signlarStauts"];
     SRLogWSWarn(@"lost connection, closing websocket");
     [self stopWebsocket];
     
@@ -211,7 +211,7 @@ typedef void (^SRWebSocketStartBlock)(id response, NSError *error);
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error {
-    [[NSUserDefaults standardUserDefaults] setObject:@"closed" forKey:@"signlarStauts"];
+    [[NSUserDefaults standardUserDefaults] setObject:@"closedsocket" forKey:@"signlarStauts"];
     SRLogWSError(@"websocket did fail with error %@, %@", [[_connectionInfo connection] connectionId], error);
     
     if (self.startBlock) {

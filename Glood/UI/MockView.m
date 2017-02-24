@@ -420,7 +420,6 @@
     if ([mic.message isEqualToString:@"100"])
     {
         [UIView animateWithDuration:20 animations:^{
-//            self.micTableViewCell.bgImageView.transform = CGAffineTransformMakeScale(6, 1);
             self.micTableViewCell.bgImageView.frame = CGRectMake((SCREEN_WIDTH*260/320-(SCREEN_WIDTH*30/320*6.5))/2, 0, SCREEN_WIDTH*30/320*6.5, SCREEN_WIDTH*35/320);
         } completion:^(BOOL finished) {
         }];
