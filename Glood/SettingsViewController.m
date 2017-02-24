@@ -73,8 +73,8 @@
     [self.view addSubview:blockUserListTitleLabel];
     
     UIButton *blockUserListButton = [[UIButton alloc] init];
-    blockUserListButton.frame = CGRectMake(SCREEN_WIDTH-25-35, blockUserListTitleLabel.frame.origin.y, 40, 35);
-    [blockUserListButton setImage:[UIImage imageNamed:@"timg.jpeg"] forState:UIControlStateNormal];
+    blockUserListButton.frame = CGRectMake(SCREEN_WIDTH-25-35+8, blockUserListTitleLabel.frame.origin.y+5, 30, 25);
+    [blockUserListButton setImage:[UIImage imageNamed:@"timg"] forState:UIControlStateNormal];
     [blockUserListButton setBackgroundColor:[UIColor clearColor]];
     [blockUserListButton addTarget:self action:@selector(onOpenBlockButton:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:blockUserListButton];

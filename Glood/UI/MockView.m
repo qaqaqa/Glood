@@ -259,17 +259,27 @@
 - (void)slideRightLike:(NSNotification*) notification
 {
     //喜欢
-    self.userInteractionEnabled = NO;
-    self.tableView.scrollEnabled = NO;
-    UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
-    userInfomationData.likeMessageId = [[notification object] objectForKey:@"messageId"];
-    if (![userInfomationData.likeMessageId  isEqual: @""]) {
-        [self.myAppDelegate updateLikeMessageId:userInfomationData.likeMessageId isRead:@"1"];
+    if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"open"]) {
+        self.userInteractionEnabled = NO;
+        self.tableView.scrollEnabled = NO;
+        UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+        userInfomationData.likeMessageId = [[notification object] objectForKey:@"messageId"];
+        if (![userInfomationData.likeMessageId  isEqual: @""]) {
+            [self.myAppDelegate updateLikeMessageId:userInfomationData.likeMessageId isRead:@"1"];
+        }
+        [userInfomationData.commonService likeMessage:userInfomationData.likeMessageId];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self slideCenterRestore];
+        });
     }
-    [userInfomationData.commonService likeMessage:userInfomationData.likeMessageId];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self slideCenterRestore];
-    });
+    else
+    {
+        [ShowMessage showMessage:@"network error"];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self slideCenterRestore];
+        });
+    }
+    
 }
 
 #pragma mark ==========  屏蔽成功 ===========
@@ -340,6 +350,13 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    if ([self.historyMicListArr count] == 0) {
+        self.tableView.userInteractionEnabled = NO;
+    }
+    else
+    {
+        self.tableView.userInteractionEnabled = YES;
+    }
     return [self.historyMicListArr count];
 }
 

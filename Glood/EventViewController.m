@@ -411,11 +411,11 @@
         [eventCoverFlowView.infoButton addTarget:self action:@selector(onInfoClick:) forControlEvents:UIControlEventTouchUpInside];
         [eventCoverFlowView.checkInButton addTarget:self action:@selector(onCheckInClick:) forControlEvents:UIControlEventTouchUpInside];
     UISwipeGestureRecognizer *recognizerUp = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipePushChatRoom:)];
-    recognizerUp.direction = UISwipeGestureRecognizerDirectionUp; //设置轻扫方向；默认是 UISwipeGestureRecognizerDirectionRight，即向右轻扫
+    recognizerUp.direction = UISwipeGestureRecognizerDirectionUp;
     [eventCoverFlowView addGestureRecognizer:recognizerUp];
     
     UISwipeGestureRecognizer *recognizerDown = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipePushChatRoom:)];
-    recognizerDown.direction = UISwipeGestureRecognizerDirectionDown; //设置轻扫方向；默认是 UISwipeGestureRecognizerDirectionRight，即向右轻扫
+    recognizerDown.direction = UISwipeGestureRecognizerDirectionDown;
     [eventCoverFlowView addGestureRecognizer:recognizerDown];
     return eventCoverFlowView;
 }
@@ -1256,12 +1256,49 @@
                                                              };
     [userInfomationData.waitingSendMessageQunenMutableArr addObject:userInfomationData.waitingSendMessageQunenMutableDic];
     
+    //如果是用户自己发的信息，则跳转到底部
+    userInfomationData.refushStr = @"no";
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
     dispatch_async(dispatch_get_global_queue(0,0), ^{
         for (NSInteger i = 0; i < [userInfomationData.waitingSendMessageQunenMutableArr count]; i ++) {
             [userInfomationData.commonService sendMessageInRoom:[[userInfomationData.waitingSendMessageQunenMutableArr objectAtIndex:i] objectForKey:@"message"] roomId:[[userInfomationData.waitingSendMessageQunenMutableArr objectAtIndex:i] objectForKey:@"room_id"] messageType:3 messageId:[[userInfomationData.waitingSendMessageQunenMutableArr objectAtIndex:i] objectForKey:@"message_id"]];
             [userInfomationData.waitingSendMessageQunenMutableArr removeObjectAtIndex:i];
         }
     });
+    
+    
+    
+    
+    ///////////////////////////////////////////////////////////////
+    //更新数据库一条消息
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Mic"];
+    //  2.设置排序
+    //  2.1创建排序描述对象
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"messageId" ascending:NO];
+    request.sortDescriptors = @[sortDescriptor];
+    NSString *roomId = roomIdx;
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"roomId = %@ AND accountId = %@ AND messageId = %@",roomId,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID],messageIdx]];
+    request.fetchOffset=0;
+    request.fetchLimit=1000;
+    request.predicate = predicate;
+    
+    //  执行这个查询请求
+    NSError *error = nil;
+    
+    NSArray *result = [self.myAppDelegate.managedObjectContext executeFetchRequest:request error:&error];
+    NSLog(@"xxxxcx-hahah--commonservice-%@===%@ --%lu---",roomId,messageIdx,(unsigned long)[result count]);
+    
+    if ([result count] != 0) {
+        for (NSInteger i = 0; i < [result count]; i ++) {
+            Mic *mic = result[0];
+            NSLog(@"xxxxxx-*-*-------  ^%@",mic.messageId);
+            mic.time = [NSNumber numberWithFloat:[userInfomationData.recordMessageTimeStr floatValue]];
+            mic.message = @"1000";
+            [self.myAppDelegate saveContext];
+        }
+    }
+    
+    [self getMicHistoryList];
 }
 
 #define nameLabelTag 20001

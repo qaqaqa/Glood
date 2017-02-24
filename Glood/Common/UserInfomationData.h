@@ -64,4 +64,6 @@
 
 @property (retain, nonatomic) NSMutableArray *blockUsersMutableArr;//本地解析屏蔽列表的存储结果
 
+@property (strong, nonatomic) NSString *recordMessageTimeStr;  //当前这条消息的录音时间
+
 @end

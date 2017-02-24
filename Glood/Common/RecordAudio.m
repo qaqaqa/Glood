@@ -79,6 +79,8 @@
         CMTime audioDuration = audioAsset.duration;
         float audioDurationSeconds =CMTimeGetSeconds(audioDuration);
         NSString *timeStr = [NSString stringWithFormat:@"%.1f",audioDurationSeconds];
+        UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+        userInfomationData.recordMessageTimeStr = timeStr;
         //转码
         NSFileManager *fileManager = [NSFileManager defaultManager];
         wavdata = [fileManager contentsAtPath:amrPath];

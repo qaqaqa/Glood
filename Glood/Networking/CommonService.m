@@ -427,7 +427,7 @@
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
     if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"closedsocket"]){
 //        [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
-        [MMProgressHUD showWithTitle:@"reConnection" status:NSLocalizedString(@"Please wating", nil)];
+        [MMProgressHUD showWithTitle:@"connecting" status:NSLocalizedString(@"Please wating", nil)];
         [userInfomationData.timer invalidate];
         userInfomationData.hubConnection = nil;
         [self connectionSignlar];
@@ -812,6 +812,10 @@
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryList" object:self];
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
                 }
+            }
+            else {
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryList" object:self];
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
             }
             [MMProgressHUD dismiss];
             
