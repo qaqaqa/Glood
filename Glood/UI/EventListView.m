@@ -40,6 +40,10 @@
         self.titleLabel.font = [UIFont fontWithName:@"ProximaNova-Regular" size:17];
         [self addSubview:self.titleLabel];
         
+        UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+        self.titleLabel.userInteractionEnabled = YES;
+        [self.titleLabel addGestureRecognizer:recognizer];
+        
         self.rightButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*54/320), SCREEN_HEIGHT*16/568, SCREEN_WIDTH*28/320, SCREEN_HEIGHT*28/568)];
         [self.rightButton setImage:[UIImage imageNamed:@"up"] forState:UIControlStateNormal];
         [self.rightButton addTarget:self action:@selector(onRightBtnClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -64,6 +68,11 @@
         
     }
     return self;
+}
+
+- (void)handleTap:(UITapGestureRecognizer *)recognizer
+{
+    [self onRightBtnClick:nil];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section

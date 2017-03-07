@@ -247,11 +247,13 @@
     id qs = @{
               @"access_token": [[NSUserDefaults standardUserDefaults] objectForKey:Exchange_OAUTH2_TOKEN],
               };
+    [userInfomationData.hubConnection didClose];
     SRHubConnection *hubConnection = [SRHubConnection connectionWithURLString:SIGNLAR_URL queryString:qs];
+    self.chat = nil;
     self.chat = [hubConnection createHubProxy:@"chat"];
     
     userInfomationData.chat = self.chat;
-    userInfomationData.hubConnection = @"";
+    userInfomationData.hubConnection = nil;
     userInfomationData.hubConnection = hubConnection;
     [self.chat on:@"onUserJoinRoom" perform:self selector:@selector(onUserJoinRoom:)];
     [self.chat on:@"onUserLeaveRoom" perform:self selector:@selector(onUserLeaveRoom:)];
@@ -329,17 +331,17 @@
         
         
         if ([error.description rangeOfString:@"Code=-1001"].location !=NSNotFound) {
-            [MMProgressHUD dismissWithError:@"time out,try again"];
+//            [MMProgressHUD dismissWithError:@"time out,try again"];
             [[NSUserDefaults standardUserDefaults] setObject:@"closed" forKey:@"signlarStauts"];
         }
         else if([error.description rangeOfString:@"Code=-1005"].location !=NSNotFound)
         {
-            [MMProgressHUD dismissWithError:@"network error"];
+//            [MMProgressHUD dismissWithError:@"network error"];
             [[NSUserDefaults standardUserDefaults] setObject:@"closed" forKey:@"signlarStauts"];
         }
         else if([error.description rangeOfString:@"Code=-1009"].location !=NSNotFound)
         {
-            [MMProgressHUD dismissWithError:@"network error"];
+//            [MMProgressHUD dismissWithError:@"network error"];
             [[NSUserDefaults standardUserDefaults] setObject:@"closed" forKey:@"signlarStauts"];
         }
         
@@ -363,7 +365,7 @@
             if (error) {
                 //加入聊天室失败，继续尝试加入
 //                [self joinChatRoom];
-                [MMProgressHUD dismissWithError:@"join chatroom,try again!" afterDelay:2.0f];
+//                [MMProgressHUD dismissWithError:@"join chatroom,try again!" afterDelay:2.0f];
                 NSLog(@"xxxxxxxxxxx----%@",error.description);
             }
             if (response == NULL) {
@@ -400,14 +402,17 @@
             if ([response count]>=5) {
                 
                 NSString *nameStr;
-                if ([CommonService isBlankString:[[[response objectForKey:@"connected_clients"] objectAtIndex:0] objectForKey:@"name"]] || [CommonService isBlankString:[[[response objectForKey:@"connected_clients"] objectAtIndex:0] objectForKey:@"surname"]]) {
-                    nameStr = [[[response objectForKey:@"connected_clients"] objectAtIndex:0] objectForKey:@"user_name"];
+                if ([response objectForKey:@"connected_clients"] > 0) {
+                    if ([CommonService isBlankString:[[[response objectForKey:@"connected_clients"] objectAtIndex:0] objectForKey:@"name"]] || [CommonService isBlankString:[[[response objectForKey:@"connected_clients"] objectAtIndex:0] objectForKey:@"surname"]]) {
+                        nameStr = [[[response objectForKey:@"connected_clients"] objectAtIndex:0] objectForKey:@"user_name"];
+                    }
+                    else
+                    {
+                        nameStr = [NSString stringWithFormat:@"%@ %@.",[[[response objectForKey:@"connected_clients"] objectAtIndex:0] objectForKey:@"name"],[[[[response objectForKey:@"connected_clients"] objectAtIndex:0] objectForKey:@"surname"] substringToIndex:1].uppercaseString];
+                    }
                 }
-                else
-                {
-                    nameStr = [NSString stringWithFormat:@"%@ %@.",[[[response objectForKey:@"connected_clients"] objectAtIndex:0] objectForKey:@"name"],[[[[response objectForKey:@"connected_clients"] objectAtIndex:0] objectForKey:@"surname"] substringToIndex:1].uppercaseString];
-                }
-                [[NSUserDefaults standardUserDefaults] setObject:[response objectForKey:@"avatar"] forKey:USER_AVATAR_URL];
+                
+                [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%@?%@",[response objectForKey:@"avatar"],@"width=300&height=300"] forKey:USER_AVATAR_URL];
                 [[NSUserDefaults standardUserDefaults] setObject:nameStr forKey:USER_NAME];
                 [[NSUserDefaults standardUserDefaults] setObject:[response objectForKey:@"current_client_id"] forKey:USER_CLIENT_ID];
             }
@@ -462,7 +467,7 @@
     NSArray *arr = [[NSArray alloc] init];
     arr = [[msg objectForKey:@"content"] componentsSeparatedByString:@","];
     if ([[msg objectForKey:@"message_type"] isEqualToString:@"Audio"] && [arr count]==2) {
-        NSLog(@"收到消息---%@---%@",[msg objectForKey:@"room_id"],[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"]);
+        NSLog(@"收到消息----%@-%@---%@",[msg objectForKey:@"user_avatar"],[msg objectForKey:@"room_id"],[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"]);
         
         userInfomationData.inRoomMessageForRoomIdStr = [msg objectForKey:@"room_id"];
         
@@ -475,7 +480,7 @@
             {
                 nameStr = [NSString stringWithFormat:@"%@ %@.",[msg objectForKey:@"name"],[[msg objectForKey:@"surname"] substringToIndex:1].uppercaseString];
             }
-            [self.myAppDelegate insertCoreData:[msg objectForKey:@"user_id"] avatarImage:[msg objectForKey:@"user_avatar"] roomId:[msg objectForKey:@"room_id"] time:[NSNumber numberWithFloat:[[arr objectAtIndex:0] floatValue]] message:[arr objectAtIndex:1] messageId:[msg objectForKey:@"id"] fromUserName:nameStr like:[msg objectForKey:@"like"]];
+            [self.myAppDelegate insertCoreData:[msg objectForKey:@"user_id"] avatarImage:[NSString stringWithFormat:@"%@?%@",[msg objectForKey:@"user_avatar"],@"width=300&height=300"] roomId:[msg objectForKey:@"room_id"] time:[NSNumber numberWithFloat:[[arr objectAtIndex:0] floatValue]] message:[arr objectAtIndex:1] messageId:[msg objectForKey:@"id"] fromUserName:nameStr like:[msg objectForKey:@"like"]];
         }
         else
         {
@@ -565,7 +570,7 @@
 //                        }
 //                    }
 //                    
-//                    
+//
 //                    NSLog(@"xxxxxx-*-*-------  ^%@",mic.messageId);
 //                    mic.accountId = [[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID];
 //                    mic.userId = [msg objectForKey:@"user_id"];
@@ -588,7 +593,6 @@
 //        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:[NSString stringWithFormat:@"%@%@",@"red",[msg objectForKey:@"room_id"]]];
         if ([userInfomationData.isEnterMicList isEqualToString:@"true"] && [[msg objectForKey:@"room_id"] isEqualToString:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"]]) {
             [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
-            
         }
         else
         {
@@ -644,7 +648,7 @@
         [userInfomationData.chat invoke:@"joinRoom" withArgs:@[roomId] completionHandler:^(id response, NSError *error) {
             if (error) {
                 NSLog(@"加入聊天室失败--- %@",error.description);
-                [MMProgressHUD dismissWithError:@"join chatroom,try again" afterDelay:2.0f];
+//                [MMProgressHUD dismissWithError:@"join chatroom,try again" afterDelay:2.0f];
                 return;
             }
             if (response == NULL) {

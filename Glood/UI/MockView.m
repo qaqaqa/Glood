@@ -436,7 +436,30 @@
     self.micTableViewCell.bgImageView.frame = CGRectMake((SCREEN_WIDTH*260/320-(SCREEN_WIDTH*30/320*timeF))/2, 0, SCREEN_WIDTH*30/320*timeF, SCREEN_WIDTH*35/320);
     if ([mic.message isEqualToString:@"100"])
     {
-        [UIView animateWithDuration:20 animations:^{
+        __block  int yuLoadTime;
+        if ((60-[userInfomationData.yuLoadMessageTimeStr intValue])<=20) {
+            yuLoadTime = 60-[userInfomationData.yuLoadMessageTimeStr intValue];
+        }
+        if (yuLoadTime <= 4 && yuLoadTime > 0) {
+            yuLoadTime = 2.0;
+        }
+        if (yuLoadTime>4 && yuLoadTime < 20) {
+            yuLoadTime = 2+yuLoadTime/5;
+        }
+        if (yuLoadTime>=20) {
+            yuLoadTime = 6.5;
+        }
+        if (yuLoadTime == 0) {
+            yuLoadTime = 1.2;
+        }
+        if (yuLoadTime <= 2 && yuLoadTime > 0) {
+            yuLoadTime = 1.2;
+        }
+        
+        NSLog(@"hahahixixixixixiihah-------------%d",yuLoadTime);
+        
+        self.micTableViewCell.bgImageView.frame = CGRectMake((SCREEN_WIDTH*260/320-(SCREEN_WIDTH*30/320*yuLoadTime))/2, 0, SCREEN_WIDTH*30/320*yuLoadTime, SCREEN_WIDTH*35/320);
+        [UIView animateWithDuration:20-(60-[userInfomationData.yuLoadMessageTimeStr intValue]) animations:^{
             self.micTableViewCell.bgImageView.frame = CGRectMake((SCREEN_WIDTH*260/320-(SCREEN_WIDTH*30/320*6.5))/2, 0, SCREEN_WIDTH*30/320*6.5, SCREEN_WIDTH*35/320);
         } completion:^(BOOL finished) {
         }];

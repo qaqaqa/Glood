@@ -66,4 +66,6 @@
 
 @property (strong, nonatomic) NSString *recordMessageTimeStr;  //当前这条消息的录音时间
 
+@property (strong, nonatomic) NSString *yuLoadMessageTimeStr; //当前这条预加载语音的录音时间（录音还在继续，未停止的情况下，用于预加载动画使用）
+
 @end

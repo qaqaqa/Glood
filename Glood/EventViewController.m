@@ -125,7 +125,6 @@
     self.hFlowView = [[PagedFlowView alloc] initWithFrame:CGRectMake(0, commonNavView.frame.size.height+commonNavView.frame.origin.y-20, SCREEN_WIDTH, SCREEN_HEIGHT-commonNavView.frame.size.height)];
     self.hFlowView.delegate = self;
     self.hFlowView.dataSource = self;
-//    self.hFlowView.backgroundColor = [UIColor blackColor];
     self.hFlowView.minimumPageAlpha = 0.1 ;
     self.hFlowView.minimumPageScale = 0.9;
     [self.view addSubview:self.hFlowView];
@@ -179,7 +178,6 @@
     
     self.largeLeftButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH*54/320, SCREEN_HEIGHT*56/568)];
     [self.largeLeftButton addTarget:self action:@selector(onLeftBtnClick) forControlEvents:UIControlEventTouchUpInside];
-    self.largeLeftButton.backgroundColor = [UIColor clearColor];
     [self.view addSubview:self.largeLeftButton];
     
     self.navtitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*60/320, SCREEN_HEIGHT*12/568, SCREEN_WIDTH*200/320, SCREEN_HEIGHT*36/568)];
@@ -258,14 +256,27 @@
     }];
 }
 
+- (void)leftButtonUserInteractionEnabledYes
+{
+    self.leftButton.userInteractionEnabled = YES;
+    self.largeLeftButton.userInteractionEnabled = YES;
+    [self.largeLeftButton removeFromSuperview];
+    self.largeLeftButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH*54/320, SCREEN_HEIGHT*56/568)];
+    [self.largeLeftButton addTarget:self action:@selector(onLeftBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.largeLeftButton];
+}
+
 #pragma mark ========== left more button 活动卡片页面========
 - (void)onLeftBtnClick
 {
     if (self.mockView.shieldBgButton.alpha != 1.0) {
         UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
         if (![userInfomationData.isEnterMicList isEqualToString:@"false"]) {
+            self.leftButton.userInteractionEnabled = NO;
+            self.largeLeftButton.userInteractionEnabled = NO;
             [self.leftButton setImage:[UIImage imageNamed:@"menu"] forState:UIControlStateNormal];
             [self onMing];
+            [self performSelector:@selector(leftButtonUserInteractionEnabledYes) withObject:nil afterDelay:1.35f];
         }
         else
         {
@@ -288,10 +299,18 @@
             [largeLeftButton addTarget:self action:@selector(onCeHuaMoreBtnClick:) forControlEvents:UIControlEventTouchUpInside];
             largeLeftButton.backgroundColor = [UIColor clearColor];
             [self.cehuaView addSubview:largeLeftButton];
-            
+            self.leftButton.userInteractionEnabled = NO;
+            self.largeLeftButton.userInteractionEnabled = NO;
             [UIView animateWithDuration:0.5 animations:^{
                 self.cehuaView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
             } completion:^(BOOL finished) {
+                self.leftButton.userInteractionEnabled = YES;
+                self.largeLeftButton.userInteractionEnabled = YES;
+                
+                [self.largeLeftButton removeFromSuperview];
+                self.largeLeftButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH*54/320, SCREEN_HEIGHT*56/568)];
+                [self.largeLeftButton addTarget:self action:@selector(onLeftBtnClick) forControlEvents:UIControlEventTouchUpInside];
+                [self.view addSubview:self.largeLeftButton];
             }];
             
             UISwipeGestureRecognizer *recognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipe:)];
@@ -317,6 +336,7 @@
 {
     if (self.mockView.shieldBgButton.alpha != 1.0) {
         NSLog(@"rigth");
+        self.navtitleLabel.userInteractionEnabled = NO;
         self.rightButton.userInteractionEnabled = NO;
         self.largeRightButton.userInteractionEnabled = NO;
         self.eventListView = [[EventListView alloc] initWithFrame:CGRectMake(0, -SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT)];
@@ -327,6 +347,7 @@
         } completion:^(BOOL finished) {
             self.rightButton.userInteractionEnabled = YES;
             self.largeRightButton.userInteractionEnabled = YES;
+            self.navtitleLabel.userInteractionEnabled = YES;
         }];
     }
 }
@@ -793,6 +814,7 @@
     [UIView animateWithDuration:0.5 animations:^{
         self.cehuaView.frame = CGRectMake(-SCREEN_WIDTH, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
         self.eventListView.frame = CGRectMake(0, -SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT);
+        
     } completion:^(BOOL finished) {
     }];
 }
@@ -1021,6 +1043,7 @@
     else
     {
         [ShowMessage showMessage:@"network error"];
+        [self onCancelSoundRecoringBtnClick:nil];
     }
     
 }
@@ -1118,6 +1141,7 @@
         else
         {
             [ShowMessage showMessage:@"network error"];
+            [self onCancelSoundRecoringBtnClick:nil];
         }
         
             
@@ -1240,6 +1264,7 @@
                 
             });
             timeout--;
+            userInfomationData.yuLoadMessageTimeStr = [NSString stringWithFormat:@"%ld",timeout];
         }  
     });  
     dispatch_resume(_timer);
@@ -1255,7 +1280,6 @@
                                                              @"message_id":messageIdx
                                                              };
     [userInfomationData.waitingSendMessageQunenMutableArr addObject:userInfomationData.waitingSendMessageQunenMutableDic];
-    
     //如果是用户自己发的信息，则跳转到底部
     userInfomationData.refushStr = @"no";
     [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
@@ -1308,6 +1332,7 @@
     [self.leftButton setImage:[UIImage imageNamed:@"backqr"] forState:UIControlStateNormal];
     self.rightButton.frame = CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*54/320), SCREEN_HEIGHT*16/568, SCREEN_WIDTH*28/320, SCREEN_HEIGHT*28/568);
     self.largeRightButton.frame = CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*54/320), 0, 54, 54);
+//    self.largeLeftButton.frame = CGRectMake(0, 0, SCREEN_WIDTH*54/320, SCREEN_HEIGHT*56/568);
     [self.addButton setHidden:YES];
     
     CAGradientLayer *gradientLayer = [CAGradientLayer layer];
