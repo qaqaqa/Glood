@@ -1298,8 +1298,10 @@
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Mic"];
     //  2.设置排序
     //  2.1创建排序描述对象
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"messageId" ascending:NO];
-    request.sortDescriptors = @[sortDescriptor];
+//    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"messageId" ascending:NO];
+//    request.sortDescriptors = @[sortDescriptor];
+    NSSortDescriptor *sortDescriptors = [NSSortDescriptor sortDescriptorWithKey:@"messageId" ascending:NO selector:@selector(localizedStandardCompare:)];
+    request.sortDescriptors = @[sortDescriptors];
     NSString *roomId = roomIdx;
     NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"roomId = %@ AND accountId = %@ AND messageId = %@",roomId,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID],messageIdx]];
     request.fetchOffset=0;

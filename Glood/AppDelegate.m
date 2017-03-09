@@ -84,7 +84,7 @@
     
     userInfomationData.waitingSendMessageQunenMutableDic = [[NSMutableDictionary alloc] initWithCapacity:10];
     userInfomationData.waitingSendMessageQunenMutableArr = [[NSMutableArray alloc] initWithCapacity:10];
-    userInfomationData.yuMessageId = 99999999999000000;
+    userInfomationData.yuMessageId = 9223372036854775000;
     NSLog(@"*-*-*-*---xxxxx-*x-  %lld",userInfomationData.yuMessageId);
     
     UNAuthorizationOptions authOptions =
@@ -591,8 +591,10 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
         //开始查询Mic表，看refrshMessageId到beginMessageId之间的区域是否大于20条数据，如果大于，则直接加载本地数据库数据，否则，就拉去服务器数据，并且把拉取下来的最小的messageId更新到之前的beginMessageId
         Node *node = result[xx];
         NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Mic"];
-        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"messageId" ascending:NO];
-        request.sortDescriptors = @[sortDescriptor];
+//        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"messageId" ascending:NO];
+//        request.sortDescriptors = @[sortDescriptor];
+        NSSortDescriptor *sortDescriptors = [NSSortDescriptor sortDescriptorWithKey:@"messageId" ascending:NO selector:@selector(localizedStandardCompare:)];
+        request.sortDescriptors = @[sortDescriptors];
         NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"roomId = %@ AND accountId = %@ AND messageId BWTEEN {%@，%@}",roomIdx,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID],node.beginMessageId,refreshMessageIdx]];
         request.predicate = predicate;
         NSError *error = nil;
@@ -626,8 +628,10 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Mic"];
     //  2.设置排序
     //  2.1创建排序描述对象
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"messageId" ascending:NO];
-    request.sortDescriptors = @[sortDescriptor];
+//    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"messageId" ascending:NO];
+//    request.sortDescriptors = @[sortDescriptor];
+    NSSortDescriptor *sortDescriptors = [NSSortDescriptor sortDescriptorWithKey:@"messageId" ascending:NO selector:@selector(localizedStandardCompare:)];
+    request.sortDescriptors = @[sortDescriptors];
     NSString *str = @"";
     for (NSInteger i = 0; i < [userInfomationData.blockUsersMutableArr count]; i ++) {
         str = [NSString stringWithFormat:@"%@ AND userId != %@",str,[[userInfomationData.blockUsersMutableArr objectAtIndex:i] objectForKey:@"id"]];
@@ -677,8 +681,10 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Mic"];
     //  2.设置排序
     //  2.1创建排序描述对象
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"messageId" ascending:NO];
-    request.sortDescriptors = @[sortDescriptor];
+//    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"messageId" ascending:NO];
+//    request.sortDescriptors = @[sortDescriptor];
+    NSSortDescriptor *sortDescriptors = [NSSortDescriptor sortDescriptorWithKey:@"messageId" ascending:NO selector:@selector(localizedStandardCompare:)];
+    request.sortDescriptors = @[sortDescriptors];
     NSString *roomId = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
     NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"roomId = %@ AND accountId = %@ AND messageId = %@",roomIdx,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID],messageIdx]];
     request.fetchOffset=0;
@@ -708,10 +714,12 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Mic"];
     //  2.设置排序
     //  2.1创建排序描述对象
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"messageId" ascending:NO];
-    request.sortDescriptors = @[sortDescriptor];
+//    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"messageId" ascending:NO];
+//    request.sortDescriptors = @[sortDescriptor];
+    NSSortDescriptor *sortDescriptors = [NSSortDescriptor sortDescriptorWithKey:@"messageId" ascending:NO selector:@selector(localizedStandardCompare:)];
+    request.sortDescriptors = @[sortDescriptors];
     NSString *roomId = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"messageId >= %@",@"99999999999000000"]];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"messageId >= %@",@"9223372036854775000"]];
     request.fetchOffset=0;
     request.fetchLimit=100;
     request.predicate = predicate;
@@ -740,8 +748,10 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Mic"];
     //  2.设置排序
     //  2.1创建排序描述对象
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"messageId" ascending:NO];
-    request.sortDescriptors = @[sortDescriptor];
+//    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"messageId" ascending:NO];
+//    request.sortDescriptors = @[sortDescriptor];
+    NSSortDescriptor *sortDescriptors = [NSSortDescriptor sortDescriptorWithKey:@"messageId" ascending:NO selector:@selector(localizedStandardCompare:)];
+    request.sortDescriptors = @[sortDescriptors];
     NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"roomId = %@",roomId]];
     request.fetchOffset=0;
     request.fetchLimit=1;
@@ -767,8 +777,10 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Mic"];
     //  2.设置排序
     //  2.1创建排序描述对象
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"messageId" ascending:NO];
-    request.sortDescriptors = @[sortDescriptor];
+//    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"messageId" ascending:NO];
+//    request.sortDescriptors = @[sortDescriptor];
+    NSSortDescriptor *sortDescriptors = [NSSortDescriptor sortDescriptorWithKey:@"messageId" ascending:NO selector:@selector(localizedStandardCompare:)];
+    request.sortDescriptors = @[sortDescriptors];
     NSString *roomId = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
     NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"roomId = %@ AND userId= %@",roomIdx,userIdx]];
     request.predicate = predicate;
@@ -794,8 +806,10 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Mic"];
     //  2.设置排序
     //  2.1创建排序描述对象
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"messageId" ascending:NO];
-    request.sortDescriptors = @[sortDescriptor];
+//    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"messageId" ascending:NO];
+//    request.sortDescriptors = @[sortDescriptor];
+    NSSortDescriptor *sortDescriptors = [NSSortDescriptor sortDescriptorWithKey:@"messageId" ascending:NO selector:@selector(localizedStandardCompare:)];
+    request.sortDescriptors = @[sortDescriptors];
     NSLog(@"asfasdfasdkfjlkll---------  %@",messageId);
     NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"messageId= %@",messageId]];
     request.predicate = predicate;
