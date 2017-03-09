@@ -84,7 +84,7 @@ DEPENDENCIES:
   - Firebase/RemoteConfig
   - KSDeferred (~> 0.3.0)
   - SDWebImage (~> 3.8.1)
-  - SignalR-ObjC (~> 2.0)
+  - SignalR-ObjC (~> 2.0.2)
 
 SPEC CHECKSUMS:
   AFNetworking: cb8d14a848e831097108418f5d49217339d4eb60
@@ -105,6 +105,6 @@ SPEC CHECKSUMS:
   SignalR-ObjC: 3913aa201f436cf21226e0016ca6c7e94265921a
   SocketRocket: d57c7159b83c3c6655745cd15302aa24b6bae531
 
-PODFILE CHECKSUM: 0925ffe00e59b198a974e429b4868f9475f1ba5d
+PODFILE CHECKSUM: 3eb2fc3cc9b6804eb04eab70e3e47f89297ce33e
 
-COCOAPODS: 1.0.1
+COCOAPODS: 1.2.1.beta.1

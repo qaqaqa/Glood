@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = 'D355CB6A38B408AE999CA7B310CCF317'
+               BlueprintIdentifier = '66FE107B6B7393C4C94BAD4CF3D5DDCA'
                BlueprintName = 'KSDeferred'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'libKSDeferred.a'>

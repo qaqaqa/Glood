@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '1067B95788F96A22F87915A868D6933C'
+               BlueprintIdentifier = '68F73B3378B9152C52F2D2A1B220A5CE'
                BlueprintName = 'Blindside'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'libBlindside.a'>

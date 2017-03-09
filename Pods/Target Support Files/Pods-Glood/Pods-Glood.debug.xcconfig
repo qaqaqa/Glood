@@ -6,4 +6,5 @@ OTHER_CFLAGS = $(inherited) -isystem "${PODS_ROOT}/Headers/Public" -isystem "${P
 OTHER_LDFLAGS = $(inherited) -ObjC -l"AFNetworking" -l"BFKit" -l"Blindside" -l"KSDeferred" -l"SDWebImage" -l"SignalR-ObjC" -l"SocketRocket" -l"c++" -l"icucore" -l"sqlite3" -l"z" -framework "Accelerate" -framework "AdSupport" -framework "AddressBook" -framework "AudioToolbox" -framework "Bugly" -framework "CFNetwork" -framework "CoreGraphics" -framework "CoreImage" -framework "FirebaseAnalytics" -framework "FirebaseInstanceID" -framework "FirebaseMessaging" -framework "FirebaseRemoteConfig" -framework "Foundation" -framework "GoogleIPhoneUtilities" -framework "GoogleInterchangeUtilities" -framework "GoogleSymbolUtilities" -framework "GoogleUtilities" -framework "ImageIO" -framework "MobileCoreServices" -framework "QuartzCore" -framework "SafariServices" -framework "Security" -framework "StoreKit" -framework "SystemConfiguration" -framework "UIKit" -weak_framework "LocalAuthentication"
 PODS_BUILD_DIR = $BUILD_DIR
 PODS_CONFIGURATION_BUILD_DIR = $PODS_BUILD_DIR/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)
+PODS_PODFILE_DIR_PATH = ${SRCROOT}/.
 PODS_ROOT = ${SRCROOT}/Pods
