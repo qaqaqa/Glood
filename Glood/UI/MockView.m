@@ -401,7 +401,7 @@
     self.micTableViewCell.bgImageView.layer.cornerRadius = (SCREEN_WIDTH*35/320)/2;
     self.micTableViewCell.bgImageView.layer.masksToBounds = YES;
     self.micTableViewCell.bgImageView.tag = bgImageViewTag+indexPath.row;
-    [self.micTableViewCell.bgImageView setImage:[UIImage imageNamed:@"background.png"]];
+    
     
     self.micTableViewCell.headImageButton.frame = CGRectMake((SCREEN_WIDTH*260/320-(SCREEN_WIDTH*35/320))/2, 0, SCREEN_WIDTH*35/320, SCREEN_WIDTH*35/320);
     self.micTableViewCell.headImageButton.tag = headImageButtonTag+indexPath.row;
@@ -479,6 +479,7 @@
     self.micTableViewCell.likeButton.frame = CGRectMake(self.micTableViewCell.bgImageView.frame.origin.x+self.micTableViewCell.bgImageView.frame.size.width-(SCREEN_WIDTH*15/320), self.micTableViewCell.bgImageView.frame.origin.y-(SCREEN_HEIGHT*4/568), SCREEN_WIDTH*25/320, SCREEN_WIDTH*25/320);
     self.micTableViewCell.likeButton.tag = likeButtonTag+indexPath.row;
     [self.micTableViewCell.likeButton setImage:[UIImage imageNamed:@"app_img_like2"] forState:UIControlStateNormal];
+    //这条消息是否被喜欢过
     if ([mic.isRead integerValue] == 1) {
         [self.micTableViewCell.likeButton setHidden:NO];
     }
@@ -486,6 +487,18 @@
     {
         [self.micTableViewCell.likeButton setHidden:YES];
     }
+    //这条消息是否被读过
+    if (([mic.isReadReady integerValue] == 1)) {
+        self.micTableViewCell.bgImageView.backgroundColor = [UIColor whiteColor];
+        self.micTableViewCell.bgImageView.alpha = 0.5;
+        [self.micTableViewCell.bgImageView setImage:[UIImage imageNamed:@""]];
+    }
+    else
+    {
+        [self.micTableViewCell.bgImageView setImage:[UIImage imageNamed:@"background.png"]];
+        self.micTableViewCell.bgImageView.alpha = 1;
+    }
+    NSLog(@"xxxxxx*-x-x-x-x-x--x------ %@----%@",mic.isReadReady,mic.messageId);
     
     return self.micTableViewCell;
 }
@@ -538,18 +551,23 @@
 {
     if (self.upHeadButtonTag != 0) {
         
-        NSLog(@"sdfsd*--*-*-*------  %ld",(long)self.upHeadButtonTag);
         UIImageView *find_bgImageView1 = (UIImageView *)[self.micBottomImageView viewWithTag:self.upHeadButtonTag-headImageButtonTag+bgImageViewTag];
         UIImageView *find_circleOneImageView1 = (UIImageView *)[self.micBottomImageView viewWithTag:self.upHeadButtonTag-headImageButtonTag+circleOneImageViewTag];
         UIImageView *find_circleTwoImageView1 = (UIImageView *)[self.micBottomImageView viewWithTag:self.upHeadButtonTag-headImageButtonTag+circleTwoImageViewTag];
         UIButton *find_headImageButtonView1 = (UIButton *)[self.micBottomImageView viewWithTag:self.upHeadButtonTag-headImageButtonTag+headImageButtonTag];
-        [find_bgImageView1 setImage:[UIImage imageNamed:@"background.png"]];
+        [find_bgImageView1 setImage:[UIImage imageNamed:@""]];
         find_circleTwoImageView1.transform = CGAffineTransformIdentity;
         find_circleOneImageView1.transform = CGAffineTransformIdentity;
         find_headImageButtonView1.transform = CGAffineTransformIdentity;
+        Mic *mic = self.historyMicListArr[[self.historyMicListArr count] -1- (self.upHeadButtonTag-headImageButtonTag)];
+        [self.myAppDelegate updateIsReadMessageId:mic.messageId isReadReady:@"1"];
+        NSLog(@"sdfsd*--*-*-*------  %ld----%ld=====%u----%@",(long)self.upHeadButtonTag,(unsigned long)[self.historyMicListArr count],[self.historyMicListArr count] -1- (self.upHeadButtonTag-headImageButtonTag),mic.messageId);
+        find_bgImageView1.backgroundColor = [UIColor whiteColor];
+        find_bgImageView1.alpha = 0.5;
+//        [self.tableView reloadData];
         self.upHeadButtonTag = 0;
     }
-
+    
     
 }
 
@@ -584,6 +602,7 @@
             NSLog(@"点击头像播放------%ld----- %@--- %@",(long)button.tag,mic.messageId,mic.fromUserName);
             self.upHeadButtonTag = button.tag;
             UIImageView *find_bgImageView = (UIImageView *)[self.micBottomImageView viewWithTag:button.tag-headImageButtonTag+bgImageViewTag];
+            find_bgImageView.alpha = 1.0;
             UIImageView *find_circleOneImageView = (UIImageView *)[self.micBottomImageView viewWithTag:button.tag-headImageButtonTag+circleOneImageViewTag];
             UIImageView *find_circleTwoImageView = (UIImageView *)[self.micBottomImageView viewWithTag:button.tag-headImageButtonTag+circleTwoImageViewTag];
             UIButton *find_headImageButtonView = (UIButton *)[self.micBottomImageView viewWithTag:button.tag-headImageButtonTag+headImageButtonTag];
@@ -622,12 +641,17 @@
                     self.userInteractionEnabled = YES;
                 }];
                 [UIView animateWithDuration:0.0 animations:^{
-                    [find_bgImageView setImage:[UIImage imageNamed:@"background.png"]];
+                    [find_bgImageView setImage:[UIImage imageNamed:@""]];
                     find_circleTwoImageView.alpha=0.5;
                     find_circleTwoImageView.transform = CGAffineTransformIdentity;
                     find_circleOneImageView.alpha=0.5;
                     find_circleOneImageView.transform = CGAffineTransformIdentity;
                 } completion:^(BOOL finished) {
+                    
+                    [self.myAppDelegate updateIsReadMessageId:mic.messageId isReadReady:@"1"];
+                    find_bgImageView.backgroundColor = [UIColor whiteColor];
+                    find_bgImageView.alpha = 0.5;
+//                    [self.tableView reloadData];
                     
                 }];
             });

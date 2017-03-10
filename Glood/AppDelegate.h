@@ -71,6 +71,9 @@
 //更新 喜欢一条消息
 - (void)updateLikeMessageId:(NSString *)messageId isRead:(NSString *)isReadContent;
 
+//跟新 已读一条消息
+- (void)updateIsReadMessageId:(NSString *)messageId isReadReady:(NSString *)isReadReadyContent;
+
 
 
 @end

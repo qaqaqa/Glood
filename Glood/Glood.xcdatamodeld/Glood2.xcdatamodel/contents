@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10174" systemVersion="16A323" minimumToolsVersion="Xcode 7.3">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11759" systemVersion="16A323" minimumToolsVersion="Xcode 7.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
     <entity name="Mic" representedClassName="Mic" syncable="YES">
         <attribute name="accountId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="avatarImage" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="fromUserName" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="isRead" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="isReadReady" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="isRead" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="isReadReady" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="message" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="messageId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="roomId" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="time" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="time" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="userId" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Node" representedClassName="Node" syncable="YES">

@@ -290,6 +290,18 @@
         [self.micTableViewCell.likeButton setHidden:YES];
     }
     
+    //这条消息是否被读过
+//    if (([mic.isReadReady integerValue] == 1)) {
+//        self.micTableViewCell.bgImageView.backgroundColor = [UIColor whiteColor];
+//        self.micTableViewCell.bgImageView.alpha = 0.6;
+//        [self.micTableViewCell.bgImageView setImage:[UIImage imageNamed:@""]];
+//    }
+//    else
+//    {
+//        [self.micTableViewCell.bgImageView setImage:[UIImage imageNamed:@"background.png"]];
+//        self.micTableViewCell.bgImageView.alpha = 1;
+//    }
+    
     return self.micTableViewCell;
 }
 

@@ -521,6 +521,7 @@
                     mic.avatarImage = NULL_TO_NIL([msg objectForKey:@"user_avatar"]);
                     mic.roomId = [msg objectForKey:@"room_id"];
                     mic.isRead = [msg objectForKey:@"like"];
+                    mic.isReadReady = 0;
                     mic.time = [NSNumber numberWithFloat:[[arr objectAtIndex:0] floatValue]];
                     mic.message = [arr objectAtIndex:1];
                     mic.messageId = [msg objectForKey:@"id"];

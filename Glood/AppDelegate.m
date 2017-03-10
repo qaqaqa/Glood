@@ -399,7 +399,9 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"Glood.sqlite"];
     NSError *error = nil;
     NSString *failureReason = @"There was an error creating or loading the application's saved data.";
-    if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&error]) {
+    NSDictionary *options = @{NSMigratePersistentStoresAutomaticallyOption:@(YES),
+                              NSInferMappingModelAutomaticallyOption:@(YES)};
+    if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:options error:&error]) {
         // Report any error we got.
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
         dict[NSLocalizedDescriptionKey] = @"Failed to initialize the application's saved data";
@@ -473,6 +475,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
         mic.avatarImage = NULL_TO_NIL(avatarImagex);
         mic.roomId = roomIdx;
         mic.isRead = likeMessage;
+        mic.isReadReady = @0;
         mic.time = timex;
         mic.message = messagex;
         mic.messageId = messageIdx;
@@ -507,6 +510,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
         mic.avatarImage = NULL_TO_NIL(avatarImagex);
         mic.roomId = roomIdx;
         mic.isRead = likeMessage;
+        mic.isReadReady = @0;
         mic.time = timex;
         mic.message = messagex;
         mic.messageId = messageIdx;
@@ -820,9 +824,36 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     NSArray *result = [self.managedObjectContext executeFetchRequest:request error:&error];
     if ([result count] != 0) {
         Mic *mic = result[0];
-        mic.isRead =  @([isReadContent integerValue]);;
+        mic.isRead =  @([isReadContent integerValue]);
         [self saveContext];
     }
+}
+
+#pragma mark ====== 跟新 已读一条消息======
+- (void)updateIsReadMessageId:(NSString *)messageId isReadReady:(NSString *)isReadReadyContent
+{
+    //  查询数据
+    //  1.NSFetchRequst对象
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Mic"];
+    //  2.设置排序
+    //  2.1创建排序描述对象
+    //    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"messageId" ascending:NO];
+    //    request.sortDescriptors = @[sortDescriptor];
+    NSSortDescriptor *sortDescriptors = [NSSortDescriptor sortDescriptorWithKey:@"messageId" ascending:NO selector:@selector(localizedStandardCompare:)];
+    request.sortDescriptors = @[sortDescriptors];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"messageId= %@",messageId]];
+    request.predicate = predicate;
+    
+    //  执行这个查询请求
+    NSError *error = nil;
+    
+    NSArray *result = [self.managedObjectContext executeFetchRequest:request error:&error];
+    NSLog(@"asfasdfasdkfjlkll---------  %@----%ld",messageId,(unsigned long)[result count]);
+    for (Mic *mic in result) {
+        mic.isReadReady =  @([isReadReadyContent integerValue]);
+    }
+    //保存
+    [self saveContext];
 }
 
 

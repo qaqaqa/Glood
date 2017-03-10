@@ -138,13 +138,13 @@
 		CC3BE56F1E10D6520034214B /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC3BE56E1E10D6520034214B /* CoreMedia.framework */; };
 		CC3BE5711E10D6610034214B /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CC3BE5701E10D6610034214B /* libiconv.tbd */; };
 		CC3BE5731E10D6850034214B /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC3BE5721E10D6850034214B /* QuartzCore.framework */; };
+		CC4360911E7240ED0047C497 /* Mic+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = CC43608E1E7240ED0047C497 /* Mic+CoreDataProperties.m */; };
+		CC4360921E7240ED0047C497 /* Mic.m in Sources */ = {isa = PBXBuildFile; fileRef = CC4360901E7240ED0047C497 /* Mic.m */; };
 		CC4AC6AD1E49D537001E3721 /* app_img_like2.png in Resources */ = {isa = PBXBuildFile; fileRef = CC4AC6AC1E49D537001E3721 /* app_img_like2.png */; };
 		CC5A1C211E1B95F70005963F /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC5A1C1D1E1B95F70005963F /* Bolts.framework */; };
 		CC5A1C221E1B95F70005963F /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC5A1C1E1E1B95F70005963F /* FBSDKCoreKit.framework */; };
 		CC5A1C231E1B95F70005963F /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC5A1C1F1E1B95F70005963F /* FBSDKLoginKit.framework */; };
 		CC5A1C241E1B95F70005963F /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC5A1C201E1B95F70005963F /* FBSDKShareKit.framework */; };
-		CC7925531E1103A300CD2BF3 /* Mic+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = CC7925501E1103A300CD2BF3 /* Mic+CoreDataProperties.m */; };
-		CC7925541E1103A300CD2BF3 /* Mic.m in Sources */ = {isa = PBXBuildFile; fileRef = CC7925521E1103A300CD2BF3 /* Mic.m */; };
 		CCC01A651E163B46008A1F5D /* CommonClass.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC01A641E163B46008A1F5D /* CommonClass.m */; };
 		CCFAAA6B1E1224C100ACF992 /* Node+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = CCFAAA681E1224C100ACF992 /* Node+CoreDataProperties.m */; };
 		CCFAAA6C1E1224C100ACF992 /* Node.m in Sources */ = {isa = PBXBuildFile; fileRef = CCFAAA6A1E1224C100ACF992 /* Node.m */; };
@@ -405,15 +405,16 @@
 		CC3BE56E1E10D6520034214B /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		CC3BE5701E10D6610034214B /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
 		CC3BE5721E10D6850034214B /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		CC4145B61E716C900064C0F1 /* Glood2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Glood2.xcdatamodel; sourceTree = "<group>"; };
+		CC43608D1E7240ED0047C497 /* Mic+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Mic+CoreDataProperties.h"; sourceTree = "<group>"; };
+		CC43608E1E7240ED0047C497 /* Mic+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Mic+CoreDataProperties.m"; sourceTree = "<group>"; };
+		CC43608F1E7240ED0047C497 /* Mic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mic.h; sourceTree = "<group>"; };
+		CC4360901E7240ED0047C497 /* Mic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Mic.m; sourceTree = "<group>"; };
 		CC4AC6AC1E49D537001E3721 /* app_img_like2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = app_img_like2.png; sourceTree = "<group>"; };
 		CC5A1C1D1E1B95F70005963F /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
 		CC5A1C1E1E1B95F70005963F /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		CC5A1C1F1E1B95F70005963F /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
 		CC5A1C201E1B95F70005963F /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKShareKit.framework; sourceTree = "<group>"; };
-		CC79254F1E1103A300CD2BF3 /* Mic+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Mic+CoreDataProperties.h"; sourceTree = "<group>"; };
-		CC7925501E1103A300CD2BF3 /* Mic+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Mic+CoreDataProperties.m"; sourceTree = "<group>"; };
-		CC7925511E1103A300CD2BF3 /* Mic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mic.h; sourceTree = "<group>"; };
-		CC7925521E1103A300CD2BF3 /* Mic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Mic.m; sourceTree = "<group>"; };
 		CCC01A631E163B46008A1F5D /* CommonClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonClass.h; sourceTree = "<group>"; };
 		CCC01A641E163B46008A1F5D /* CommonClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommonClass.m; sourceTree = "<group>"; };
 		CCFAAA671E1224C100ACF992 /* Node+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Node+CoreDataProperties.h"; sourceTree = "<group>"; };
@@ -590,10 +591,10 @@
 				CCFAAA681E1224C100ACF992 /* Node+CoreDataProperties.m */,
 				CCFAAA691E1224C100ACF992 /* Node.h */,
 				CCFAAA6A1E1224C100ACF992 /* Node.m */,
-				CC79254F1E1103A300CD2BF3 /* Mic+CoreDataProperties.h */,
-				CC7925501E1103A300CD2BF3 /* Mic+CoreDataProperties.m */,
-				CC7925511E1103A300CD2BF3 /* Mic.h */,
-				CC7925521E1103A300CD2BF3 /* Mic.m */,
+				CC43608D1E7240ED0047C497 /* Mic+CoreDataProperties.h */,
+				CC43608E1E7240ED0047C497 /* Mic+CoreDataProperties.m */,
+				CC43608F1E7240ED0047C497 /* Mic.h */,
+				CC4360901E7240ED0047C497 /* Mic.m */,
 			);
 			path = CoreData;
 			sourceTree = "<group>";
@@ -1268,6 +1269,7 @@
 				CCC01A651E163B46008A1F5D /* CommonClass.m in Sources */,
 				CC3BE5671E10D4510034214B /* FeedbackViewController.m in Sources */,
 				CC3BE54C1E10D3E70034214B /* LoginView.m in Sources */,
+				CC4360911E7240ED0047C497 /* Mic+CoreDataProperties.m in Sources */,
 				CC3BE50B1E10D3E60034214B /* View+MASAdditions.m in Sources */,
 				CC3BE5191E10D3E70034214B /* UIColor+HEX.m in Sources */,
 				CCFE86F81E5AA04000A5546D /* BlockUserViewController.m in Sources */,
@@ -1275,7 +1277,6 @@
 				CC3BE4FF1E10D3E60034214B /* qrinput.c in Sources */,
 				CC3BE5041E10D3E60034214B /* MASConstraint.m in Sources */,
 				CCFAAA6C1E1224C100ACF992 /* Node.m in Sources */,
-				CC7925531E1103A300CD2BF3 /* Mic+CoreDataProperties.m in Sources */,
 				CC3BE4FB1E10D3E60034214B /* bitstream.c in Sources */,
 				CC3BE54B1E10D3E70034214B /* EventListView.m in Sources */,
 				CC3BE5081E10D3E60034214B /* MASViewConstraint.m in Sources */,
@@ -1289,11 +1290,11 @@
 				CC3BE5651E10D4510034214B /* AddATicketViewController.m in Sources */,
 				CC3BE5471E10D3E70034214B /* CheckInTableViewCell.m in Sources */,
 				CC3BE5111E10D3E70034214B /* MMProgressHUD+Class.m in Sources */,
-				CC7925541E1103A300CD2BF3 /* Mic.m in Sources */,
 				CCFE86FB1E5AA1B500A5546D /* BlockUsersTableViewCell.m in Sources */,
 				CC3BE51A1E10D3E70034214B /* amrFileCodec.mm in Sources */,
 				CC3BE4FE1E10D3E60034214B /* qrencode.c in Sources */,
 				CC3BE5261E10D3E70034214B /* NetworkingTools.m in Sources */,
+				CC4360921E7240ED0047C497 /* Mic.m in Sources */,
 				CC3BE5451E10D3E70034214B /* CeHuaView.m in Sources */,
 				CC3BE4FA1E10D3E60034214B /* LGRefreshView.m in Sources */,
 				CC3BE5461E10D3E70034214B /* CeHuaTableViewCell.m in Sources */,
@@ -1617,9 +1618,10 @@
 		CC258BEF1E10D24700491916 /* Glood.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				CC4145B61E716C900064C0F1 /* Glood2.xcdatamodel */,
 				CC258BF01E10D24700491916 /* Glood.xcdatamodel */,
 			);
-			currentVersion = CC258BF01E10D24700491916 /* Glood.xcdatamodel */;
+			currentVersion = CC4145B61E716C900064C0F1 /* Glood2.xcdatamodel */;
 			path = Glood.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
