@@ -30,6 +30,7 @@
 #import "Mic.h"
 #import "CommonClass.h"
 #import "CoverFlowAlpahView.h"
+#import "LikeView.h"
 
 #define eventCoverFlowTag 500001
 @import AVFoundation;
@@ -52,13 +53,16 @@
 @property (retain, nonatomic) UIImageView *soundingRecoringImageView; //长按手势时，检查麦克风权限是否开启
 @property (retain, nonatomic) UIImageView *micTopImageView;
 
-@property (retain, nonatomic) UIImageView *micPlayerStatesImageView;
+@property (retain, nonatomic) UIButton *likeLeftBottomButton;
+@property (retain, nonatomic) UILabel *likeLfetBottomLabel;
+@property (retain, nonatomic) UIButton *largrLikeLeftBottomButton;
 @property (retain, nonatomic) UIButton *micShieldButton;
 @property (strong, nonatomic) NSMutableArray *dataArr;//活动list
 @property (strong, nonatomic) NSMutableArray *micArr;//语音list
 @property (assign, nonatomic) double cgAffineTransformMakeScale;//动画系数
 @property (retain, nonatomic) UIView *cehuaView;
 @property (retain, nonatomic) EventListView *eventListView;
+@property (retain, nonatomic) LikeView *likeView;
 @property (retain, nonatomic) UIButton *rightButton;
 @property (retain, nonatomic) UIButton *largeRightButton;
 @property (retain, nonatomic) UIButton *addButton;
@@ -158,18 +162,31 @@
     self.soundingRecoringImageView.userInteractionEnabled = YES;
     [self.soundingRecoringImageView addGestureRecognizer:tap];
     
-    self.micPlayerStatesImageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, SCREEN_HEIGHT-30-(SCREEN_HEIGHT*20/568), SCREEN_WIDTH*13/320, SCREEN_HEIGHT*20/568)];
-    self.micPlayerStatesImageView.backgroundColor = [UIColor clearColor];
-//    [self.micPlayerStatesImageView setImage:[UIImage imageNamed:@"play.png"]];
-    self.micPlayerStatesImageView.alpha = 0;
-    [self.view addSubview:self.micPlayerStatesImageView];
+    self.likeLeftBottomButton = [[UIButton alloc] initWithFrame:CGRectMake(20, SCREEN_HEIGHT-20-(SCREEN_HEIGHT*20/568), SCREEN_WIDTH*25/320, SCREEN_HEIGHT*25/568)];
+    [self.likeLeftBottomButton setImage:[UIImage imageNamed:@"popup_heart.png"] forState:UIControlStateNormal];
+    self.likeLeftBottomButton.alpha = 0;
+    [self.likeLeftBottomButton addTarget:self action:@selector(onShowLikeView) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.likeLeftBottomButton];
     
-    self.micShieldButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-21-(SCREEN_WIDTH*20/320), self.micPlayerStatesImageView.frame.origin.y+8, SCREEN_WIDTH*30/320, SCREEN_HEIGHT*30/568)];
-    [self.micShieldButton setHidden:YES];
-    [self.micShieldButton setImage:[UIImage imageNamed:@"people.png"] forState:UIControlStateNormal];
-    [self.micShieldButton addTarget:self action:@selector(onShieldBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-    self.micShieldButton.alpha = 0;
-    [self.view addSubview: self.micShieldButton];
+    self.likeLfetBottomLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.likeLeftBottomButton.frame.origin.x+self.likeLeftBottomButton.frame.size.width, self.likeLeftBottomButton.frame.origin.y, 30, self.likeLeftBottomButton.frame.size.height)];
+    self.likeLfetBottomLabel.text = @"18";
+    self.likeLfetBottomLabel.font = [UIFont fontWithName:@"ProximaNova-Regular" size:17];
+    self.likeLfetBottomLabel.textColor = [UIColor whiteColor];
+    self.likeLfetBottomLabel.alpha = 0;
+    [self.view addSubview:self.likeLfetBottomLabel];
+    
+    self.largrLikeLeftBottomButton = [[UIButton alloc] initWithFrame:CGRectMake(10, SCREEN_HEIGHT-30-(SCREEN_HEIGHT*20/568), SCREEN_WIDTH*50/320, SCREEN_WIDTH*50/320)];
+    self.largrLikeLeftBottomButton.alpha = 0;
+    self.largrLikeLeftBottomButton.backgroundColor = [UIColor clearColor];
+    [self.largrLikeLeftBottomButton addTarget:self action:@selector(onShowLikeView) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.largrLikeLeftBottomButton];
+    
+//    self.micShieldButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-21-(SCREEN_WIDTH*20/320), self.micPlayerStatesImageView.frame.origin.y+8, SCREEN_WIDTH*30/320, SCREEN_HEIGHT*30/568)];
+//    [self.micShieldButton setHidden:YES];
+//    [self.micShieldButton setImage:[UIImage imageNamed:@"people.png"] forState:UIControlStateNormal];
+//    [self.micShieldButton addTarget:self action:@selector(onShieldBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+//    self.micShieldButton.alpha = 0;
+//    [self.view addSubview: self.micShieldButton];
     
     self.leftButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*0/320, SCREEN_HEIGHT*10/568, SCREEN_WIDTH*48/320, SCREEN_HEIGHT*45/568)];
     [self.leftButton setImage:[UIImage imageNamed:@"menu"] forState:UIControlStateNormal];
@@ -329,6 +346,13 @@
 - (void)handleSwipePushChatRoom:(UISwipeGestureRecognizer *)recognizer
 {
     [self pushChatRoom];
+}
+
+#pragma mark ========== 查看喜欢 ========
+- (void)onShowLikeView
+{
+    self.likeView = [[LikeView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+    [self.view addSubview:self.likeView];
 }
 
 #pragma mark ========== right eventlist button ========
@@ -754,7 +778,9 @@
         self.navtitleLabel.text = @"Communities";
         self.micTopImageView.alpha = 0;
         self.micShieldButton.alpha = 0;
-        self.micPlayerStatesImageView.alpha = 0;
+        self.likeLeftBottomButton.alpha = 0;
+        self.likeLfetBottomLabel.alpha = 0;
+        self.largrLikeLeftBottomButton.alpha = 0;
         self.mockView.lastBgView.alpha = 1;
         [self.mockView.lastBgView setHidden:NO];
         [UIView animateWithDuration:0.5 animations:^{
@@ -1439,7 +1465,9 @@
         
         self.micTopImageView.alpha = 1;
         self.micShieldButton.alpha = 1;
-        self.micPlayerStatesImageView.alpha = 1;
+        self.likeLeftBottomButton.alpha = 1;
+        self.likeLfetBottomLabel.alpha = 1;
+        self.largrLikeLeftBottomButton.alpha = 1;
         for (NSInteger i = 0; i < 20; i++) {
             UILabel *find_nameLabel = (UILabel *)[self.mockView.micBottomImageView viewWithTag:nameLabelTag+i];
             find_nameLabel.alpha = 1;

@@ -145,6 +145,9 @@
 		CC5A1C221E1B95F70005963F /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC5A1C1E1E1B95F70005963F /* FBSDKCoreKit.framework */; };
 		CC5A1C231E1B95F70005963F /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC5A1C1F1E1B95F70005963F /* FBSDKLoginKit.framework */; };
 		CC5A1C241E1B95F70005963F /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC5A1C201E1B95F70005963F /* FBSDKShareKit.framework */; };
+		CC87594F1E7638B10093183F /* popup_heart.png in Resources */ = {isa = PBXBuildFile; fileRef = CC87594E1E7638B10093183F /* popup_heart.png */; };
+		CC8759521E763C020093183F /* LikeView.m in Sources */ = {isa = PBXBuildFile; fileRef = CC8759511E763C020093183F /* LikeView.m */; };
+		CC8759551E7641B70093183F /* LikeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CC8759541E7641B70093183F /* LikeTableViewCell.m */; };
 		CCC01A651E163B46008A1F5D /* CommonClass.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC01A641E163B46008A1F5D /* CommonClass.m */; };
 		CCFAAA6B1E1224C100ACF992 /* Node+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = CCFAAA681E1224C100ACF992 /* Node+CoreDataProperties.m */; };
 		CCFAAA6C1E1224C100ACF992 /* Node.m in Sources */ = {isa = PBXBuildFile; fileRef = CCFAAA6A1E1224C100ACF992 /* Node.m */; };
@@ -377,8 +380,8 @@
 		CC3BE4E61E10D3E60034214B /* EventListView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventListView.m; sourceTree = "<group>"; };
 		CC3BE4E71E10D3E60034214B /* LoginView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginView.h; sourceTree = "<group>"; };
 		CC3BE4E81E10D3E60034214B /* LoginView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginView.m; sourceTree = "<group>"; };
-		CC3BE4E91E10D3E60034214B /* MicTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MicTableViewCell.h; sourceTree = "<group>"; };
-		CC3BE4EA1E10D3E60034214B /* MicTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MicTableViewCell.m; sourceTree = "<group>"; };
+		CC3BE4E91E10D3E60034214B /* MicTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MicTableViewCell.h; path = ../MicTableViewCell.h; sourceTree = "<group>"; };
+		CC3BE4EA1E10D3E60034214B /* MicTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MicTableViewCell.m; path = ../MicTableViewCell.m; sourceTree = "<group>"; };
 		CC3BE4EB1E10D3E60034214B /* MockView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockView.h; sourceTree = "<group>"; };
 		CC3BE4EC1E10D3E60034214B /* MockView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockView.m; sourceTree = "<group>"; };
 		CC3BE4ED1E10D3E60034214B /* QRView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QRView.h; sourceTree = "<group>"; };
@@ -415,6 +418,11 @@
 		CC5A1C1E1E1B95F70005963F /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		CC5A1C1F1E1B95F70005963F /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
 		CC5A1C201E1B95F70005963F /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKShareKit.framework; sourceTree = "<group>"; };
+		CC87594E1E7638B10093183F /* popup_heart.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = popup_heart.png; sourceTree = "<group>"; };
+		CC8759501E763C020093183F /* LikeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LikeView.h; sourceTree = "<group>"; };
+		CC8759511E763C020093183F /* LikeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LikeView.m; sourceTree = "<group>"; };
+		CC8759531E7641B70093183F /* LikeTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LikeTableViewCell.h; path = ../LikeTableViewCell.h; sourceTree = "<group>"; };
+		CC8759541E7641B70093183F /* LikeTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LikeTableViewCell.m; path = ../LikeTableViewCell.m; sourceTree = "<group>"; };
 		CCC01A631E163B46008A1F5D /* CommonClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonClass.h; sourceTree = "<group>"; };
 		CCC01A641E163B46008A1F5D /* CommonClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommonClass.m; sourceTree = "<group>"; };
 		CCFAAA671E1224C100ACF992 /* Node+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Node+CoreDataProperties.h"; sourceTree = "<group>"; };
@@ -423,8 +431,8 @@
 		CCFAAA6A1E1224C100ACF992 /* Node.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Node.m; sourceTree = "<group>"; };
 		CCFE86F61E5AA04000A5546D /* BlockUserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlockUserViewController.h; sourceTree = "<group>"; };
 		CCFE86F71E5AA04000A5546D /* BlockUserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlockUserViewController.m; sourceTree = "<group>"; };
-		CCFE86F91E5AA1B500A5546D /* BlockUsersTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlockUsersTableViewCell.h; sourceTree = "<group>"; };
-		CCFE86FA1E5AA1B500A5546D /* BlockUsersTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlockUsersTableViewCell.m; sourceTree = "<group>"; };
+		CCFE86F91E5AA1B500A5546D /* BlockUsersTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BlockUsersTableViewCell.h; path = ../BlockUsersTableViewCell.h; sourceTree = "<group>"; };
+		CCFE86FA1E5AA1B500A5546D /* BlockUsersTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BlockUsersTableViewCell.m; path = ../BlockUsersTableViewCell.m; sourceTree = "<group>"; };
 		E098CE90632E472DD26E99AF /* Pods-Glood.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Glood.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Glood/Pods-Glood.debug.xcconfig"; sourceTree = "<group>"; };
 		FE9C48D0C173BD780652515D /* Pods-Glood.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Glood.release.xcconfig"; path = "Pods/Target Support Files/Pods-Glood/Pods-Glood.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -964,6 +972,7 @@
 				CC2DF2041E5D9684008C3C26 /* plus_icon.png */,
 				CC2FFF271E5ECB0700D18525 /* ban_sign.png */,
 				CC1C85A51E60014B0085DD13 /* timg.png */,
+				CC87594E1E7638B10093183F /* popup_heart.png */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -984,16 +993,14 @@
 				CC3BE4E61E10D3E60034214B /* EventListView.m */,
 				CC3BE4E71E10D3E60034214B /* LoginView.h */,
 				CC3BE4E81E10D3E60034214B /* LoginView.m */,
-				CC3BE4E91E10D3E60034214B /* MicTableViewCell.h */,
-				CC3BE4EA1E10D3E60034214B /* MicTableViewCell.m */,
 				CC3BE4EB1E10D3E60034214B /* MockView.h */,
 				CC3BE4EC1E10D3E60034214B /* MockView.m */,
 				CC3BE4ED1E10D3E60034214B /* QRView.h */,
 				CC3BE4EE1E10D3E60034214B /* QRView.m */,
 				CC3BB5821E2F2D0000992527 /* CoverFlowAlpahView.h */,
 				CC3BB5831E2F2D0000992527 /* CoverFlowAlpahView.m */,
-				CCFE86F91E5AA1B500A5546D /* BlockUsersTableViewCell.h */,
-				CCFE86FA1E5AA1B500A5546D /* BlockUsersTableViewCell.m */,
+				CC8759501E763C020093183F /* LikeView.h */,
+				CC8759511E763C020093183F /* LikeView.m */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -1007,6 +1014,12 @@
 				CC3BE4DE1E10D3E60034214B /* CheckInTableViewCell.m */,
 				CC3BE4DF1E10D3E60034214B /* EventListTableViewCell.h */,
 				CC3BE4E01E10D3E60034214B /* EventListTableViewCell.m */,
+				CC8759531E7641B70093183F /* LikeTableViewCell.h */,
+				CC8759541E7641B70093183F /* LikeTableViewCell.m */,
+				CC3BE4E91E10D3E60034214B /* MicTableViewCell.h */,
+				CC3BE4EA1E10D3E60034214B /* MicTableViewCell.m */,
+				CCFE86F91E5AA1B500A5546D /* BlockUsersTableViewCell.h */,
+				CCFE86FA1E5AA1B500A5546D /* BlockUsersTableViewCell.m */,
 			);
 			path = cell;
 			sourceTree = "<group>";
@@ -1132,6 +1145,7 @@
 				CC3BE5281E10D3E70034214B /* 171604419.jpg in Resources */,
 				CC3BE52D1E10D3E70034214B /* background.png in Resources */,
 				CC3BE5201E10D3E70034214B /* zbar-back.png in Resources */,
+				CC87594F1E7638B10093183F /* popup_heart.png in Resources */,
 				CC3BE4F01E10D3E60034214B /* ProximaNova-Light.otf in Resources */,
 				CC3BE5341E10D3E70034214B /* feedbackeys.png in Resources */,
 				CC3BE5381E10D3E70034214B /* line.png in Resources */,
@@ -1255,6 +1269,7 @@
 				CC3BE5091E10D3E60034214B /* NSArray+MASAdditions.m in Sources */,
 				CC3BE5601E10D4510034214B /* EventViewController.m in Sources */,
 				CC3BE54A1E10D3E70034214B /* EventCoverFlowView.m in Sources */,
+				CC8759521E763C020093183F /* LikeView.m in Sources */,
 				CC3BE4FC1E10D3E60034214B /* mask.c in Sources */,
 				CC3BE5611E10D4510034214B /* CheckInViewController.m in Sources */,
 				CC3BE5241E10D3E70034214B /* CommonService.m in Sources */,
@@ -1290,6 +1305,7 @@
 				CC3BE5651E10D4510034214B /* AddATicketViewController.m in Sources */,
 				CC3BE5471E10D3E70034214B /* CheckInTableViewCell.m in Sources */,
 				CC3BE5111E10D3E70034214B /* MMProgressHUD+Class.m in Sources */,
+				CC8759551E7641B70093183F /* LikeTableViewCell.m in Sources */,
 				CCFE86FB1E5AA1B500A5546D /* BlockUsersTableViewCell.m in Sources */,
 				CC3BE51A1E10D3E70034214B /* amrFileCodec.mm in Sources */,
 				CC3BE4FE1E10D3E60034214B /* qrencode.c in Sources */,
