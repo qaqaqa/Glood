@@ -75,6 +75,8 @@
 
 @property (retain, nonatomic) NSTimer *animationtTimer;
 
+@property (strong, nonatomic) NSString *currentRroomIdStr;
+
 @end
 
 @implementation EventViewController
@@ -169,7 +171,7 @@
     [self.view addSubview:self.likeLeftBottomButton];
     
     self.likeLfetBottomLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.likeLeftBottomButton.frame.origin.x+self.likeLeftBottomButton.frame.size.width, self.likeLeftBottomButton.frame.origin.y, 30, self.likeLeftBottomButton.frame.size.height)];
-    self.likeLfetBottomLabel.text = @"18";
+    self.likeLfetBottomLabel.text = @" ";
     self.likeLfetBottomLabel.font = [UIFont fontWithName:@"ProximaNova-Regular" size:17];
     self.likeLfetBottomLabel.textColor = [UIColor whiteColor];
     self.likeLfetBottomLabel.alpha = 0;
@@ -350,6 +352,23 @@
 
 #pragma mark ========== 查看喜欢 ========
 - (void)onShowLikeView
+{
+    UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        userInfomationData.getUsersLikesInRoomMutableArr = [[NSMutableArray alloc] initWithCapacity:10];
+        [userInfomationData.commonService getUserLikesInRoom:self.currentRroomIdStr lastLikeId:@"" count:@"20"];
+    });
+    self.largrLikeLeftBottomButton.userInteractionEnabled = NO;
+    [self performSelector:@selector(largrLikeLeftBottomButtonCanTouch) withObject:nil afterDelay:1.0f];
+    
+}
+
+- (void)largrLikeLeftBottomButtonCanTouch
+{
+    self.largrLikeLeftBottomButton.userInteractionEnabled = YES;
+}
+
+- (void)onGetLikesInRoom
 {
     self.likeView = [[LikeView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
     [self.view addSubview:self.likeView];
@@ -576,6 +595,8 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"yesShield" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"becomeActive" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"stopRecording" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"onGetLikesCountInRoom" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"onGetLikesInRoom" object:nil];
     
     [self.mockView deallocNSNotificationCenter];
 }
@@ -598,6 +619,8 @@
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(getYesShield)name:@"yesShield"object:nil];
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(becomeActive)name:@"becomeActive"object:nil];
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(onStopRecording)name:@"stopRecording"object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(onGetLikesCountInRoom)name:@"onGetLikesCountInRoom"object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(onGetLikesInRoom)name:@"onGetLikesInRoom"object:nil];
     
     
     [self.mockView addNSNotificationCenter];
@@ -1393,10 +1416,10 @@
     //进入聊天室列表
     NSMutableArray *monthMutableArr = [[NSMutableArray alloc] initWithObjects:@"JAN",@"FEB",@"MAR",@"APR",@"MAY",@"JUN",@"JUL",@"AUG",@"SEP",@"OCT",@"NOV",@"DEC", nil];
     
-    
     NSString *currentDateStr;
     userInfomationData.micMockListPageIndex = 1; //每次重新进入聊天室，当前分页置为0
     if ([CommonService isBlankString:userInfomationData.QRRoomId]) {
+        self.currentRroomIdStr = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
         [self.mockView.topImageView sd_setImageWithURL:[CommonClass showImage:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"image_url"] x1:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"image_crop_info"] objectForKey:@"x1"] y1:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"image_crop_info"] objectForKey:@"y1"] x2:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"image_crop_info"] objectForKey:@"x2"] y2:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"image_crop_info"] objectForKey:@"y2"] width:[NSString stringWithFormat:@"%.f",self.mockView.topImageView.frame.size.width*2]] placeholderImage:[UIImage imageNamed:@"event_background.jpg"]];
         self.mockView.eventNameLabel.text = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"name"];
         currentDateStr = [self getLocalDateFormateUTCDate:[[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"schedules"] objectAtIndex:0] objectForKey:@"begin_time_utc"]];
@@ -1411,6 +1434,7 @@
     {
         for (NSInteger i = 0; i < [(NSMutableArray*)[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] count]; i ++) {
             if ([userInfomationData.QRRoomId isEqualToString:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"id"]]) {
+                self.currentRroomIdStr = userInfomationData.QRRoomId;
                 
                 [self.mockView.topImageView sd_setImageWithURL:[CommonClass showImage:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"image_url"] x1:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"image_crop_info"] objectForKey:@"x1"] y1:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"image_crop_info"] objectForKey:@"y1"] x2:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"image_crop_info"] objectForKey:@"x2"] y2:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"image_crop_info"] objectForKey:@"y2"] width:[NSString stringWithFormat:@"%.f",self.mockView.topImageView.frame.size.width*2]] placeholderImage:[UIImage imageNamed:@"event_background.jpg"]];
                 
@@ -1483,6 +1507,12 @@
         [self.mockView.tableView reloadData];
     } completion:^(BOOL finished) {
         [self.mockView.lastBgView setHidden:YES];
+        
+        //获取在一个房间中被喜欢的数量
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [userInfomationData.commonService getUserLikesCountInRoom:self.currentRroomIdStr];
+            self.likeLfetBottomLabel.text = userInfomationData.getUsersLikesCountInRoom;
+        });
     }];
 }
 
@@ -1529,6 +1559,18 @@
     //消除活动列表后面未读消息的小红掉标记
     userInfomationData.currtentRoomIdStr = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:[NSString stringWithFormat:@"%@%@",@"red",[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"]]];
+    
+    //获取在一个房间中被喜欢的数量
+    self.currentRroomIdStr = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [userInfomationData.commonService getUserLikesCountInRoom:self.currentRroomIdStr];
+    });
+}
+
+- (void)onGetLikesCountInRoom
+{
+    UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+    self.likeLfetBottomLabel.text = userInfomationData.getUsersLikesCountInRoom;
 }
 
 ////UTC时间转换 成对应系统时间

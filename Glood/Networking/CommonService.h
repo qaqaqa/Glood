@@ -84,4 +84,10 @@
 //获取当前用户屏蔽发言人的列表
 - (void)getBlockUsers:(NSString *)isShowMessage;
 
+//获取一个聊天室中被用户喜欢的数量
+- (void)getUserLikesCountInRoom:(NSString *)roomId;
+
+//获取一个聊天室中被用户喜欢的列表
+- (void)getUserLikesInRoom:(NSString *)roomId lastLikeId:(NSString *)lastLikeIdContent count:(NSString *)countContent;
+
 @end

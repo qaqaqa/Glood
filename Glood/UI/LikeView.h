@@ -19,6 +19,8 @@
 @property (retain, nonatomic) UILabel *heartsFromLabel;
 @property (retain, nonatomic) UITableView *tableView;
 
+@property (retain, nonatomic) UILabel *noResultLabel;
+
 @property (retain, nonatomic) LikeTableViewCell *likeTableViewCell;
 
 @end

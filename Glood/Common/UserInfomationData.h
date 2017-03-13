@@ -68,4 +68,8 @@
 
 @property (strong, nonatomic) NSString *yuLoadMessageTimeStr; //当前这条预加载语音的录音时间（录音还在继续，未停止的情况下，用于预加载动画使用）
 
+@property (strong, nonatomic) NSString *getUsersLikesCountInRoom; //在这个房间中，有多少人喜欢了你
+
+@property (strong, nonatomic) NSMutableArray *getUsersLikesInRoomMutableArr; //在这个房间中，喜欢你的人的列表
+
 @end

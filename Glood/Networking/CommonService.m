@@ -979,6 +979,60 @@
     }
 }
 
+#pragma mark ======== 获取一个聊天室中被用户喜欢的数量 =========
+- (void)getUserLikesCountInRoom:(NSString *)roomId
+{
+    if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"open"]) {
+        UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+        [userInfomationData.chat invoke:@"getUserLikesCountInRoom" withArgs:@[roomId] completionHandler:^(id response, NSError *error) {
+            if (error) {
+                [ShowMessage showMessage:@"getUserLikesCountInRoom fail"];
+                NSLog(@"xxxxxxxxxxx----%@",error.description);
+                return;
+            }
+            if (response == NULL) {
+                return;
+            }
+            NSLog(@"ahhahahhadfasdf-*-----  %@",response);
+            userInfomationData.getUsersLikesCountInRoom = response;
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"onGetLikesCountInRoom" object:self];
+            
+        }];
+    }
+    else
+    {
+        [ShowMessage showMessage:@"disconnect chatroom"];
+    }
+}
+
+#pragma mark ======== 获取一个聊天室中被用户喜欢的列表 =========
+- (void)getUserLikesInRoom:(NSString *)roomId lastLikeId:(NSString *)lastLikeIdContent count:(NSString *)countContent
+{
+    if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"open"]) {
+        UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+        [userInfomationData.chat invoke:@"getUserLikesInRoom" withArgs:@[roomId,lastLikeIdContent,countContent] completionHandler:^(id response, NSError *error) {
+            if (error) {
+                [ShowMessage showMessage:@"getUserLikesInRoom fail"];
+                NSLog(@"xxxxxxxxxxx----%@",error.description);
+                return;
+            }
+            if (response == NULL) {
+                return;
+            }
+            NSLog(@"ahhahahhadfasdfxxxxxx-*-----  %@",response);
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"onGetLikesInRoom" object:self];
+            for (NSInteger i = 0; i < [response count]; i ++) {
+                [userInfomationData.getUsersLikesInRoomMutableArr addObject:[response objectAtIndex:i]];
+            }
+            
+        }];
+    }
+    else
+    {
+        [ShowMessage showMessage:@"disconnect chatroom"];
+    }
+}
+
 #pragma mark - Fetched results controller
 
 - (NSFetchedResultsController *)fetchedResultsController
