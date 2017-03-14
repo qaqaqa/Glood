@@ -149,6 +149,11 @@
 		CC8759521E763C020093183F /* LikeView.m in Sources */ = {isa = PBXBuildFile; fileRef = CC8759511E763C020093183F /* LikeView.m */; };
 		CC8759551E7641B70093183F /* LikeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CC8759541E7641B70093183F /* LikeTableViewCell.m */; };
 		CCC01A651E163B46008A1F5D /* CommonClass.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC01A641E163B46008A1F5D /* CommonClass.m */; };
+		CCCD53C61E778AF5005DBBC1 /* sdRefeshView_arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CCCD53BC1E778AF5005DBBC1 /* sdRefeshView_arrow@2x.png */; };
+		CCCD53C71E778AF5005DBBC1 /* SDRefreshFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = CCCD53BF1E778AF5005DBBC1 /* SDRefreshFooterView.m */; };
+		CCCD53C81E778AF5005DBBC1 /* SDRefreshHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = CCCD53C11E778AF5005DBBC1 /* SDRefreshHeaderView.m */; };
+		CCCD53C91E778AF5005DBBC1 /* SDRefreshView.m in Sources */ = {isa = PBXBuildFile; fileRef = CCCD53C31E778AF5005DBBC1 /* SDRefreshView.m */; };
+		CCCD53CA1E778AF5005DBBC1 /* UIView+SDExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = CCCD53C51E778AF5005DBBC1 /* UIView+SDExtension.m */; };
 		CCFAAA6B1E1224C100ACF992 /* Node+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = CCFAAA681E1224C100ACF992 /* Node+CoreDataProperties.m */; };
 		CCFAAA6C1E1224C100ACF992 /* Node.m in Sources */ = {isa = PBXBuildFile; fileRef = CCFAAA6A1E1224C100ACF992 /* Node.m */; };
 		CCFE86F81E5AA04000A5546D /* BlockUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CCFE86F71E5AA04000A5546D /* BlockUserViewController.m */; };
@@ -425,6 +430,16 @@
 		CC8759541E7641B70093183F /* LikeTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LikeTableViewCell.m; path = ../LikeTableViewCell.m; sourceTree = "<group>"; };
 		CCC01A631E163B46008A1F5D /* CommonClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonClass.h; sourceTree = "<group>"; };
 		CCC01A641E163B46008A1F5D /* CommonClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommonClass.m; sourceTree = "<group>"; };
+		CCCD53BC1E778AF5005DBBC1 /* sdRefeshView_arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sdRefeshView_arrow@2x.png"; sourceTree = "<group>"; };
+		CCCD53BD1E778AF5005DBBC1 /* SDRefresh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDRefresh.h; sourceTree = "<group>"; };
+		CCCD53BE1E778AF5005DBBC1 /* SDRefreshFooterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDRefreshFooterView.h; sourceTree = "<group>"; };
+		CCCD53BF1E778AF5005DBBC1 /* SDRefreshFooterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDRefreshFooterView.m; sourceTree = "<group>"; };
+		CCCD53C01E778AF5005DBBC1 /* SDRefreshHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDRefreshHeaderView.h; sourceTree = "<group>"; };
+		CCCD53C11E778AF5005DBBC1 /* SDRefreshHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDRefreshHeaderView.m; sourceTree = "<group>"; };
+		CCCD53C21E778AF5005DBBC1 /* SDRefreshView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDRefreshView.h; sourceTree = "<group>"; };
+		CCCD53C31E778AF5005DBBC1 /* SDRefreshView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDRefreshView.m; sourceTree = "<group>"; };
+		CCCD53C41E778AF5005DBBC1 /* UIView+SDExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+SDExtension.h"; sourceTree = "<group>"; };
+		CCCD53C51E778AF5005DBBC1 /* UIView+SDExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+SDExtension.m"; sourceTree = "<group>"; };
 		CCFAAA671E1224C100ACF992 /* Node+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Node+CoreDataProperties.h"; sourceTree = "<group>"; };
 		CCFAAA681E1224C100ACF992 /* Node+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Node+CoreDataProperties.m"; sourceTree = "<group>"; };
 		CCFAAA691E1224C100ACF992 /* Node.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Node.h; sourceTree = "<group>"; };
@@ -638,6 +653,7 @@
 		CC3BE42A1E10D3E60034214B /* Framework */ = {
 			isa = PBXGroup;
 			children = (
+				CC8759581E76A1360093183F /* SYRefreshTable */,
 				CC5A1C1D1E1B95F70005963F /* Bolts.framework */,
 				CC5A1C1E1E1B95F70005963F /* FBSDKCoreKit.framework */,
 				CC5A1C1F1E1B95F70005963F /* FBSDKLoginKit.framework */,
@@ -1024,6 +1040,24 @@
 			path = cell;
 			sourceTree = "<group>";
 		};
+		CC8759581E76A1360093183F /* SYRefreshTable */ = {
+			isa = PBXGroup;
+			children = (
+				CCCD53BC1E778AF5005DBBC1 /* sdRefeshView_arrow@2x.png */,
+				CCCD53BD1E778AF5005DBBC1 /* SDRefresh.h */,
+				CCCD53BE1E778AF5005DBBC1 /* SDRefreshFooterView.h */,
+				CCCD53BF1E778AF5005DBBC1 /* SDRefreshFooterView.m */,
+				CCCD53C01E778AF5005DBBC1 /* SDRefreshHeaderView.h */,
+				CCCD53C11E778AF5005DBBC1 /* SDRefreshHeaderView.m */,
+				CCCD53C21E778AF5005DBBC1 /* SDRefreshView.h */,
+				CCCD53C31E778AF5005DBBC1 /* SDRefreshView.m */,
+				CCCD53C41E778AF5005DBBC1 /* UIView+SDExtension.h */,
+				CCCD53C51E778AF5005DBBC1 /* UIView+SDExtension.m */,
+			);
+			name = SYRefreshTable;
+			path = TableViewRefresh;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1163,6 +1197,7 @@
 				CC3BE5221E10D3E70034214B /* zbar-helpicons.png in Resources */,
 				CC3BE53F1E10D3E70034214B /* setting.png in Resources */,
 				CC3BE5311E10D3E70034214B /* event_background.jpg in Resources */,
+				CCCD53C61E778AF5005DBBC1 /* sdRefeshView_arrow@2x.png in Resources */,
 				CC1C85A61E60014B0085DD13 /* timg.png in Resources */,
 				CC3BE5391E10D3E70034214B /* menu.png in Resources */,
 				CC2DF2051E5D9684008C3C26 /* plus_icon.png in Resources */,
@@ -1271,6 +1306,7 @@
 				CC3BE54A1E10D3E70034214B /* EventCoverFlowView.m in Sources */,
 				CC8759521E763C020093183F /* LikeView.m in Sources */,
 				CC3BE4FC1E10D3E60034214B /* mask.c in Sources */,
+				CCCD53CA1E778AF5005DBBC1 /* UIView+SDExtension.m in Sources */,
 				CC3BE5611E10D4510034214B /* CheckInViewController.m in Sources */,
 				CC3BE5241E10D3E70034214B /* CommonService.m in Sources */,
 				CC3BE5161E10D3E70034214B /* MMRadialProgressView.m in Sources */,
@@ -1311,9 +1347,11 @@
 				CC3BE4FE1E10D3E60034214B /* qrencode.c in Sources */,
 				CC3BE5261E10D3E70034214B /* NetworkingTools.m in Sources */,
 				CC4360921E7240ED0047C497 /* Mic.m in Sources */,
+				CCCD53C81E778AF5005DBBC1 /* SDRefreshHeaderView.m in Sources */,
 				CC3BE5451E10D3E70034214B /* CeHuaView.m in Sources */,
 				CC3BE4FA1E10D3E60034214B /* LGRefreshView.m in Sources */,
 				CC3BE5461E10D3E70034214B /* CeHuaTableViewCell.m in Sources */,
+				CCCD53C71E778AF5005DBBC1 /* SDRefreshFooterView.m in Sources */,
 				CC3BE4211E10D3D90034214B /* UserInfomationData.m in Sources */,
 				CC3BE50F1E10D3E70034214B /* MMHud.m in Sources */,
 				CC3BE5251E10D3E70034214B /* HMFJSONResponseSerializerWithData.m in Sources */,
@@ -1331,6 +1369,7 @@
 				CC3BE5631E10D4510034214B /* QRNativeViewController.m in Sources */,
 				CC3BE5661E10D4510034214B /* SettingsViewController.m in Sources */,
 				CC3BE5481E10D3E70034214B /* EventListTableViewCell.m in Sources */,
+				CCCD53C91E778AF5005DBBC1 /* SDRefreshView.m in Sources */,
 				CC3BE5031E10D3E60034214B /* MASCompositeConstraint.m in Sources */,
 				CC3BE4201E10D3D90034214B /* RecordAudio.m in Sources */,
 				CC3BE5171E10D3E70034214B /* MMVectorImage.m in Sources */,

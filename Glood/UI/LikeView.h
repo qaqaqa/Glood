@@ -8,9 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import "LikeTableViewCell.h"
+#import "SDRefresh.h"
 
 @interface LikeView : UIView
 <UITableViewDelegate, UITableViewDataSource>
+{
+    BOOL isLoading;//是否正在加载
+}
 
 @property (retain, nonatomic) UIButton *bgButton;
 @property (retain, nonatomic) UIView *whiteBgView;
@@ -22,5 +26,7 @@
 @property (retain, nonatomic) UILabel *noResultLabel;
 
 @property (retain, nonatomic) LikeTableViewCell *likeTableViewCell;
+
+@property (nonatomic, weak) SDRefreshFooterView *refreshFooter;
 
 @end

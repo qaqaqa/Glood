@@ -1008,6 +1008,7 @@
 #pragma mark ======== 获取一个聊天室中被用户喜欢的列表 =========
 - (void)getUserLikesInRoom:(NSString *)roomId lastLikeId:(NSString *)lastLikeIdContent count:(NSString *)countContent
 {
+    NSLog(@"adfasfas-*--*---*-*-*----- %@",roomId);
     if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"open"]) {
         UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
         [userInfomationData.chat invoke:@"getUserLikesInRoom" withArgs:@[roomId,lastLikeIdContent,countContent] completionHandler:^(id response, NSError *error) {

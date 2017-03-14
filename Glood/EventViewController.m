@@ -356,7 +356,8 @@
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         userInfomationData.getUsersLikesInRoomMutableArr = [[NSMutableArray alloc] initWithCapacity:10];
-        [userInfomationData.commonService getUserLikesInRoom:self.currentRroomIdStr lastLikeId:@"" count:@"20"];
+        userInfomationData.getUsersLikesInRoomId = self.currentRroomIdStr;
+        [userInfomationData.commonService getUserLikesInRoom:self.currentRroomIdStr lastLikeId:@"" count:@"10"];
     });
     self.largrLikeLeftBottomButton.userInteractionEnabled = NO;
     [self performSelector:@selector(largrLikeLeftBottomButtonCanTouch) withObject:nil afterDelay:1.0f];

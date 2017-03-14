@@ -72,4 +72,5 @@
 
 @property (strong, nonatomic) NSMutableArray *getUsersLikesInRoomMutableArr; //在这个房间中，喜欢你的人的列表
 
+@property (strong, nonatomic) NSString *getUsersLikesInRoomId; //获取喜欢人的列表的当前房间ID
 @end
