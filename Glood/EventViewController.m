@@ -360,6 +360,7 @@
         [userInfomationData.commonService getUserLikesInRoom:self.currentRroomIdStr lastLikeId:@"" count:@"10"];
     });
     self.largrLikeLeftBottomButton.userInteractionEnabled = NO;
+    self.likeLeftBottomButton.userInteractionEnabled = NO;
     [self performSelector:@selector(largrLikeLeftBottomButtonCanTouch) withObject:nil afterDelay:1.0f];
     
 }
@@ -367,6 +368,7 @@
 - (void)largrLikeLeftBottomButtonCanTouch
 {
     self.largrLikeLeftBottomButton.userInteractionEnabled = YES;
+    self.likeLeftBottomButton.userInteractionEnabled = YES;
 }
 
 - (void)onGetLikesInRoom
@@ -1014,78 +1016,81 @@
     if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"open"]) {
         UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
         if ([userInfomationData.isEnterMicList isEqualToString:@"true"]) {
-            //判断是否开启麦克风权限
-            AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeAudio];
-            NSLog(@"*-*-*--*hahhah--- %ld",(long)authStatus);
             
-            if (authStatus ==AVAuthorizationStatusRestricted || authStatus == AVAuthorizationStatusDenied) {
-                NSLog(@"hiehieheihiehieheieieieheiehieheiehi-------");
-                [self.soundingRecoringImageView setHidden:NO];
-            }
-            else
-            {
-                self.animationtTimer = [NSTimer scheduledTimerWithTimeInterval:1.5
-                                                                        target:self
-                                                                      selector:@selector(timerAnimation)
-                                                                      userInfo:nil
-                                                                       repeats:YES];
-                self.timerCount = 0;
-                
-                [self.mockBgView setHidden:NO];
-                NSLog(@"开始录音！");
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"recordOrExchangeChatRoomStopAnimation" object:self];
-                self.navigationController.interactivePopGestureRecognizer.delaysTouchesBegan=NO;
-                
-                [self.yuLoadTimer invalidate];
-                self.yuLoadTimer = [NSTimer scheduledTimerWithTimeInterval:0.5
-                                                                    target:self
-                                                                  selector:@selector(yuLoad)
-                                                                  userInfo:nil
-                                                                   repeats:NO];
-                //            [self.soundingRecoringButton setImage:[UIImage imageNamed:@"voice.png"] forState:UIControlStateNormal];
-                self.soundingRecoringButton.backgroundColor = [UIColor colorWithRed:27/255.0 green:127/255.0 blue:254/255.0 alpha:1.0];
-                [userInfomationData.recordAudio startRecoring:@"IOS"];
-                self.recordAudioTimeOutStr = @"no";
-                [self gcdTimeRecordAudio];
-            }
             
             //判断应用程序是不是第一次启用麦克风，用以在第一次询问麦克风权限时，预加载出错问题
             NSUserDefaults *TimeOfBootCount = [NSUserDefaults standardUserDefaults];
             if (![TimeOfBootCount valueForKey:@"time"]) {
                 [TimeOfBootCount setValue:@"sd" forKey:@"time"];
                 NSLog(@"第一次启动");
-                [self.mockBgView setHidden:YES];
+//                [self.mockBgView setHidden:YES];
                 [[AVAudioSession sharedInstance] requestRecordPermission:^(BOOL granted) {
-                    NSString *roomIdStr;
-                    if ([CommonService isBlankString:userInfomationData.QRRoomId]) {
-                        roomIdStr = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
-                    }
-                    else
-                    {
-                        for (NSInteger i = 0; i < [(NSMutableArray*)[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] count]; i ++) {
-                            if ([userInfomationData.QRRoomId isEqualToString:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"id"]]) {
-                                roomIdStr = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"id"];
-                            }
-                        }
-                        
-                    }
-                    [self.myAppDelegate deletePreLoadingMessage:roomIdStr message:[NSString stringWithFormat:@"%lld",userInfomationData.yuMessageId]];
-                    [userInfomationData.recordAudio stopRecoring];
-                    
+//                    NSString *roomIdStr;
+//                    if ([CommonService isBlankString:userInfomationData.QRRoomId]) {
+//                        roomIdStr = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
+//                    }
+//                    else
+//                    {
+//                        for (NSInteger i = 0; i < [(NSMutableArray*)[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] count]; i ++) {
+//                            if ([userInfomationData.QRRoomId isEqualToString:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"id"]]) {
+//                                roomIdStr = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"id"];
+//                            }
+//                        }
+//                        
+//                    }
+//                    [self.myAppDelegate deletePreLoadingMessage:roomIdStr message:[NSString stringWithFormat:@"%lld",userInfomationData.yuMessageId]];
+//                    [userInfomationData.recordAudio stopRecoring];
                     if (granted) {
                         
                         // 用户同意获取麦克风
+                        NSLog(@"x-x*-x*-x*-x*-x---用户同意获取麦克风");
                         
                         
                     } else {
                         
                         // 用户不同意获取麦克风
+                        NSLog(@"x-x*-x*-x*-x*-x---用户不同意获取麦克风");
                         
                     }
                     
                 }];
             }else{
                 NSLog(@"不是第一次启动");
+                
+                //判断是否开启麦克风权限
+                AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeAudio];
+                NSLog(@"*-*-*--*hahhah--- %ld",(long)authStatus);
+                
+                if (authStatus ==AVAuthorizationStatusRestricted || authStatus == AVAuthorizationStatusDenied) {
+                    NSLog(@"hiehieheihiehieheieieieheiehieheiehi-------");
+                    [self.soundingRecoringImageView setHidden:NO];
+                }
+                else
+                {
+                    self.animationtTimer = [NSTimer scheduledTimerWithTimeInterval:1.5
+                                                                            target:self
+                                                                          selector:@selector(timerAnimation)
+                                                                          userInfo:nil
+                                                                           repeats:YES];
+                    self.timerCount = 0;
+                    
+                    [self.mockBgView setHidden:NO];
+                    NSLog(@"开始录音！");
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"recordOrExchangeChatRoomStopAnimation" object:self];
+                    self.navigationController.interactivePopGestureRecognizer.delaysTouchesBegan=NO;
+                    
+                    [self.yuLoadTimer invalidate];
+                    self.yuLoadTimer = [NSTimer scheduledTimerWithTimeInterval:0.5
+                                                                        target:self
+                                                                      selector:@selector(yuLoad)
+                                                                      userInfo:nil
+                                                                       repeats:NO];
+                    //            [self.soundingRecoringButton setImage:[UIImage imageNamed:@"voice.png"] forState:UIControlStateNormal];
+                    self.soundingRecoringButton.backgroundColor = [UIColor colorWithRed:27/255.0 green:127/255.0 blue:254/255.0 alpha:1.0];
+                    [userInfomationData.recordAudio startRecoring:@"IOS"];
+                    self.recordAudioTimeOutStr = @"no";
+                    [self gcdTimeRecordAudio];
+                }
             }
             
         }

@@ -94,6 +94,7 @@
         self.myAppDelegate = [UIApplication sharedApplication].delegate;
         [self performSelector:@selector(cancelTimer) withObject:nil afterDelay:0.5f];
         [ShowMessage showMessage:@"recording error"];
+    
     return nil;
     
 }

@@ -740,7 +740,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
         }
         [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
     }
-    
+        
 }
 
 #pragma mark ====== 查询数据库，找出每个房间最大的messageId======
