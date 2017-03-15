@@ -133,6 +133,9 @@
                 return error;
             }];
         }
+        else{
+            [MMProgressHUD dismissWithError:[[serializedData objectForKey:@"error"] objectForKey:@"message"] afterDelay:2.0f];
+        }
 
         NSLog(@"Errorxxxxxxxxx: %@hahha%@", error.description,operation);
     }];

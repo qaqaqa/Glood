@@ -154,12 +154,12 @@
     CeHuaView *ceHuav = [[CeHuaView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
     [self.cehuaView addSubview:ceHuav];
     
-    UIButton *ceHuaMoreButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*34/320)-50, SCREEN_HEIGHT*10/568, SCREEN_WIDTH*48/320, SCREEN_HEIGHT*45/568)];
-    [ceHuaMoreButton setImage:[UIImage imageNamed:@"menu"] forState:UIControlStateNormal];
+    UIButton *ceHuaMoreButton = [[UIButton alloc] initWithFrame:CGRectMake(15, SCREEN_HEIGHT*10/568, SCREEN_WIDTH*48/320, SCREEN_HEIGHT*45/568)];
+    [ceHuaMoreButton setImage:[UIImage imageNamed:@"backqr"] forState:UIControlStateNormal];
     [ceHuaMoreButton addTarget:self action:@selector(onCeHuaMoreBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self.cehuaView addSubview:ceHuaMoreButton];
     
-    UIButton *largeLeftButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*34/320)-40, 0, SCREEN_WIDTH*54/320, SCREEN_HEIGHT*56/568)];
+    UIButton *largeLeftButton = [[UIButton alloc] initWithFrame:CGRectMake(9, 0, SCREEN_WIDTH*54/320, SCREEN_HEIGHT*56/568)];
     [largeLeftButton addTarget:self action:@selector(onCeHuaMoreBtnClick) forControlEvents:UIControlEventTouchUpInside];
     largeLeftButton.backgroundColor = [UIColor clearColor];
     [self.cehuaView addSubview:largeLeftButton];

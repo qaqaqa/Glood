@@ -32,7 +32,7 @@
         imageView.alpha = 0.3;
         [self addSubview:imageView];
         
-        self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0,20,SCREEN_WIDTH-70,SCREEN_HEIGHT)];
+        self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0,130,SCREEN_WIDTH-70,SCREEN_HEIGHT)];
         self.tableView.backgroundColor = [UIColor clearColor];
         self.tableView.dataSource = self;
         self.tableView.delegate = self;
@@ -57,7 +57,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 55;
+    return 100;
 }
 
 #define ceHuaIconImageViewTag 10001
@@ -71,13 +71,14 @@
         [self.ceHuaTabelViewCell setSelectionStyle:UITableViewCellSelectionStyleNone];
     }
     
-    self.ceHuaTabelViewCell.ceHuaIconImageView.frame = CGRectMake(18, 12, SCREEN_WIDTH*30/320, SCREEN_WIDTH*30/320);
+    self.ceHuaTabelViewCell.ceHuaIconImageView.frame = CGRectMake(18, 12, SCREEN_WIDTH*35/320, SCREEN_WIDTH*35/320);
     [self.ceHuaTabelViewCell.ceHuaIconImageView setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@",[[self.cehuaArr objectAtIndex:indexPath.row] objectForKey:@"MingleIcon"]]]];
     self.ceHuaTabelViewCell.ceHuaIconImageView.tag = ceHuaIconImageViewTag+indexPath.row;
     
     self.ceHuaTabelViewCell.ceHuaTitleLabel.frame = CGRectMake(15+(SCREEN_WIDTH*20/320)+40, self.ceHuaTabelViewCell.ceHuaIconImageView.frame.origin.y-5, 250, self.ceHuaTabelViewCell.ceHuaIconImageView.frame.size.height+10);
     self.ceHuaTabelViewCell.ceHuaTitleLabel.text = [NSString stringWithFormat:@"%@",[[self.cehuaArr objectAtIndex:indexPath.row] objectForKey:@"MingleTitle"]];
-    self.ceHuaTabelViewCell.ceHuaTitleLabel.font = [UIFont fontWithName:@"ProximaNova-Light" size:22];
+    self.ceHuaTabelViewCell.ceHuaTitleLabel.textColor = [UIColor colorWithRed:40/255.0 green:70/255.0 blue:79/255.0 alpha:1];
+    self.ceHuaTabelViewCell.ceHuaTitleLabel.font = [UIFont fontWithName:@"ProximaNova-Regular" size:28];
     
     return self.ceHuaTabelViewCell;
 }

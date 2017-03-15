@@ -199,7 +199,7 @@
     [self.largeLeftButton addTarget:self action:@selector(onLeftBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.largeLeftButton];
     
-    self.navtitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*60/320, SCREEN_HEIGHT*12/568, SCREEN_WIDTH*200/320, SCREEN_HEIGHT*36/568)];
+    self.navtitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREEN_WIDTH*43/320, SCREEN_HEIGHT*12/568, SCREEN_WIDTH*200/320, SCREEN_HEIGHT*36/568)];
     self.navtitleLabel.text = @"Communities";
     self.navtitleLabel.textAlignment = NSTextAlignmentCenter;
     self.navtitleLabel.textColor = [UIColor colorWithRed:57/255.0 green:66/255.0 blue:57/255.0 alpha:1.0];
@@ -210,7 +210,7 @@
     self.navtitleLabel.userInteractionEnabled = YES;
     [self.navtitleLabel addGestureRecognizer:recognizer];
     
-    self.rightButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*(54+50)/320), SCREEN_HEIGHT*16/568, SCREEN_WIDTH*28/320, SCREEN_HEIGHT*28/568)];
+    self.rightButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*(68+50)/320), SCREEN_HEIGHT*16/568, SCREEN_WIDTH*28/320, SCREEN_HEIGHT*28/568)];
     [self.rightButton setImage:[UIImage imageNamed:@"down"] forState:UIControlStateNormal];
     [self.rightButton addTarget:self action:@selector(onRightBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.rightButton];
@@ -269,6 +269,8 @@
 #pragma mark ==========侧滑菜单栏=========
 - (void)onCeHuaMoreBtnClick:(id)sender
 {
+    self.leftButton.userInteractionEnabled = YES;
+    self.largeLeftButton.userInteractionEnabled = YES;
     [UIView animateWithDuration:0.5 animations:^{
         self.cehuaView.frame = CGRectMake(-SCREEN_WIDTH, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
     } completion:^(BOOL finished) {
@@ -309,26 +311,26 @@
             CeHuaView *ceHuav = [[CeHuaView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
             [self.cehuaView addSubview:ceHuav];
             
-            UIButton *ceHuaMoreButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*34/320)-52, SCREEN_HEIGHT*15/568, SCREEN_WIDTH*48/320, SCREEN_HEIGHT*45/568)];
-            [ceHuaMoreButton setImage:[UIImage imageNamed:@"menu"] forState:UIControlStateNormal];
+            UIButton *ceHuaMoreButton = [[UIButton alloc] initWithFrame:CGRectMake(15, SCREEN_HEIGHT*10/568, SCREEN_WIDTH*48/320, SCREEN_HEIGHT*45/568)];
+            [ceHuaMoreButton setImage:[UIImage imageNamed:@"backqr.png"] forState:UIControlStateNormal];
             [ceHuaMoreButton addTarget:self action:@selector(onCeHuaMoreBtnClick:) forControlEvents:UIControlEventTouchUpInside];
             [self.cehuaView addSubview:ceHuaMoreButton];
             
-            UIButton *largeLeftButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*34/320)-40, 0, SCREEN_WIDTH*54/320, SCREEN_HEIGHT*56/568)];
+            UIButton *largeLeftButton = [[UIButton alloc] initWithFrame:CGRectMake(9, 0, SCREEN_WIDTH*50/320, SCREEN_HEIGHT*56/568)];
             [largeLeftButton addTarget:self action:@selector(onCeHuaMoreBtnClick:) forControlEvents:UIControlEventTouchUpInside];
             largeLeftButton.backgroundColor = [UIColor clearColor];
             [self.cehuaView addSubview:largeLeftButton];
-            self.leftButton.userInteractionEnabled = NO;
-            self.largeLeftButton.userInteractionEnabled = NO;
+            
+            
             [UIView animateWithDuration:0.5 animations:^{
                 self.cehuaView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
             } completion:^(BOOL finished) {
-                self.leftButton.userInteractionEnabled = YES;
-                self.largeLeftButton.userInteractionEnabled = YES;
                 
                 [self.largeLeftButton removeFromSuperview];
                 self.largeLeftButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH*54/320, SCREEN_HEIGHT*56/568)];
                 [self.largeLeftButton addTarget:self action:@selector(onLeftBtnClick) forControlEvents:UIControlEventTouchUpInside];
+                self.leftButton.userInteractionEnabled = NO;
+                self.largeLeftButton.userInteractionEnabled = NO;
                 [self.view addSubview:self.largeLeftButton];
             }];
             
@@ -772,6 +774,8 @@
 #pragma mark ========= Ming ===========
 - (void)onMing
 {
+    self.leftButton.userInteractionEnabled = YES;
+    self.largeLeftButton.userInteractionEnabled = YES;
     [self navigatorButton];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"recordOrExchangeChatRoomStopAnimation" object:self];
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
@@ -874,6 +878,8 @@
 #pragma mark ========= onSetting ===========
 - (void)onSetting
 {
+    self.leftButton.userInteractionEnabled = YES;
+    self.largeLeftButton.userInteractionEnabled = YES;
     [self navigatorButton];
     [self initUserDefaultsSourceAndRmoveEventListView];
     SettingsViewController *settingVC = [[SettingsViewController alloc] initWithNibName:nil bundle:nil];
@@ -883,6 +889,8 @@
 #pragma mark ========= onFeedbak ===========
 - (void)onFeedbak
 {
+    self.leftButton.userInteractionEnabled = YES;
+    self.largeLeftButton.userInteractionEnabled = YES;
     [self navigatorButton];
     [self initUserDefaultsSourceAndRmoveEventListView];
     FeedbackViewController *feedbackVC = [[FeedbackViewController alloc] initWithNibName:nil bundle:nil];

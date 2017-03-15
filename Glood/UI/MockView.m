@@ -21,7 +21,9 @@
 @property (retain, nonatomic) EventViewController *eventViewVC;
 @property (assign, nonatomic) NSInteger upHeadButtonTag;
 @property (strong, nonatomic) AppDelegate *myAppDelegate;
-
+@property (strong, nonatomic) NSTimer *circleAnimationTimer;
+@property (strong, nonatomic) NSTimer *animationTimer;
+@property (assign, nonatomic) float time;
 
 @end
 
@@ -549,7 +551,10 @@
 - (void)recordOrExchangeChatRoomStopAnimation
 {
     if (self.upHeadButtonTag != 0) {
-        
+        [self.animationTimer invalidate];
+        self.animationTimer = nil;
+        [self.circleAnimationTimer invalidate];
+        self.circleAnimationTimer = nil;
         UIImageView *find_bgImageView1 = (UIImageView *)[self.micBottomImageView viewWithTag:self.upHeadButtonTag-headImageButtonTag+bgImageViewTag];
         UIImageView *find_circleOneImageView1 = (UIImageView *)[self.micBottomImageView viewWithTag:self.upHeadButtonTag-headImageButtonTag+circleOneImageViewTag];
         UIImageView *find_circleTwoImageView1 = (UIImageView *)[self.micBottomImageView viewWithTag:self.upHeadButtonTag-headImageButtonTag+circleTwoImageViewTag];
@@ -587,13 +592,13 @@
 {
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
     UIButton *button = (UIButton *)sender;
-    float time;
+//    float time;
     Mic *mic = self.historyMicListArr[[self.historyMicListArr count] -1- (button.tag-headImageButtonTag)];
-    time = [mic.time floatValue];
+    self.time = [mic.time floatValue];
     if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"isSelectShield"] integerValue] == 0) {
         
-        if ([mic.time floatValue]>0.1) {
-            self.userInteractionEnabled = NO;
+        if ([mic.time floatValue] > 0) {
+//            self.userInteractionEnabled = NO;
             //在播放之前，暂停所有的播放
             [self recordOrExchangeChatRoomStopAnimation];
             [userInfomationData.recordAudio saveRecord:mic.message messageId:mic.messageId];
@@ -611,49 +616,51 @@
             } completion:^(BOOL finished) {
                 self.userInteractionEnabled = YES;
             }];
-            
+            find_circleOneImageView.alpha = 1.0;
             [UIView beginAnimations:nil context:NULL];
             [UIView setAnimationDuration:1.0f];
             UIView.animationRepeatCount =HUGE_VALF;
             find_circleOneImageView.alpha=0.1;
             find_circleOneImageView.transform = CGAffineTransformMakeScale(1.8,1.8);
             [UIView commitAnimations];
+            self.circleAnimationTimer = [NSTimer scheduledTimerWithTimeInterval:0.5f
+                                                                         target:self
+                                                                       selector:@selector(circleAnimationed)
+                                                                       userInfo:nil
+                                                                        repeats:NO];
             
-            double delayInSeconds = 0.5;
-            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-                [UIView beginAnimations:nil context:NULL];
-                [UIView setAnimationDuration:1.0f];
-                UIView.animationRepeatCount =HUGE_VALF;
-                find_circleTwoImageView.alpha=0.1;
-                find_circleTwoImageView.transform = CGAffineTransformMakeScale(1.8,1.8);
-                [UIView commitAnimations];
-            });
+            
+            
             
             //播放完毕
-            
-            dispatch_time_t popTime1 = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(time * NSEC_PER_SEC));
-            dispatch_after(popTime1, dispatch_get_main_queue(), ^(void){
-                [UIView animateWithDuration:0.5 animations:^{
-                    find_headImageButtonView.transform = CGAffineTransformIdentity;
-                } completion:^(BOOL finished) {
-                    self.userInteractionEnabled = YES;
-                }];
-                [UIView animateWithDuration:0.0 animations:^{
-                    [find_bgImageView setImage:[UIImage imageNamed:@""]];
-                    find_circleTwoImageView.alpha=0.5;
-                    find_circleTwoImageView.transform = CGAffineTransformIdentity;
-                    find_circleOneImageView.alpha=0.5;
-                    find_circleOneImageView.transform = CGAffineTransformIdentity;
-                } completion:^(BOOL finished) {
-                    
-                    [self.myAppDelegate updateIsReadMessageId:mic.messageId isReadReady:@"1"];
-                    find_bgImageView.backgroundColor = [UIColor whiteColor];
-                    find_bgImageView.alpha = 0.5;
-//                    [self.tableView reloadData];
-                    
-                }];
-            });
+            NSLog(@"当前语音时间-------------------  %f",self.time);
+            self.animationTimer = [NSTimer scheduledTimerWithTimeInterval:self.time
+                                                                   target:self
+                                                                 selector:@selector(resetAnimationed)
+                                                                 userInfo:nil
+                                                                  repeats:NO];
+//            dispatch_time_t popTime1 = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(time * NSEC_PER_SEC));
+//            dispatch_after(popTime1, dispatch_get_main_queue(), ^(void){
+//                [UIView animateWithDuration:0.5 animations:^{
+//                    find_headImageButtonView.transform = CGAffineTransformIdentity;
+//                } completion:^(BOOL finished) {
+//                    self.userInteractionEnabled = YES;
+//                }];
+//                [UIView animateWithDuration:0.0 animations:^{
+//                    [find_bgImageView setImage:[UIImage imageNamed:@""]];
+//                    find_circleTwoImageView.alpha=0.5;
+//                    find_circleTwoImageView.transform = CGAffineTransformIdentity;
+//                    find_circleOneImageView.alpha=0.5;
+//                    find_circleOneImageView.transform = CGAffineTransformIdentity;
+//                } completion:^(BOOL finished) {
+//                    
+//                    [self.myAppDelegate updateIsReadMessageId:mic.messageId isReadReady:@"1"];
+//                    find_bgImageView.backgroundColor = [UIColor whiteColor];
+//                    find_bgImageView.alpha = 0.5;
+////                    [self.tableView reloadData];
+//                    
+//                }];
+//            });
         }
         
     }
@@ -678,6 +685,48 @@
         
     }
     
+}
+
+- (void)circleAnimationed
+{
+//    self.isMoreThanStr = @"yes";
+    UIImageView *find_circleTwoImageView = (UIImageView *)[self.micBottomImageView viewWithTag:self.upHeadButtonTag-headImageButtonTag+circleTwoImageViewTag];
+    if (self.time >= 0.5) {
+        find_circleTwoImageView.alpha = 1.0;
+        [UIView beginAnimations:nil context:NULL];
+        [UIView setAnimationDuration:1.0f];
+        UIView.animationRepeatCount =HUGE_VALF;
+        find_circleTwoImageView.alpha=0.1;
+        find_circleTwoImageView.transform = CGAffineTransformMakeScale(1.8,1.8);
+        [UIView commitAnimations];
+    }
+}
+
+- (void)resetAnimationed
+{
+    UIImageView *find_bgImageView = (UIImageView *)[self.micBottomImageView viewWithTag:self.upHeadButtonTag-headImageButtonTag+bgImageViewTag];
+    UIImageView *find_circleOneImageView = (UIImageView *)[self.micBottomImageView viewWithTag:self.upHeadButtonTag-headImageButtonTag+circleOneImageViewTag];
+    UIImageView *find_circleTwoImageView = (UIImageView *)[self.micBottomImageView viewWithTag:self.upHeadButtonTag-headImageButtonTag+circleTwoImageViewTag];
+    UIButton *find_headImageButtonView = (UIButton *)[self.micBottomImageView viewWithTag:self.upHeadButtonTag-headImageButtonTag+headImageButtonTag];
+    [UIView animateWithDuration:0.5 animations:^{
+        find_headImageButtonView.transform = CGAffineTransformIdentity;
+    } completion:^(BOOL finished) {
+        self.userInteractionEnabled = YES;
+    }];
+    [UIView animateWithDuration:0.0 animations:^{
+        [find_bgImageView setImage:[UIImage imageNamed:@""]];
+        find_circleTwoImageView.alpha=0.5;
+        find_circleTwoImageView.transform = CGAffineTransformIdentity;
+        find_circleOneImageView.alpha=0.5;
+        find_circleOneImageView.transform = CGAffineTransformIdentity;
+    } completion:^(BOOL finished) {
+        Mic *mic = self.historyMicListArr[[self.historyMicListArr count] -1- (self.upHeadButtonTag-headImageButtonTag)];
+        [self.myAppDelegate updateIsReadMessageId:mic.messageId isReadReady:@"1"];
+        find_bgImageView.backgroundColor = [UIColor whiteColor];
+        find_bgImageView.alpha = 0.5;
+        //                    [self.tableView reloadData];
+        
+    }];
 }
 
 - (void)onInfoClick:(id)sender
