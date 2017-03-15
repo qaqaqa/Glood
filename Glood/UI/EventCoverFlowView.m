@@ -254,9 +254,10 @@
     self.micTableViewCell.nameLabel.tag = nameLabelTag+indexPath.row;
     [self.micTableViewCell.nameLabel setHidden:YES];
     //语音时间计算
-     __block float timeF = [mic.time floatValue];
+    
     if ([self.historyMicListArr count]>=4) {
-        if (timeF <= 4) {
+        __block float timeF = [mic.time floatValue];
+        if (timeF <= 4 && timeF > 0) {
             timeF = 2.0;
         }
         if (timeF>4 && timeF < 20) {
@@ -271,12 +272,21 @@
      }
     if ([self.historyMicListArr count] >0 && [self.historyMicListArr count] <4)
     {
+        __block float timeF = [mic.time floatValue];
         timeF = [mic.time floatValue];
+        if (timeF <= 4 && timeF > 0) {
+            timeF = 2.0;
+        }
+        if (timeF>4 && timeF < 20) {
+            timeF = 2+timeF/5;
+        }
+        if (timeF>=20) {
+            timeF = 6.5;
+        }
         
         self.micTableViewCell.bgImageView.frame = CGRectMake((self.tableView.frame.size.width-(SCREEN_WIDTH*30/320*timeF))/2, 0, SCREEN_WIDTH*30/320*timeF, SCREEN_WIDTH*35/320);
         [self.micTableViewCell.headImageButton sd_setImageWithURL:mic.avatarImage forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"171604419.jpg"]];
         self.micTableViewCell.nameLabel.text = mic.fromUserName;
-        NSLog(@"-*-*-*-*-*x-x-x-x-x-----%li-- %@",(long)indexPath.row,mic.fromUserName);
     }
     
     self.micTableViewCell.likeButton.frame = CGRectMake(self.micTableViewCell.bgImageView.frame.origin.x+self.micTableViewCell.bgImageView.frame.size.width-(SCREEN_WIDTH*25/568), self.micTableViewCell.bgImageView.frame.origin.y-(SCREEN_HEIGHT*5/568), SCREEN_WIDTH*25/320, SCREEN_WIDTH*25/320);

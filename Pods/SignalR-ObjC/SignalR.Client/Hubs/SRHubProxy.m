@@ -74,7 +74,6 @@
         subscription.selector = selector;
         _subscriptions[eventName] = subscription;
     }
-    
     return subscription;
 }
 

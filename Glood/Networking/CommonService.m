@@ -443,15 +443,15 @@
 #pragma mark ======== 某人加入聊天室通知 =========
 - (void)onUserJoinRoom:(NSDictionary *)msg
 {
-    NSLog(@"------- %@",msg);
-    [ShowMessage showMessage:[NSString stringWithFormat:@"%@ Join",[msg objectForKey:@"user_name"]]];
+    NSLog(@"-------join %@",msg);
+//    [ShowMessage showMessage:[NSString stringWithFormat:@"%@ Join",[[msg objectForKey:@"user"] objectForKey:@"user_name"]]];
 }
 
 #pragma mark ======== 某人离开聊天室通知 =========
 - (void)onUserLeaveRoom:(NSDictionary *)msg
 {
-    NSLog(@"------- %@",msg);
-    [ShowMessage showMessage:[NSString stringWithFormat:@"%@ Leave",[msg objectForKey:@"user_name"]]];
+    NSLog(@"------- Leave%@",msg);
+//    [ShowMessage showMessage:[NSString stringWithFormat:@"%@ Leave",[[msg objectForKey:@"user"] objectForKey:@"user_name"]]];
 }
 
 #pragma mark ======== 聊天室收到消息 =========
@@ -607,11 +607,29 @@
 }
 
 #pragma mark ======== 喜欢一条消息 =========
-- (void)onUserLikeMessage:(NSDictionary *)msg
+- (void)onUserLikeMessage:(NSDictionary *)message
 {
-    NSLog(@"----saaaadafdsfas--- %@",msg);
-//    [ShowMessage showMessage:[NSString stringWithFormat:@"%@ like you message",msg]];
-    self.myAppDelegate.showTipsLabel.text = [NSString stringWithFormat:@"%@ like you message",msg];
+    NSLog(@"----saaaadafdsfas--- %@",message);
+    self.myAppDelegate.showTipsLabel.text = [NSString stringWithFormat:@"%@ like you message",[message objectForKey:@"user_name"]];
+    NSString *currentRroomIdStr;
+    UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+    if ([CommonService isBlankString:userInfomationData.QRRoomId]) {
+        currentRroomIdStr = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
+    }
+    else
+    {
+        for (NSInteger i = 0; i < [(NSMutableArray*)[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] count]; i ++) {
+            if ([userInfomationData.QRRoomId isEqualToString:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"id"]]) {
+                currentRroomIdStr = userInfomationData.QRRoomId;
+            }
+        }
+    }
+    
+    if ([[[message objectForKey:@"message"] objectForKey:@"room_id"] isEqualToString:currentRroomIdStr]) {
+        userInfomationData.getUsersLikesCountInRoom = [NSString stringWithFormat:@"%d",[userInfomationData.getUsersLikesCountInRoom integerValue]+1];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"onGetLikesCountInRoom" object:self];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"belike" object:self];
+    }
     [UIView animateWithDuration:0.5 animations:^{
         self.myAppDelegate.showTipsView.frame = CGRectMake(0, -10, SCREEN_WIDTH, 60);
     } completion:^(BOOL finished) {
@@ -631,14 +649,12 @@
 - (void)onBlockUser:(NSDictionary *)msg
 {
     NSLog(@"----xxxxdfasdfsdfx--- %@",msg);
-//    [ShowMessage showMessage:[NSString stringWithFormat:@"%@ Leave",[msg objectForKey:@"user_name"]]];
 }
 
 #pragma mark ======== 取消屏蔽一条消息 =========
 - (void)onCancelBlockUser:(NSDictionary *)msg
 {
     NSLog(@"---ssssssdfsdfsds---- %@",msg);
-//    [ShowMessage showMessage:[NSString stringWithFormat:@"%@ Leave",[msg objectForKey:@"user_name"]]];
 }
 
 #pragma mark ======== 扫描后，加入聊天室 =========

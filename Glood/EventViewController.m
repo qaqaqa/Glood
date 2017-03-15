@@ -164,13 +164,13 @@
     self.soundingRecoringImageView.userInteractionEnabled = YES;
     [self.soundingRecoringImageView addGestureRecognizer:tap];
     
-    self.likeLeftBottomButton = [[UIButton alloc] initWithFrame:CGRectMake(20, SCREEN_HEIGHT-20-(SCREEN_HEIGHT*20/568), SCREEN_WIDTH*25/320, SCREEN_HEIGHT*25/568)];
-    [self.likeLeftBottomButton setImage:[UIImage imageNamed:@"popup_heart.png"] forState:UIControlStateNormal];
+    self.likeLeftBottomButton = [[UIButton alloc] initWithFrame:CGRectMake(15, SCREEN_HEIGHT-20-(SCREEN_HEIGHT*20/568), SCREEN_WIDTH*30/320, SCREEN_HEIGHT*30/568)];
+    [self.likeLeftBottomButton setImage:[UIImage imageNamed:@"heart-white"] forState:UIControlStateNormal];
     self.likeLeftBottomButton.alpha = 0;
     [self.likeLeftBottomButton addTarget:self action:@selector(onShowLikeView) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.likeLeftBottomButton];
     
-    self.likeLfetBottomLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.likeLeftBottomButton.frame.origin.x+self.likeLeftBottomButton.frame.size.width, self.likeLeftBottomButton.frame.origin.y, 30, self.likeLeftBottomButton.frame.size.height)];
+    self.likeLfetBottomLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.likeLeftBottomButton.frame.origin.x+self.likeLeftBottomButton.frame.size.width, self.likeLeftBottomButton.frame.origin.y+2, 30, self.likeLeftBottomButton.frame.size.height)];
     self.likeLfetBottomLabel.text = @" ";
     self.likeLfetBottomLabel.font = [UIFont fontWithName:@"ProximaNova-Regular" size:17];
     self.likeLfetBottomLabel.textColor = [UIColor whiteColor];

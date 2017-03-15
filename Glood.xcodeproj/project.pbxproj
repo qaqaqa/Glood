@@ -145,6 +145,10 @@
 		CC5A1C221E1B95F70005963F /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC5A1C1E1E1B95F70005963F /* FBSDKCoreKit.framework */; };
 		CC5A1C231E1B95F70005963F /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC5A1C1F1E1B95F70005963F /* FBSDKLoginKit.framework */; };
 		CC5A1C241E1B95F70005963F /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC5A1C201E1B95F70005963F /* FBSDKShareKit.framework */; };
+		CC7E8AED1E77E262002651D7 /* arrow-left.png in Resources */ = {isa = PBXBuildFile; fileRef = CC7E8AEA1E77E262002651D7 /* arrow-left.png */; };
+		CC7E8AEE1E77E262002651D7 /* background-qrcode.png in Resources */ = {isa = PBXBuildFile; fileRef = CC7E8AEB1E77E262002651D7 /* background-qrcode.png */; };
+		CC7E8AEF1E77E262002651D7 /* heart-white.png in Resources */ = {isa = PBXBuildFile; fileRef = CC7E8AEC1E77E262002651D7 /* heart-white.png */; };
+		CC7E8AF11E77E89C002651D7 /* lineqr.png in Resources */ = {isa = PBXBuildFile; fileRef = CC7E8AF01E77E89C002651D7 /* lineqr.png */; };
 		CC87594F1E7638B10093183F /* popup_heart.png in Resources */ = {isa = PBXBuildFile; fileRef = CC87594E1E7638B10093183F /* popup_heart.png */; };
 		CC8759521E763C020093183F /* LikeView.m in Sources */ = {isa = PBXBuildFile; fileRef = CC8759511E763C020093183F /* LikeView.m */; };
 		CC8759551E7641B70093183F /* LikeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CC8759541E7641B70093183F /* LikeTableViewCell.m */; };
@@ -423,6 +427,10 @@
 		CC5A1C1E1E1B95F70005963F /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		CC5A1C1F1E1B95F70005963F /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
 		CC5A1C201E1B95F70005963F /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKShareKit.framework; sourceTree = "<group>"; };
+		CC7E8AEA1E77E262002651D7 /* arrow-left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "arrow-left.png"; sourceTree = "<group>"; };
+		CC7E8AEB1E77E262002651D7 /* background-qrcode.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "background-qrcode.png"; sourceTree = "<group>"; };
+		CC7E8AEC1E77E262002651D7 /* heart-white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "heart-white.png"; sourceTree = "<group>"; };
+		CC7E8AF01E77E89C002651D7 /* lineqr.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lineqr.png; sourceTree = "<group>"; };
 		CC87594E1E7638B10093183F /* popup_heart.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = popup_heart.png; sourceTree = "<group>"; };
 		CC8759501E763C020093183F /* LikeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LikeView.h; sourceTree = "<group>"; };
 		CC8759511E763C020093183F /* LikeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LikeView.m; sourceTree = "<group>"; };
@@ -989,6 +997,10 @@
 				CC2FFF271E5ECB0700D18525 /* ban_sign.png */,
 				CC1C85A51E60014B0085DD13 /* timg.png */,
 				CC87594E1E7638B10093183F /* popup_heart.png */,
+				CC7E8AEA1E77E262002651D7 /* arrow-left.png */,
+				CC7E8AEB1E77E262002651D7 /* background-qrcode.png */,
+				CC7E8AEC1E77E262002651D7 /* heart-white.png */,
+				CC7E8AF01E77E89C002651D7 /* lineqr.png */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -1196,10 +1208,14 @@
 				CC3BE5331E10D3E70034214B /* feedback.png in Resources */,
 				CC3BE5221E10D3E70034214B /* zbar-helpicons.png in Resources */,
 				CC3BE53F1E10D3E70034214B /* setting.png in Resources */,
+				CC7E8AEF1E77E262002651D7 /* heart-white.png in Resources */,
 				CC3BE5311E10D3E70034214B /* event_background.jpg in Resources */,
 				CCCD53C61E778AF5005DBBC1 /* sdRefeshView_arrow@2x.png in Resources */,
 				CC1C85A61E60014B0085DD13 /* timg.png in Resources */,
 				CC3BE5391E10D3E70034214B /* menu.png in Resources */,
+				CC7E8AF11E77E89C002651D7 /* lineqr.png in Resources */,
+				CC7E8AED1E77E262002651D7 /* arrow-left.png in Resources */,
+				CC7E8AEE1E77E262002651D7 /* background-qrcode.png in Resources */,
 				CC2DF2051E5D9684008C3C26 /* plus_icon.png in Resources */,
 				CC3BE4EF1E10D3E60034214B /* ProximaNova-Bold.otf in Resources */,
 				CC3BE53B1E10D3E70034214B /* people.png in Resources */,

@@ -13,8 +13,8 @@
 #import "MMProgressHUD.h"
 
 
-#define SCANVIEW_EdgeTop 150.0
-#define SCANVIEW_EdgeLeft 50.0
+#define SCANVIEW_EdgeTop [UIScreen mainScreen].bounds.size.height*133/568
+#define SCANVIEW_EdgeLeft [UIScreen mainScreen].bounds.size.width*20/320
 #define TINTCOLOR_ALPHA 0.2 //浅色透明度
 #define DARKCOLOR_ALPHA 0.3 //深色透明度
 #define VIEW_WIDTH [UIScreen mainScreen].bounds.size.width
@@ -26,7 +26,7 @@ static const char *kScanQRCodeQueueName = "ScanQRCodeQueue";
     UIView *_scanView;
     NSTimer *_timer;
     
-    UIView *_QrCodeline;
+    UIImageView *_QrCodeline;
     UIView *_QrCodeline1;
     UIImageView *_scanCropView;//扫描窗口
     AVCaptureSession *_captureSession;
@@ -296,6 +296,7 @@ static const char *kScanQRCodeQueueName = "ScanQRCodeQueue";
 //二维码的扫描区域
 - (void)setScanView
 {
+    
     _scanView=[[UIView alloc] initWithFrame:CGRectMake(0,0, VIEW_WIDTH,VIEW_HEIGHT )];
     _scanView.backgroundColor=[UIColor clearColor];
     [self.view addSubview:_scanView];
@@ -304,13 +305,13 @@ static const char *kScanQRCodeQueueName = "ScanQRCodeQueue";
     UIView *upView = [[UIView alloc] initWithFrame:CGRectMake(0,0, VIEW_WIDTH,SCANVIEW_EdgeTop)];
     upView.alpha =TINTCOLOR_ALPHA;
     upView.backgroundColor = [UIColor blackColor];
-    [_scanView addSubview:upView];
+//    [_scanView addSubview:upView];
     
     //左侧的view
     UIView *leftView = [[UIView alloc] initWithFrame:CGRectMake(0, SCANVIEW_EdgeTop, SCANVIEW_EdgeLeft,VIEW_WIDTH - 2 * SCANVIEW_EdgeLeft)];
     leftView.alpha =TINTCOLOR_ALPHA;
     leftView.backgroundColor = [UIColor blackColor];
-    [_scanView addSubview:leftView];
+//    [_scanView addSubview:leftView];
     
     // 中间扫描区
     _scanCropView=[[UIImageView alloc] initWithFrame:CGRectMake(SCANVIEW_EdgeLeft,SCANVIEW_EdgeTop, VIEW_WIDTH - 2 * SCANVIEW_EdgeLeft, VIEW_WIDTH - 2 * SCANVIEW_EdgeLeft)];
@@ -318,63 +319,58 @@ static const char *kScanQRCodeQueueName = "ScanQRCodeQueue";
     _scanCropView.layer.borderColor=[UIColor greenColor].CGColor;
     _scanCropView.layer.borderWidth=2.0;
     _scanCropView.backgroundColor=[UIColor clearColor];
-    [_scanView addSubview:_scanCropView];
+//    [_scanView addSubview:_scanCropView];
     
     //右侧的view
     UIView *rightView = [[UIView alloc] initWithFrame:CGRectMake(VIEW_WIDTH - SCANVIEW_EdgeLeft,SCANVIEW_EdgeTop, SCANVIEW_EdgeLeft, VIEW_WIDTH - 2 * SCANVIEW_EdgeLeft)];
     rightView.alpha =TINTCOLOR_ALPHA;
     rightView.backgroundColor = [UIColor blackColor];
-    [_scanView addSubview:rightView];
+//    [_scanView addSubview:rightView];
     
     //底部view
     UIView *downView = [[UIView alloc] initWithFrame:CGRectMake(0, VIEW_WIDTH - 2 * SCANVIEW_EdgeLeft + SCANVIEW_EdgeTop, VIEW_WIDTH, VIEW_HEIGHT - (VIEW_WIDTH - 2 * SCANVIEW_EdgeLeft + SCANVIEW_EdgeTop))];
     //downView.alpha = TINTCOLOR_ALPHA;
     downView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:TINTCOLOR_ALPHA];
-    [_scanView addSubview:downView];
+//    [_scanView addSubview:downView];
     
     //画中间的基准线
-    _QrCodeline = [[UIView alloc] initWithFrame:CGRectMake(SCANVIEW_EdgeLeft, SCANVIEW_EdgeTop, VIEW_WIDTH- 2 * SCANVIEW_EdgeLeft, 2)];
-    _QrCodeline.backgroundColor = [UIColor greenColor];
+    _QrCodeline = [[UIImageView alloc] initWithFrame:CGRectMake(10, SCANVIEW_EdgeTop, VIEW_WIDTH-20, 4)];
+    [_QrCodeline setImage:[UIImage imageNamed:@"lineqr"]];
+//    _QrCodeline.backgroundColor = [UIColor greenColor];
     [_scanView addSubview:_QrCodeline];
     
     //画中间的基准线
     _QrCodeline1 = [[UIView alloc] initWithFrame:CGRectMake(SCANVIEW_EdgeLeft, SCANVIEW_EdgeTop, VIEW_WIDTH- 2 * SCANVIEW_EdgeLeft, 2)];
     _QrCodeline1.backgroundColor = [UIColor greenColor];
-    [_scanView addSubview:_QrCodeline1];
+//    [_scanView addSubview:_QrCodeline1];
     
-    UIButton *cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 10, 48, 45)];
-    [cancelButton setImage:[UIImage imageNamed:@"backqr"] forState:UIControlStateNormal];
+    UIImageView *bgImageView = [[UIImageView alloc] init];
+    bgImageView.frame = CGRectMake(0, 0, VIEW_WIDTH, VIEW_HEIGHT);
+    [bgImageView setImage:[UIImage imageNamed:@"background-qrcode"]];
+    [self.view addSubview:bgImageView];
+    
+    UIButton *cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 10, 55, 44)];
+    [cancelButton setImage:[UIImage imageNamed:@"arrow-left"] forState:UIControlStateNormal];
     [cancelButton addTarget:self action:@selector(onCancelBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:cancelButton];
     
     // 先让第二根线运动一次,避免定时器执行的时差,让用户感到启动App后,横线就开始移动
     [UIView animateWithDuration:2.2 animations:^{
-        
-        _QrCodeline1.frame = CGRectMake(SCANVIEW_EdgeLeft, VIEW_WIDTH - 2 * SCANVIEW_EdgeLeft + SCANVIEW_EdgeTop - 2, VIEW_WIDTH - 2 * SCANVIEW_EdgeLeft, 1);
+        _QrCodeline.frame = CGRectMake(10, VIEW_HEIGHT*410/568, VIEW_WIDTH-20, 4);
+    } completion:^(BOOL finished) {
+        _QrCodeline.frame = CGRectMake(10, SCANVIEW_EdgeTop, VIEW_WIDTH-20, 4);
     }];
-    
     
 }
 
 // 当地一根线到达底部时,第二根线开始下落运动,此时第一根线已经在顶部,当第一根线接着下落时,第二根线到达顶部.依次循环
 - (void)moveUpAndDownLine
 {
-    CGFloat Y = _QrCodeline.frame.origin.y;
-    if (Y == SCANVIEW_EdgeTop) {
-        [UIView animateWithDuration:2.2 animations:^{
-            
-            _QrCodeline.frame = CGRectMake(SCANVIEW_EdgeLeft, VIEW_WIDTH - 2 * SCANVIEW_EdgeLeft + SCANVIEW_EdgeTop - 2, VIEW_WIDTH - 2 * SCANVIEW_EdgeLeft, 1);
-        }];
-        _QrCodeline1.frame = CGRectMake(SCANVIEW_EdgeLeft, SCANVIEW_EdgeTop, VIEW_WIDTH - 2 * SCANVIEW_EdgeLeft, 1);
-    }
-    else if (Y == VIEW_WIDTH - 2 * SCANVIEW_EdgeLeft + SCANVIEW_EdgeTop - 2) {
-        _QrCodeline.frame = CGRectMake(SCANVIEW_EdgeLeft, SCANVIEW_EdgeTop, VIEW_WIDTH - 2 * SCANVIEW_EdgeLeft, 1);
-        [UIView animateWithDuration:2.2 animations:^{
-            
-            _QrCodeline1.frame = CGRectMake(SCANVIEW_EdgeLeft, VIEW_WIDTH - 2 * SCANVIEW_EdgeLeft + SCANVIEW_EdgeTop - 2, VIEW_WIDTH - 2 * SCANVIEW_EdgeLeft, 1);
-        }];
-    }
-    
+    [UIView animateWithDuration:2.2 animations:^{
+        _QrCodeline.frame = CGRectMake(10, VIEW_HEIGHT*410/568, VIEW_WIDTH-20, 4);
+    } completion:^(BOOL finished) {
+        _QrCodeline.frame = CGRectMake(10, SCANVIEW_EdgeTop, VIEW_WIDTH-20, 4);
+    }];
 }
 
 //取消button

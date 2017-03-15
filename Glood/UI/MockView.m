@@ -498,7 +498,6 @@
         [self.micTableViewCell.bgImageView setImage:[UIImage imageNamed:@"background.png"]];
         self.micTableViewCell.bgImageView.alpha = 1;
     }
-    NSLog(@"xxxxxx*-x-x-x-x-x--x------ %@----%@",mic.isReadReady,mic.messageId);
     
     return self.micTableViewCell;
 }

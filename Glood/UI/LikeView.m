@@ -21,6 +21,8 @@
     self = [super initWithFrame:frame];
     if (self)
     {
+        [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(belike)name:@"belike"object:nil];
+        
         self.bgButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
         self.bgButton.backgroundColor = [UIColor clearColor];
         [self.bgButton addTarget:self action:@selector(onHiddenView) forControlEvents:UIControlEventTouchUpInside];
@@ -58,7 +60,7 @@
         
         self.noResultLabel = [[UILabel alloc] init];
         self.noResultLabel.frame = CGRectMake(0,90,self.whiteBgView.frame.size.width,self.whiteBgView.frame.size.height-90);
-        self.noResultLabel.text = @"No one likes you!";
+//        self.noResultLabel.text = @"No one likes you!";
         self.noResultLabel.font = [UIFont fontWithName:@"ProximaNova-Regular" size:18];
         self.noResultLabel.textAlignment = NSTextAlignmentCenter;
         [self.whiteBgView addSubview:self.noResultLabel];
@@ -67,6 +69,12 @@
         
     }
     return self;
+}
+
+- (void)belike
+{
+    UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+    self.heartCountLabel.text = [NSString stringWithFormat:@"%@",userInfomationData.getUsersLikesCountInRoom];
 }
 
 - (void)setupFooter
@@ -134,6 +142,7 @@
 
 - (void)onHiddenView
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"belike" object:nil];
     [self removeFromSuperview];
 }
 
