@@ -442,23 +442,17 @@
         if ((60-[userInfomationData.yuLoadMessageTimeStr intValue])<=20) {
             yuLoadTime = 60-[userInfomationData.yuLoadMessageTimeStr intValue];
         }
-        if (yuLoadTime <= 4 && yuLoadTime > 0) {
-            yuLoadTime = 2.0;
-        }
         if (yuLoadTime>4 && yuLoadTime < 20) {
             yuLoadTime = 2+yuLoadTime/5;
         }
         if (yuLoadTime>=20) {
             yuLoadTime = 6.5;
         }
-        if (yuLoadTime == 0) {
-            yuLoadTime = 1.2;
-        }
-        if (yuLoadTime <= 2 && yuLoadTime > 0) {
-            yuLoadTime = 1.2;
+        if (yuLoadTime == 1) {
+            yuLoadTime = 2;
         }
         
-        NSLog(@"hahahixixixixixiihah-------------%d",yuLoadTime);
+        NSLog(@"hahahixixixixixiihah-------------%d--- %@",yuLoadTime,userInfomationData.yuLoadMessageTimeStr);
         
         self.micTableViewCell.bgImageView.frame = CGRectMake((SCREEN_WIDTH*260/320-(SCREEN_WIDTH*30/320*yuLoadTime))/2, 0, SCREEN_WIDTH*30/320*yuLoadTime, SCREEN_WIDTH*35/320);
         [UIView animateWithDuration:20-(60-[userInfomationData.yuLoadMessageTimeStr intValue]) animations:^{
