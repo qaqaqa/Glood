@@ -831,6 +831,7 @@
                     }
                     NSLog(@"*-*-*-*-*-*------- %@",[[response objectAtIndex:i] objectForKey:@"id"]);
                 }
+                [self.myAppDelegate saveContext];
                 
                 if ([userInfomationData.isEnterMicList isEqualToString:@"true"]) {
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];

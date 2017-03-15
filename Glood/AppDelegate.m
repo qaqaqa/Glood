@@ -457,9 +457,17 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Mic"];
     NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"messageId = %@ AND accountId = %@",messageIdx,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID]]];
     request.predicate = predicate;
+    
+    NSFetchRequest *requestxx = [[NSFetchRequest alloc] initWithEntityName:@"Mic"];
+    NSPredicate *predicatexx = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"roomId = %@ AND accountId = %@",roomIdx,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID]]];
+    requestxx.predicate = predicatexx;
+    NSArray *resultxx = [self.managedObjectContext executeFetchRequest:requestxx error:nil];
     //  执行这个查询请求
     NSError *error = nil;
     NSArray *result = [self.managedObjectContext executeFetchRequest:request error:&error];
+    
+    
+    NSLog(@"woririrririririri------ %lu----%lu---- %@--%@---%@--%@--%@--%@--%@---%@-- %@-",(unsigned long)[result count],(unsigned long)[resultxx count],messageIdx,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID],userIdx,NULL_TO_NIL(avatarImagex),roomIdx,likeMessage,timex,messageIdx,fromUserNamex);
     
     if ([result count] == 0) {
         UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
@@ -469,6 +477,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
         //  创建实体描述对象
         NSEntityDescription *description = [NSEntityDescription entityForName:@"Mic" inManagedObjectContext:self.managedObjectContext];
         //  1.先创建一个模型对象
+        
         Mic *mic = [[Mic alloc] initWithEntity:description insertIntoManagedObjectContext:self.managedObjectContext];
         mic.accountId = [[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID];
         mic.userId = userIdx;
@@ -480,7 +489,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
         mic.message = messagex;
         mic.messageId = messageIdx;
         mic.fromUserName = fromUserNamex;
-        [self saveContext];
+//        [self saveContext];
     }
 }
 
@@ -551,7 +560,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
         Node *node = [[Node alloc] initWithEntity:description insertIntoManagedObjectContext:self.managedObjectContext];
         node.roomId = roomIdx;
         node.lastMessageId = lastMessageIdx;
-        [self saveContext];
+//        [self saveContext];
     }
     else
     {
@@ -568,6 +577,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Node"];
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"beginMessageId" ascending:NO];
     request.sortDescriptors = @[sortDescriptor];
+    NSLog(@"fadf*asd-fa-sf*-a*-*------  %@------ %@",roomIdx,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID]);
     NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"roomId = %@ AND accountId = %@",roomIdx,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID]]];
     request.predicate = predicate;
     
@@ -575,7 +585,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     NSError *error = nil;
     
     NSArray *result = [self.managedObjectContext executeFetchRequest:request error:&error];
-    
+    NSLog(@"hahahhahahahahxxuxuxux ---- %lu",(unsigned long)[result count]);
     //找到refrshMessageId在那个区间
     NSInteger xx = -1;
     for (NSInteger i = 0; i < [result count]; i++) {
