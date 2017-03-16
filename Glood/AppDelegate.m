@@ -34,6 +34,7 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    
     // Override point for customization after application launch.
     
     [Bugly startWithAppId:@"900016269"];
@@ -396,7 +397,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     // Create the coordinator and store
     
     _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
-    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"Glood.sqlite"];
+    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"Glood2.sqlite"];
     NSError *error = nil;
     NSString *failureReason = @"There was an error creating or loading the application's saved data.";
     NSDictionary *options = @{NSMigratePersistentStoresAutomaticallyOption:@(YES),
@@ -455,17 +456,16 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
 {
     //查询数据库，如果当前需要插入的messageid在数据库不存在，则
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Mic"];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"messageId = %@ AND accountId = %@",messageIdx,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID]]];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"accountId = %@ AND roomId = %@ AND messageId = %@",[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID],roomIdx,messageIdx]];
     request.predicate = predicate;
     
     NSFetchRequest *requestxx = [[NSFetchRequest alloc] initWithEntityName:@"Mic"];
-    NSPredicate *predicatexx = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"roomId = %@ AND accountId = %@",roomIdx,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID]]];
+    NSPredicate *predicatexx = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"accountId = %@ AND roomId = %@",[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID],roomIdx]];
     requestxx.predicate = predicatexx;
     NSArray *resultxx = [self.managedObjectContext executeFetchRequest:requestxx error:nil];
     //  执行这个查询请求
     NSError *error = nil;
     NSArray *result = [self.managedObjectContext executeFetchRequest:request error:&error];
-    
     
     NSLog(@"woririrririririri------ %lu----%lu---- %@--%@---%@--%@--%@--%@--%@---%@-- %@-",(unsigned long)[result count],(unsigned long)[resultxx count],messageIdx,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID],userIdx,NULL_TO_NIL(avatarImagex),roomIdx,likeMessage,timex,messageIdx,fromUserNamex);
     
@@ -489,7 +489,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
         mic.message = messagex;
         mic.messageId = messageIdx;
         mic.fromUserName = fromUserNamex;
-//        [self saveContext];
+        [self saveContext];
     }
 }
 
@@ -560,7 +560,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
         Node *node = [[Node alloc] initWithEntity:description insertIntoManagedObjectContext:self.managedObjectContext];
         node.roomId = roomIdx;
         node.lastMessageId = lastMessageIdx;
-//        [self saveContext];
+        [self saveContext];
     }
     else
     {
@@ -650,7 +650,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     for (NSInteger i = 0; i < [userInfomationData.blockUsersMutableArr count]; i ++) {
         str = [NSString stringWithFormat:@"%@ AND userId != %@",str,[[userInfomationData.blockUsersMutableArr objectAtIndex:i] objectForKey:@"id"]];
     }
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"roomId = %@ AND accountId = %@ %@",roomIdx,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID],str]];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"accountId = %@ AND roomId = %@ %@",[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID],roomIdx,str]];
     request.fetchOffset=0; //分页起始索引
     request.fetchLimit=20*userInfomationData.micMockListPageIndex; //每页条数
     request.predicate = predicate;
@@ -825,7 +825,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     NSSortDescriptor *sortDescriptors = [NSSortDescriptor sortDescriptorWithKey:@"messageId" ascending:NO selector:@selector(localizedStandardCompare:)];
     request.sortDescriptors = @[sortDescriptors];
     NSLog(@"asfasdfasdkfjlkll---------  %@",messageId);
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"messageId= %@",messageId]];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"messageId= %@ AND accountId = %@",messageId,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID]]];
     request.predicate = predicate;
     
     //  执行这个查询请求
@@ -851,7 +851,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     //    request.sortDescriptors = @[sortDescriptor];
     NSSortDescriptor *sortDescriptors = [NSSortDescriptor sortDescriptorWithKey:@"messageId" ascending:NO selector:@selector(localizedStandardCompare:)];
     request.sortDescriptors = @[sortDescriptors];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"messageId= %@",messageId]];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"messageId= %@ AND accountId = %@",messageId,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID]]];
     request.predicate = predicate;
     
     //  执行这个查询请求

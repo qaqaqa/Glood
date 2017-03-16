@@ -899,6 +899,7 @@
 
 - (void)navigatorButton
 {
+    self.navtitleLabel.frame = CGRectMake(SCREEN_WIDTH*43/320, SCREEN_HEIGHT*12/568, SCREEN_WIDTH*200/320, SCREEN_HEIGHT*36/568);
     self.rightButton.frame = CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*(54+50)/320), SCREEN_HEIGHT*16/568, SCREEN_WIDTH*28/320, SCREEN_HEIGHT*28/568);
     self.largeRightButton.frame = CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*(54+50)/320), 0, 54, 54);
     [self.addButton setHidden:NO];
@@ -1395,6 +1396,7 @@
 - (void)pushChatRoom
 {
     [self.leftButton setImage:[UIImage imageNamed:@"backqr"] forState:UIControlStateNormal];
+    self.navtitleLabel.frame = CGRectMake(SCREEN_WIDTH*60/320, SCREEN_HEIGHT*12/568, SCREEN_WIDTH*200/320, SCREEN_HEIGHT*36/568);
     self.rightButton.frame = CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*54/320), SCREEN_HEIGHT*16/568, SCREEN_WIDTH*28/320, SCREEN_HEIGHT*28/568);
     self.largeRightButton.frame = CGRectMake(SCREEN_WIDTH-(SCREEN_WIDTH*54/320), 0, 54, 54);
 //    self.largeLeftButton.frame = CGRectMake(0, 0, SCREEN_WIDTH*54/320, SCREEN_HEIGHT*56/568);
