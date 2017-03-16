@@ -73,4 +73,9 @@
 @property (strong, nonatomic) NSMutableArray *getUsersLikesInRoomMutableArr; //在这个房间中，喜欢你的人的列表
 
 @property (strong, nonatomic) NSString *getUsersLikesInRoomId; //获取喜欢人的列表的当前房间ID
+
+@property (assign, nonatomic) NSInteger *getApiMicCount; //服务器返回的历史语音消息是否满足20条，如果不足20，则表示已经拉取完毕，没有更多数据
+@property (assign, nonatomic) NSInteger *getCoredataMicCount; //数据库返回的历史语音消息是否满足20条，如果不足20，则需要请求api从服务器上获取，否则显示输出到UI
+
+
 @end

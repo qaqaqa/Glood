@@ -36,7 +36,6 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     // Override point for customization after application launch.
-    
     [Bugly startWithAppId:@"900016269"];
 //    [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"signlarStauts"];
     
@@ -396,6 +395,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     
     // Create the coordinator and store
     
+    
     _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
     NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"Glood2.sqlite"];
     NSError *error = nil;
@@ -446,6 +446,10 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
             NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
             abort();
         }
+        else
+        {
+            NSLog(@"插入数据成功！！！");
+        }
     }
 }
 
@@ -490,7 +494,9 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
         mic.messageId = messageIdx;
         mic.fromUserName = fromUserNamex;
         [self saveContext];
+        
     }
+    
 }
 
 #pragma mark ====== 插入预加载数据库======
@@ -657,9 +663,11 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     //  执行这个查询请求
     NSError *error = nil;
     
+    
     NSArray *result = [self.managedObjectContext executeFetchRequest:request error:&error];
     NSLog(@"--*-*-*-*-*-sd*fs-d*-xc*c-x*v------  %ld",[result count]);
-    
+    //判断本地数据库coredata返回的语音是否够20条
+    userInfomationData.getCoredataMicCount = [result count];
     return result;
 }
 
@@ -733,7 +741,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     NSSortDescriptor *sortDescriptors = [NSSortDescriptor sortDescriptorWithKey:@"messageId" ascending:NO selector:@selector(localizedStandardCompare:)];
     request.sortDescriptors = @[sortDescriptors];
     NSString *roomId = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"messageId >= %@",@"9223372036854775000"]];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"messageId = %@ OR messageId = %@ OR messageId = %@ OR messageId = %@ OR messageId = %@ OR messageId = %@ OR messageId = %@ OR messageId = %@ OR messageId = %@ OR messageId = %@",@"9223372036854775000",@"9223372036854775001",@"9223372036854775002",@"9223372036854775003",@"9223372036854775004",@"9223372036854775005",@"9223372036854775006",@"9223372036854775007",@"9223372036854775008",@"9223372036854775009"]];
     request.fetchOffset=0;
     request.fetchLimit=100;
     request.predicate = predicate;
@@ -742,7 +750,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     NSError *error = nil;
     
     NSArray *result = [self.managedObjectContext executeFetchRequest:request error:&error];
-    NSLog(@"xxxxcx---appdelegate-%@===%@ --%lu",roomId,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID],(unsigned long)[result count]);
+    NSLog(@"xxxxcx---appdelegatesdfsdfsdfsd-%@===%@ --%lu",roomId,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID],(unsigned long)[result count]);
     if ([result count] != 0) {
         for (NSInteger i = 0; i < [result count]; i++) {
             [self.managedObjectContext deleteObject:[result objectAtIndex:i]];

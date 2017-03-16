@@ -333,6 +333,7 @@
     else{
         
         //从服务器拉取
+        NSLog(@"wahahahhahwae------ %@---- %@",mic.messageId,roomId);
         userInfomationData.micMockListPageIndex ++;
         [userInfomationData.commonService getMessageInRoom:mic.messageId roomId:roomId];
     }
