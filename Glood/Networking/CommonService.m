@@ -856,7 +856,7 @@
                 return;
             }
             userInfomationData.getApiMicCount = [response count];
-            if ([response count] >= 0) {
+            if ([response count] > 0) {
                 for (NSInteger i = 0;i < [response count] ; i ++) {
                     NSArray *arr = [[NSArray alloc] init];
                     arr = [[[(NSArray *)response objectAtIndex:i] objectForKey:@"content"] componentsSeparatedByString:@","];
