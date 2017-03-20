@@ -20,7 +20,8 @@
 @interface MockView ()
 @property (assign, nonatomic) NSInteger upHeadButtonTag;
 @property (strong, nonatomic) AppDelegate *myAppDelegate;
-@property (strong, nonatomic) NSTimer *circleAnimationTimer;
+@property (strong, nonatomic) NSTimer *circleOneAnimationTimer;
+@property (strong, nonatomic) NSTimer *circleTwoAnimationTimer;
 @property (strong, nonatomic) NSTimer *animationTimer;
 @property (assign, nonatomic) float time;
 @property (strong, nonatomic) NSString *currentIsYuLoadStr;
@@ -38,6 +39,7 @@
     {
         self.myAppDelegate = [UIApplication sharedApplication].delegate;
         self.upHeadButtonTag = 0;
+        self.playingVoiceMessageIdStr = @"";
         //拉取该房间的消息
         UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
 //        NSString *roomId;
@@ -590,8 +592,10 @@
     if (self.upHeadButtonTag != 0) {
         [self.animationTimer invalidate];
         self.animationTimer = nil;
-        [self.circleAnimationTimer invalidate];
-        self.circleAnimationTimer = nil;
+        [self.circleOneAnimationTimer invalidate];
+        self.circleOneAnimationTimer = nil;
+        [self.circleTwoAnimationTimer invalidate];
+        self.circleTwoAnimationTimer = nil;
         UIImageView *find_bgImageView1 = (UIImageView *)[self.micBottomImageView viewWithTag:self.upHeadButtonTag-headImageButtonTag+bgImageViewTag];
         UIImageView *find_circleOneImageView1 = (UIImageView *)[self.micBottomImageView viewWithTag:self.upHeadButtonTag-headImageButtonTag+circleOneImageViewTag];
         UIImageView *find_circleTwoImageView1 = (UIImageView *)[self.micBottomImageView viewWithTag:self.upHeadButtonTag-headImageButtonTag+circleTwoImageViewTag];
@@ -607,6 +611,7 @@
         find_bgImageView1.alpha = 0.5;
 //        [self.tableView reloadData];
         self.upHeadButtonTag = 0;
+        self.playingVoiceMessageIdStr = @"";
     }
     
     
@@ -628,15 +633,15 @@
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"fadfa-*-*-*-*-*-*----------  %d",self.upHeadButtonTag-headImageButtonTag+bgImageViewTag);
-    if (self.upHeadButtonTag-headImageButtonTag == indexPath.row) {
-        NSLog(@"fadfa-*-*-*-*-*-*-adf-adfa---asdfa----  %d",self.upHeadButtonTag-headImageButtonTag+bgImageViewTag);
-        [self.circleAnimationTimer invalidate];
-        self.circleAnimationTimer = nil;
+    Mic *mic = self.historyMicListArr[[self.historyMicListArr count] - indexPath.row-1];
+    if ([self.playingVoiceMessageIdStr isEqualToString:mic.messageId]) {
+        self.upHeadButtonTag =indexPath.row+headImageButtonTag;
+        [self.circleOneAnimationTimer invalidate];
+        self.circleOneAnimationTimer = nil;
+        [self.circleTwoAnimationTimer invalidate];
+        self.circleTwoAnimationTimer = nil;
         UIImageView *find_bgImageView = (UIImageView *)[self.micBottomImageView viewWithTag:self.upHeadButtonTag-headImageButtonTag+bgImageViewTag];
         find_bgImageView.alpha = 1.0;
-        UIImageView *find_circleOneImageView = (UIImageView *)[self.micBottomImageView viewWithTag:self.upHeadButtonTag-headImageButtonTag+circleOneImageViewTag];
-        UIImageView *find_circleTwoImageView = (UIImageView *)[self.micBottomImageView viewWithTag:self.upHeadButtonTag-headImageButtonTag+circleTwoImageViewTag];
         UIButton *find_headImageButtonView = (UIButton *)[self.micBottomImageView viewWithTag:self.upHeadButtonTag-headImageButtonTag+headImageButtonTag];
         [find_bgImageView setImage:[UIImage imageNamed:@"background2.png"]];
         [UIView animateWithDuration:0.0 animations:^{
@@ -644,18 +649,19 @@
         } completion:^(BOOL finished) {
             self.userInteractionEnabled = YES;
         }];
-        find_circleOneImageView.alpha = 1.0;
-        [UIView beginAnimations:nil context:NULL];
-        [UIView setAnimationDuration:1.0f];
-        UIView.animationRepeatCount =HUGE_VALF;
-        find_circleOneImageView.alpha=0.1;
-        find_circleOneImageView.transform = CGAffineTransformMakeScale(1.8,1.8);
-        [UIView commitAnimations];
-        self.circleAnimationTimer = [NSTimer scheduledTimerWithTimeInterval:0.6f
-                                                                     target:self
-                                                                   selector:@selector(circleAnimationed)
-                                                                   userInfo:nil
-                                                                    repeats:NO];
+        
+        self.circleOneAnimationTimer = [NSTimer scheduledTimerWithTimeInterval:0.0f
+                                                                        target:self
+                                                                      selector:@selector(circleOneAnimationed)
+                                                                      userInfo:nil
+                                                                       repeats:NO];
+        
+        self.circleTwoAnimationTimer = [NSTimer scheduledTimerWithTimeInterval:1.3f
+                                                                        target:self
+                                                                      selector:@selector(circleTwoAnimationed)
+                                                                      userInfo:nil
+                                                                       repeats:NO];
+        
     }
 }
 
@@ -676,6 +682,7 @@
             [userInfomationData.recordAudio palyRecord:mic.messageId];
             NSLog(@"点击头像播放------%ld----- %@--- %@",(long)button.tag,mic.messageId,mic.fromUserName);
             self.upHeadButtonTag = button.tag;
+            self.playingVoiceMessageIdStr = mic.messageId;
             UIImageView *find_bgImageView = (UIImageView *)[self.micBottomImageView viewWithTag:button.tag-headImageButtonTag+bgImageViewTag];
             find_bgImageView.alpha = 1.0;
             UIImageView *find_circleOneImageView = (UIImageView *)[self.micBottomImageView viewWithTag:button.tag-headImageButtonTag+circleOneImageViewTag];
@@ -687,16 +694,21 @@
             } completion:^(BOOL finished) {
                 self.userInteractionEnabled = YES;
             }];
-            find_circleOneImageView.alpha = 1.0;
-            [UIView beginAnimations:nil context:NULL];
-            [UIView setAnimationDuration:1.0f];
-            UIView.animationRepeatCount =HUGE_VALF;
-            find_circleOneImageView.alpha=0.1;
-            find_circleOneImageView.transform = CGAffineTransformMakeScale(1.8,1.8);
-            [UIView commitAnimations];
-            self.circleAnimationTimer = [NSTimer scheduledTimerWithTimeInterval:0.5f
+//            find_circleOneImageView.alpha = 1.0;
+//            [UIView beginAnimations:nil context:NULL];
+//            [UIView setAnimationDuration:1.0f];
+//            UIView.animationRepeatCount =HUGE_VALF;
+//            find_circleOneImageView.alpha=0.1;
+//            find_circleOneImageView.transform = CGAffineTransformMakeScale(1.8,1.8);
+//            [UIView commitAnimations];
+            self.circleOneAnimationTimer = [NSTimer scheduledTimerWithTimeInterval:0.0f
+                                                                            target:self
+                                                                          selector:@selector(circleOneAnimationed)
+                                                                          userInfo:nil
+                                                                           repeats:NO];
+            self.circleTwoAnimationTimer = [NSTimer scheduledTimerWithTimeInterval:0.5f
                                                                          target:self
-                                                                       selector:@selector(circleAnimationed)
+                                                                       selector:@selector(circleTwoAnimationed)
                                                                        userInfo:nil
                                                                         repeats:NO];
             
@@ -758,9 +770,22 @@
     
 }
 
-- (void)circleAnimationed
+- (void)circleOneAnimationed
 {
-//    self.isMoreThanStr = @"yes";
+    NSLog(@"hahahahhahahaah111111111111111--- ");
+    UIImageView *find_circleOneImageView = (UIImageView *)[self.micBottomImageView viewWithTag:self.upHeadButtonTag-headImageButtonTag+circleOneImageViewTag];
+    find_circleOneImageView.alpha = 1.0;
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDuration:1.0f];
+    UIView.animationRepeatCount =HUGE_VALF;
+    find_circleOneImageView.alpha=0.1;
+    find_circleOneImageView.transform = CGAffineTransformMakeScale(1.8,1.8);
+    [UIView commitAnimations];
+}
+
+- (void)circleTwoAnimationed
+{
+    NSLog(@"hahahahhahahaah2222222222222222--- ");
     UIImageView *find_circleTwoImageView = (UIImageView *)[self.micBottomImageView viewWithTag:self.upHeadButtonTag-headImageButtonTag+circleTwoImageViewTag];
     if (self.time >= 0.5) {
         find_circleTwoImageView.alpha = 1.0;
