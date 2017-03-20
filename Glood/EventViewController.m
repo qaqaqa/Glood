@@ -436,7 +436,7 @@
     NSString *roomId = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:index] objectForKey:@"id"];
     NSArray *result = [[NSArray alloc] initWithArray:[self.myAppDelegate selectCoreDataroomId:roomId]];
     NSLog(@"++9++9+9+9++++++  %@",roomId);
-    //  给数据源数组中添加数据
+//      给数据源数组中添加数据
     
     if ([result count] > 0) {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryList" object:self];
@@ -445,19 +445,19 @@
     else
     {
         dispatch_async(dispatch_get_global_queue(0,0), ^{
-//            UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+            UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
             [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
             [MMProgressHUD showWithTitle:@"get chat history" status:NSLocalizedString(@"Please wating", nil)];
-//            [self performSelectorInBackground:@selector(onGetMessageInRoom) withObject:nil];
+            [self performSelectorInBackground:@selector(onGetMessageInRoom:) withObject:nil];
             dispatch_queue_t queue2 = dispatch_queue_create("com.wxhl.gcd.Queue3", DISPATCH_QUEUE_CONCURRENT);
             dispatch_async(queue2, ^{
                 [self onGetMessageInRoom:roomId];
             });
-//            [userInfomationData.commonService getMessageInRoom:@"" roomId:roomId];
+            [userInfomationData.commonService getMessageInRoom:@"" roomId:roomId];
         });
-        
-    }
     
+    }
+
 }
 
 - (void)onGetMessageInRoom:(NSString *)roomId
