@@ -227,11 +227,11 @@
 //    self.addButton.titleLabel.font = [UIFont boldSystemFontOfSize:25];
     [self.view addSubview:self.addButton];
     
-//    if ([userInfomationData.pushEventVCTypeStr isEqualToString:@"QR"]) {
-//        [userInfomationData.commonService getMessageInRoom:@"" roomId:userInfomationData.QRRoomId];
-//        [self pushChatRoom];
-//        
-//    }
+    if ([userInfomationData.pushEventVCTypeStr isEqualToString:@"QR"]) {
+        [userInfomationData.commonService getMessageInRoom:@"" roomId:userInfomationData.QRRoomId];
+        [self pushChatRoom];
+        
+    }
     
     self.gcdView = [[UIView alloc] init];
     self.gcdView.frame = CGRectMake((SCREEN_WIDTH-(SCREEN_WIDTH*200/320))/2, (SCREEN_HEIGHT-(SCREEN_WIDTH*200/320))/2, SCREEN_WIDTH*200/320, SCREEN_WIDTH*200/320);
@@ -294,6 +294,8 @@
             [self.leftButton setImage:[UIImage imageNamed:@"menu"] forState:UIControlStateNormal];
             [self onMing];
             [self performSelector:@selector(leftButtonUserInteractionEnabledYes) withObject:nil afterDelay:1.35f];
+            userInfomationData.QRRoomId = @"";
+            userInfomationData.pushEventVCTypeStr = @"NOQR";
         }
         else
         {

@@ -646,7 +646,7 @@
         else
         {
             [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryList" object:self];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
+//            [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
         }
     }
     

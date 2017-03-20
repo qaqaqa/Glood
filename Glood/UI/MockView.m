@@ -24,6 +24,7 @@
 @property (strong, nonatomic) NSTimer *animationTimer;
 @property (assign, nonatomic) float time;
 @property (strong, nonatomic) NSString *currentIsYuLoadStr;
+@property (strong, nonatomic) NSString *playingVoiceMessageIdStr; //正在播放的语音
 
 @end
 
@@ -623,6 +624,39 @@
     userInfomationData.refushStr = @"no";
     self.currentIsYuLoadStr = @"yuLoad";
     [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"fadfa-*-*-*-*-*-*----------  %d",self.upHeadButtonTag-headImageButtonTag+bgImageViewTag);
+    if (self.upHeadButtonTag-headImageButtonTag == indexPath.row) {
+        NSLog(@"fadfa-*-*-*-*-*-*-adf-adfa---asdfa----  %d",self.upHeadButtonTag-headImageButtonTag+bgImageViewTag);
+        [self.circleAnimationTimer invalidate];
+        self.circleAnimationTimer = nil;
+        UIImageView *find_bgImageView = (UIImageView *)[self.micBottomImageView viewWithTag:self.upHeadButtonTag-headImageButtonTag+bgImageViewTag];
+        find_bgImageView.alpha = 1.0;
+        UIImageView *find_circleOneImageView = (UIImageView *)[self.micBottomImageView viewWithTag:self.upHeadButtonTag-headImageButtonTag+circleOneImageViewTag];
+        UIImageView *find_circleTwoImageView = (UIImageView *)[self.micBottomImageView viewWithTag:self.upHeadButtonTag-headImageButtonTag+circleTwoImageViewTag];
+        UIButton *find_headImageButtonView = (UIButton *)[self.micBottomImageView viewWithTag:self.upHeadButtonTag-headImageButtonTag+headImageButtonTag];
+        [find_bgImageView setImage:[UIImage imageNamed:@"background2.png"]];
+        [UIView animateWithDuration:0.0 animations:^{
+            find_headImageButtonView.transform = CGAffineTransformMakeScale(1.1,1.1);
+        } completion:^(BOOL finished) {
+            self.userInteractionEnabled = YES;
+        }];
+        find_circleOneImageView.alpha = 1.0;
+        [UIView beginAnimations:nil context:NULL];
+        [UIView setAnimationDuration:1.0f];
+        UIView.animationRepeatCount =HUGE_VALF;
+        find_circleOneImageView.alpha=0.1;
+        find_circleOneImageView.transform = CGAffineTransformMakeScale(1.8,1.8);
+        [UIView commitAnimations];
+        self.circleAnimationTimer = [NSTimer scheduledTimerWithTimeInterval:0.6f
+                                                                     target:self
+                                                                   selector:@selector(circleAnimationed)
+                                                                   userInfo:nil
+                                                                    repeats:NO];
+    }
 }
 
 - (void)onHeadBtnClick:(id)sender
