@@ -324,7 +324,7 @@
 {
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
     NSLog(@"begin Refreshing");
-    [ShowMessage showMessage:@"begin"];
+//    [ShowMessage showMessage:@"begin"];
     userInfomationData.refushStr = @"yes";
     self.currentIsYuLoadStr = @"noYuLoad";
     NSString *roomId = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
@@ -820,6 +820,8 @@
         [self.myAppDelegate updateIsReadMessageId:mic.messageId isReadReady:@"1"];
         find_bgImageView.backgroundColor = [UIColor whiteColor];
         find_bgImageView.alpha = 0.5;
+        self.upHeadButtonTag = 0;
+        self.playingVoiceMessageIdStr = @"";
         //                    [self.tableView reloadData];
         
     }];
