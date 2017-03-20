@@ -49,6 +49,7 @@
     userInfomationData.commonService = self.commonService;
     userInfomationData.recordAudio = self.recordAudio;
     userInfomationData.micMockListPageIndex = 1; //每次进入应用程序时，当前分页置为0
+    userInfomationData.currentPage = 1;
     userInfomationData.mockViewNameLabelIsHiddenStr = @"no";
     
     [[UIApplication sharedApplication] setStatusBarHidden: YES];
@@ -446,10 +447,6 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
             NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
             abort();
         }
-        else
-        {
-            NSLog(@"插入数据成功！！！");
-        }
     }
 }
 
@@ -466,12 +463,10 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     NSFetchRequest *requestxx = [[NSFetchRequest alloc] initWithEntityName:@"Mic"];
     NSPredicate *predicatexx = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"accountId = %@ AND roomId = %@",[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID],roomIdx]];
     requestxx.predicate = predicatexx;
-    NSArray *resultxx = [self.managedObjectContext executeFetchRequest:requestxx error:nil];
     //  执行这个查询请求
     NSError *error = nil;
     NSArray *result = [self.managedObjectContext executeFetchRequest:request error:&error];
     
-    NSLog(@"woririrririririri------ %lu----%lu---- %@--%@---%@--%@--%@--%@--%@---%@-- %@-",(unsigned long)[result count],(unsigned long)[resultxx count],messageIdx,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID],userIdx,NULL_TO_NIL(avatarImagex),roomIdx,likeMessage,timex,messageIdx,fromUserNamex);
     
     if ([result count] == 0) {
         UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
@@ -658,6 +653,34 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     }
     NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"accountId = %@ AND roomId = %@ %@",[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID],roomIdx,str]];
     request.fetchOffset=0; //分页起始索引
+    request.fetchLimit=20*userInfomationData.currentPage; //每页条数
+    request.predicate = predicate;
+    //  执行这个查询请求
+    NSError *error = nil;
+    
+    
+    NSArray *result = [self.managedObjectContext executeFetchRequest:request error:&error];
+    NSLog(@"--*sfasdfasd*-*-*-*-sd*fs-d*-xc*c-x*v------  %ld---- %ld",[result count],userInfomationData.micMockListPageIndex);
+    //判断本地数据库coredata返回的语音是否够20条
+    userInfomationData.getCoredataMicCount = [result count];
+    return result;
+}
+
+#pragma mark ====== 查询数据======(没有屏蔽人的情况)
+- (NSArray *)selectCoreDataroomIdNoBlock:(NSString *)roomIdx
+{
+    //  查询数据
+    //  1.NSFetchRequst对象
+    UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Mic"];
+    //  2.设置排序
+    //  2.1创建排序描述对象
+    //    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"messageId" ascending:NO];
+    //    request.sortDescriptors = @[sortDescriptor];
+    NSSortDescriptor *sortDescriptors = [NSSortDescriptor sortDescriptorWithKey:@"messageId" ascending:NO selector:@selector(localizedStandardCompare:)];
+    request.sortDescriptors = @[sortDescriptors];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"accountId = %@ AND roomId = %@",[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID],roomIdx]];
+    request.fetchOffset=0; //分页起始索引
     request.fetchLimit=20*userInfomationData.micMockListPageIndex; //每页条数
     request.predicate = predicate;
     //  执行这个查询请求
@@ -667,7 +690,6 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     NSArray *result = [self.managedObjectContext executeFetchRequest:request error:&error];
     NSLog(@"--*-*-*-*-*-sd*fs-d*-xc*c-x*v------  %ld",[result count]);
     //判断本地数据库coredata返回的语音是否够20条
-    userInfomationData.getCoredataMicCount = [result count];
     return result;
 }
 

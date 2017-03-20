@@ -40,6 +40,7 @@ static const char *kScanQRCodeQueueName = "ScanQRCodeQueue";
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(onAddTicketsFail)name:@"onAddTicketsFail"object:nil];
     self.view.backgroundColor = [UIColor clearColor];
     AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
     if ([self isCameraAvailable] && authStatus != AVAuthorizationStatusDenied) {
@@ -111,6 +112,7 @@ static const char *kScanQRCodeQueueName = "ScanQRCodeQueue";
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"onAddTicketsFail" object:nil];
     
     [self stopTimer];
     _captureSession = nil;
@@ -278,6 +280,11 @@ static const char *kScanQRCodeQueueName = "ScanQRCodeQueue";
     
     }
     return;
+}
+
+- (void)onAddTicketsFail
+{
+    [self startReading];
 }
 
 - (void)createTimer

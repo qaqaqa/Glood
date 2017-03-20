@@ -186,7 +186,7 @@ typedef void (^SRWebSocketStartBlock)(id response, NSError *error);
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message {
-    SRLogWSInfo(@"websocket did receive: %@", message);
+//    SRLogWSInfo(@"websocket did receive: %@", message);
     
     BOOL timedOut = NO;
     BOOL disconnected = NO;

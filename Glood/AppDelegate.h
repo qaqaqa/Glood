@@ -43,6 +43,9 @@
 //查询数据
 - (NSArray *)selectCoreDataroomId:(NSString *)roomIdx;
 
+//查询数据======(没有屏蔽人的情况)
+- (NSArray *)selectCoreDataroomIdNoBlock:(NSString *)roomIdx;
+
 //插入lastMessageId到数据库（每次从服务器上拉取的时候插入）
 - (void)insertCoraData:(NSString *)roomIdx lastMessageId:(NSString *)lastMessageIdx beginMessageId:(NSString *)beginMessageIdx;
 

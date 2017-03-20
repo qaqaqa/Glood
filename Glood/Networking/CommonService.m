@@ -200,6 +200,7 @@
         NSLog(@"json: ----%@", responseObject);
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Error: %@----%@", error.description,operation);
+        [MMProgressHUD dismissWithError:@"Get ticket error,try again!" afterDelay:2.0f];
     }];
     return requestDeferred.promise;
 }
@@ -233,6 +234,8 @@
         NSLog(@"add ticket json: ----%@", responseObject);
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Error: %@----%@", error.description,operation);
+         [MMProgressHUD dismissWithError:@"add ticket error,try again!" afterDelay:2.0f];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"onAddTicketsFail" object:self];
     }];
     return requestDeferred.promise;
 }
@@ -250,7 +253,7 @@
     id qs = @{
               @"access_token": [[NSUserDefaults standardUserDefaults] objectForKey:Exchange_OAUTH2_TOKEN],
               };
-    [userInfomationData.hubConnection didClose];
+//    [userInfomationData.hubConnection didClose];
     SRHubConnection *hubConnection = [SRHubConnection connectionWithURLString:SIGNLAR_URL queryString:qs];
     self.chat = nil;
     self.chat = [hubConnection createHubProxy:@"chat"];
@@ -315,9 +318,16 @@
         [[NSUserDefaults standardUserDefaults] setObject:@"open" forKey:@"signlarStauts"];
         NSLog(@"Connection Slow");
     }];
+    [hubConnection setReconnecting:^{
+        NSLog(@"Connection Reconnecting");
+    }];
+    [hubConnection setReconnected:^{
+        NSLog(@"Connection Reconnected");
+        [[NSUserDefaults standardUserDefaults] setObject:@"open" forKey:@"signlarStauts"];
+    }];
     [hubConnection setClosed:^{
         NSLog(@"Connection Closed");
-        userInfomationData.hubConnection = nil;
+//        userInfomationData.hubConnection = nil;
 //        [userInfomationData.hubConnection stop];
 //        [userInfomationData.hubConnection disconnect];
         
@@ -384,12 +394,30 @@
             }
             
             if ([self.reConnectionTag isEqualToString:@"reConnetion"]) {
-                [self getMessageInRoom:@"" roomId:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"]];
-                
+                UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+                userInfomationData.isReconnectionStr = @"yes";
+                userInfomationData.refushStr = @"no";
+//                NSThread *thread = [[NSThread alloc] initWithTarget:self selector:@selector(listenNetWorkingPort) object:nil];
+//                // 启动
+//                [thread start];
                 dispatch_async(dispatch_get_global_queue(0,0), ^{
                     for (NSInteger i = 0; i < [[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] count]; i ++) {
                         if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"open"]) {
-                            [self getMessageInRoom:@"" roomId:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"id"]];
+                            if (![userInfomationData.currtentRoomIdStr isEqualToString:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"id"]]) {
+                                [self getMessageInRoom:@"" roomId:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"id"]];
+                                if (i == [[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] count]-1) {
+                                    UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+                                    userInfomationData.isReconnectionStr = @"no";
+                                    userInfomationData.apiRoomIdStr = @"";
+                                }
+                            }
+                            else
+                            {
+                                userInfomationData.micMockListPageIndex = 1; //每次重新进入聊天室，当前分页置为0
+                                userInfomationData.currentPage = 1;
+                                [self getMessageInRoom:@"" roomId:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"]];
+                            }
+                            
                         }
                         
                     }
@@ -429,10 +457,25 @@
     
 }
 
+- (void)listenNetWorkingPort
+{
+    for (NSInteger i = 0; i < [[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] count]; i ++) {
+        if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"open"]) {
+            [self getMessageInRoom:@"" roomId:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"id"]];
+            if (i == [[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] count]-1) {
+                UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+                userInfomationData.isReconnectionStr = @"yes";
+            }
+        }
+        
+    }
+}
+
 #pragma mark ======== 断线重连 =========
 - (void)reconntionSignlar
 {
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+    
     if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"closedsocket"]){
 //        [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
         [MMProgressHUD showWithTitle:@"connecting" status:NSLocalizedString(@"Please wating", nil)];
@@ -789,8 +832,11 @@
 #pragma mark ======== 进入聊天室时，获取历史消息 =========
 - (void)getMessageInRoom:(NSString *)lastMessageId roomId:(NSString *)roomIdContent
 {
+    
     if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"open"] && ![CommonService isBlankString:roomIdContent]) {
+        
         UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+        userInfomationData.apiRoomIdStr = roomIdContent;
         NSLog(@"***-------  %@",roomIdContent);
         [userInfomationData.chat invoke:@"getMessagesInRoom" withArgs:@[roomIdContent,@"Audio",lastMessageId,@"20"] completionHandler:^(id response, NSError *error) {
             if (error) {
@@ -809,7 +855,7 @@
             if (response == NULL) {
                 return;
             }
-            NSLog(@"xxxxjxjxjxlll----- %lu---%@",[response count],response);
+            userInfomationData.getApiMicCount = [response count];
             if ([response count]>=3) {
                 for (NSInteger i = 0;i < [response count] ; i ++) {
                     NSArray *arr = [[NSArray alloc] init];
@@ -829,10 +875,9 @@
                         userInfomationData.inRoomMessageForRoomIdStr = [[response objectAtIndex:i] objectForKey:@"room_id"];
                         
                     }
-                    NSLog(@"*-*-*-*-*-*------- %@",[[response objectAtIndex:i] objectForKey:@"id"]);
                 }
                 
-                if ([userInfomationData.isEnterMicList isEqualToString:@"true"]) {
+                if ([userInfomationData.isEnterMicList isEqualToString:@"true"] && [userInfomationData.currtentRoomIdStr isEqualToString:userInfomationData.apiRoomIdStr]) {
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
                 }
                 else

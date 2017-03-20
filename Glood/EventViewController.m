@@ -227,15 +227,11 @@
 //    self.addButton.titleLabel.font = [UIFont boldSystemFontOfSize:25];
     [self.view addSubview:self.addButton];
     
-    
-    if ([userInfomationData.pushEventVCTypeStr isEqualToString:@"QR"]) {
-//        userInfomationData.historyMicArr = [[NSMutableArray alloc] initWithCapacity:10];
-            // something
-        
-        [userInfomationData.commonService getMessageInRoom:@"" roomId:userInfomationData.QRRoomId];
-        [self pushChatRoom];
-        
-    }
+//    if ([userInfomationData.pushEventVCTypeStr isEqualToString:@"QR"]) {
+//        [userInfomationData.commonService getMessageInRoom:@"" roomId:userInfomationData.QRRoomId];
+//        [self pushChatRoom];
+//        
+//    }
     
     self.gcdView = [[UIView alloc] init];
     self.gcdView.frame = CGRectMake((SCREEN_WIDTH-(SCREEN_WIDTH*200/320))/2, (SCREEN_HEIGHT-(SCREEN_WIDTH*200/320))/2, SCREEN_WIDTH*200/320, SCREEN_WIDTH*200/320);
@@ -433,7 +429,8 @@
 
 - (void)flowView:(PagedFlowView *)flowView didScrollToPageAtIndex:(NSInteger)index {
     NSLog(@"Scrolled to page # %ld", (long)index);
-    
+    UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+    userInfomationData.currentPage = 1;
     [[NSUserDefaults standardUserDefaults] setInteger:index forKey:@"currentIndex"];
     
     NSString *roomId = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:index] objectForKey:@"id"];
@@ -448,15 +445,27 @@
     else
     {
         dispatch_async(dispatch_get_global_queue(0,0), ^{
-            UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+//            UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
             [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
             [MMProgressHUD showWithTitle:@"get chat history" status:NSLocalizedString(@"Please wating", nil)];
-            [userInfomationData.commonService getMessageInRoom:@"" roomId:roomId];
+//            [self performSelectorInBackground:@selector(onGetMessageInRoom) withObject:nil];
+            dispatch_queue_t queue2 = dispatch_queue_create("com.wxhl.gcd.Queue3", DISPATCH_QUEUE_CONCURRENT);
+            dispatch_async(queue2, ^{
+                [self onGetMessageInRoom:roomId];
+            });
+//            [userInfomationData.commonService getMessageInRoom:@"" roomId:roomId];
         });
         
     }
     
 }
+
+- (void)onGetMessageInRoom:(NSString *)roomId
+{
+    UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+    [userInfomationData.commonService getMessageInRoom:@"" roomId:roomId];
+}
+
 
 - (void)flowView:(PagedFlowView *)flowView didTapPageAtIndex:(NSInteger)index{
     NSLog(@"Tapped on page # %ld", (long)index);
@@ -511,31 +520,7 @@
     for (NSInteger i = 0; i < [result count]; i++) {
         [find_eventCoverFlowView.historyMicListArr addObject:[result objectAtIndex:i]];
     }
-    
-    /*
-    //在这个房间中被屏蔽的人的ID
-    NSMutableArray *shieldMutableArr = [[NSMutableArray alloc] initWithCapacity:10];
-    for (NSInteger x = 0; x < [(NSMutableArray *)[[NSUserDefaults standardUserDefaults] objectForKey:@"Shield"] count]; x++) {
-        if ([[[[[NSUserDefaults standardUserDefaults] objectForKey:@"Shield"] objectAtIndex:x] objectForKey:@"room_id"] isEqualToString:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"]]) {
-            [shieldMutableArr addObject:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"Shield"] objectAtIndex:x] objectForKey:@"user_id"]];
-            NSLog(@"-=-=-=xxxx===  %@",[[[[NSUserDefaults standardUserDefaults] objectForKey:@"Shield"] objectAtIndex:x] objectForKey:@"user_id"]);
-        }
-    }
-    
-    //根被屏蔽人的id，清除数据中包含该用户id的那一条数据
-    NSMutableIndexSet *indexSets = [[NSMutableIndexSet alloc] init];
-    for (NSInteger i = 0; i < [find_eventCoverFlowView.historyMicListArr count]; i++) {
-        for (NSInteger x = 0; x < [shieldMutableArr count]; x ++) {
-            Mic *mic = find_eventCoverFlowView.historyMicListArr[i];
-            if ([[shieldMutableArr objectAtIndex:x] isEqualToString:mic.userId]) {
-                [indexSets addIndex:i];
-                [self.myAppDelegate deleteShieldMessage:roomIdStr userId:mic.userId];
-            }
-        }
-    }
-    [find_eventCoverFlowView.historyMicListArr removeObjectsAtIndexes:indexSets];
-     */
-    
+        
     [find_eventCoverFlowView.tableView reloadData];
     
     [MMProgressHUD dismiss];
@@ -774,8 +759,8 @@
 #pragma mark ========= Ming ===========
 - (void)onMing
 {
-    self.leftButton.userInteractionEnabled = YES;
-    self.largeLeftButton.userInteractionEnabled = YES;
+//    self.leftButton.userInteractionEnabled = YES;
+//    self.largeLeftButton.userInteractionEnabled = YES;
     [self navigatorButton];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"recordOrExchangeChatRoomStopAnimation" object:self];
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
@@ -1082,7 +1067,7 @@
                                                                           userInfo:nil
                                                                            repeats:YES];
                     self.timerCount = 0;
-                    
+                    [self timerAnimation];
                     [self.mockBgView setHidden:NO];
                     NSLog(@"开始录音！");
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"recordOrExchangeChatRoomStopAnimation" object:self];
@@ -1434,6 +1419,7 @@
     
     NSString *currentDateStr;
     userInfomationData.micMockListPageIndex = 1; //每次重新进入聊天室，当前分页置为0
+    userInfomationData.currentPage = 1;
     if ([CommonService isBlankString:userInfomationData.QRRoomId]) {
         self.currentRroomIdStr = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
         [self.mockView.topImageView sd_setImageWithURL:[CommonClass showImage:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"image_url"] x1:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"image_crop_info"] objectForKey:@"x1"] y1:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"image_crop_info"] objectForKey:@"y1"] x2:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"image_crop_info"] objectForKey:@"x2"] y2:[[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"image_crop_info"] objectForKey:@"y2"] width:[NSString stringWithFormat:@"%.f",self.mockView.topImageView.frame.size.width*2]] placeholderImage:[UIImage imageNamed:@"event_background.jpg"]];
@@ -1530,6 +1516,7 @@
             self.likeLfetBottomLabel.text = userInfomationData.getUsersLikesCountInRoom;
         });
     }];
+    
 }
 
 //在聊天室切换
@@ -1554,6 +1541,7 @@
         [self.soundingRecoringImageView setHidden:YES];
     }
     userInfomationData.micMockListPageIndex = 1; //每次重新进入聊天室，当前分页置为0
+    userInfomationData.currentPage = 1;
     [userInfomationData.recordAudio stopPlay];
     [self.hFlowView setHidden:YES];
     NSMutableArray *monthMutableArr = [[NSMutableArray alloc] initWithObjects:@"JAN",@"FEB",@"MAR",@"APR",@"MAY",@"JUN",@"JUL",@"AUG",@"SEP",@"OCT",@"NOV",@"DEC", nil];
@@ -1581,6 +1569,7 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [userInfomationData.commonService getUserLikesCountInRoom:self.currentRroomIdStr];
     });
+    
 }
 
 - (void)onGetLikesCountInRoom

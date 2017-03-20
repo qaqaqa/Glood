@@ -18,12 +18,12 @@
 #import "AppDelegate.h"
 
 @interface MockView ()
-@property (retain, nonatomic) EventViewController *eventViewVC;
 @property (assign, nonatomic) NSInteger upHeadButtonTag;
 @property (strong, nonatomic) AppDelegate *myAppDelegate;
 @property (strong, nonatomic) NSTimer *circleAnimationTimer;
 @property (strong, nonatomic) NSTimer *animationTimer;
 @property (assign, nonatomic) float time;
+@property (strong, nonatomic) NSString *currentIsYuLoadStr;
 
 @end
 
@@ -37,23 +37,22 @@
     {
         self.myAppDelegate = [UIApplication sharedApplication].delegate;
         self.upHeadButtonTag = 0;
-//        self.eventViewVC = [[EventViewController alloc] init];
         //拉取该房间的消息
         UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
-        NSString *roomId;
-        if ([userInfomationData.pushEventVCTypeStr isEqualToString:@"QR"]) {
-            roomId = userInfomationData.QRRoomId;
-        }
-        else
-        {
-            roomId = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
-            
-        }
-        [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
-        [MMProgressHUD showWithTitle:@"get chat history" status:NSLocalizedString(@"Please wating", nil)];
-        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            [userInfomationData.commonService getMessageInRoom:@"" roomId:roomId];
-        });
+//        NSString *roomId;
+//        if ([userInfomationData.pushEventVCTypeStr isEqualToString:@"QR"]) {
+//            roomId = userInfomationData.QRRoomId;
+//        }
+//        else
+//        {
+//            roomId = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
+//            
+//        }
+//        [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
+//        [MMProgressHUD showWithTitle:@"get chat history" status:NSLocalizedString(@"Please wating", nil)];
+//        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+//            [userInfomationData.commonService getMessageInRoom:@"" roomId:roomId];
+//        });
         
         
         
@@ -287,6 +286,8 @@
 #pragma mark ==========  屏蔽成功 ===========
 - (void)onBlockUserSucess
 {
+    UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+    userInfomationData.currentPage = 1;
     [self getMicHistoryListMock];
 }
 
@@ -322,20 +323,60 @@
     NSLog(@"begin Refreshing");
     [ShowMessage showMessage:@"begin"];
     userInfomationData.refushStr = @"yes";
+    self.currentIsYuLoadStr = @"noYuLoad";
     NSString *roomId = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
+    /*
     Mic *mic = self.historyMicListArr[[self.historyMicListArr count]-1];
-    NSLog(@"-*-*-*-*xxxxxdfsd---------- %@------ %hhu",mic.fromUserName,[self.myAppDelegate selectCoreDataroomId:roomId refreshMessageId:mic.messageId]);
+//    NSLog(@"-*-*-*-*xxxxxdfsd---------- %@------ %hhu",mic.fromUserName,[self.myAppDelegate selectCoreDataroomId:roomId refreshMessageId:mic.messageId]);
     if ([self.myAppDelegate selectCoreDataroomId:roomId refreshMessageId:mic.messageId]) {
         //从本地数据库加载
         userInfomationData.micMockListPageIndex ++;
         [self getMicHistoryListMock];
     }
     else{
+        //根据从数据库拉出的最后一条语音消息的messageId来从从服务器拉取
+//        userInfomationData.getCoredataMicCount
         
         //从服务器拉取
-        NSLog(@"wahahahhahwae------ %@---- %@",mic.messageId,roomId);
-        userInfomationData.micMockListPageIndex ++;
-        [userInfomationData.commonService getMessageInRoom:mic.messageId roomId:roomId];
+        
+        
+        NSThread *thread = [[NSThread alloc] initWithTarget:self selector:@selector(listenNetWorkingPort) object:nil];
+        // 启动
+        [thread start];
+        
+    }
+    */
+//    NSThread *thread = [[NSThread alloc] initWithTarget:self selector:@selector(onGetMessageInRoom) object:nil];
+//    // 启动
+//    [thread start];
+    
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        // 处理耗时操作的代码块...
+        [self onGetMessageInRoom];
+        //通知主线程刷新
+        dispatch_async(dispatch_get_main_queue(), ^{
+            //回调或者说是通知主线程刷新， 
+        }); 
+        
+    });
+    
+}
+
+- (void)onGetMessageInRoom
+{
+    UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+    NSString *roomId = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
+    userInfomationData.micMockListPageIndex ++;
+    NSMutableArray *arr = [[NSMutableArray alloc] initWithCapacity:10];
+    NSArray *result = [[NSArray alloc] initWithArray:[self.myAppDelegate selectCoreDataroomIdNoBlock:roomId]];
+    for (NSInteger i = 0; i < [result count]; i++) {
+        [arr addObject:[result objectAtIndex:i]];
+    }
+    if ([arr count] > 0)
+    {
+        Mic *micxx = arr[[arr count]-1];
+        NSLog(@"wahahahhahwae------ %@---- %@",micxx.messageId,roomId);
+        [userInfomationData.commonService getMessageInRoom:micxx.messageId roomId:roomId];
     }
     
 }
@@ -580,6 +621,7 @@
     NSLog(@"xxxxcx---mockview-%@===%@--- %lld",roomId,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID],userInfomationData.yuMessageId);
     //如果是用户自己发的信息，则跳转到底部
     userInfomationData.refushStr = @"no";
+    self.currentIsYuLoadStr = @"yuLoad";
     [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
 }
 
@@ -736,88 +778,82 @@
 
 - (void)getMicHistoryListMock
 {
+//    [self.myAppDelegate selectCoreDataroomId:self.currentRoomId];
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
-    self.historyMicListArr = [[NSMutableArray alloc] init];
-    //  查询数据
-    if ([CommonService isBlankString:userInfomationData.QRRoomId]) {
-        self.currentRoomId = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
+    //如果从数据库返回的语音少于20条，则继续拉取服务器的数据，如果服务器返回少于20条，则停止从服务器拉取数据
+    
+    if (userInfomationData.getCoredataMicCount %20 != 0 && userInfomationData.getApiMicCount == 20 && ceil(userInfomationData.getCoredataMicCount/20) < userInfomationData.currentPage && [self.currentIsYuLoadStr isEqualToString:@"noYuLoad"] && [userInfomationData.isReconnectionStr isEqualToString:@"yes"]) {
+//        userInfomationData.micMockListPageIndex--;
+        [self beginRefreshingxx];
+        NSLog(@"fx-x-x--x-x-xx------ %ld----%ld-----%ld---- %@",(long)userInfomationData.getCoredataMicCount,(long)userInfomationData.getApiMicCount,(long)userInfomationData.currentPage,self.currentRoomId);
     }
     else
     {
-        self.currentRoomId = userInfomationData.QRRoomId;
-    }
-    NSArray *result = [[NSArray alloc] initWithArray:[self.myAppDelegate selectCoreDataroomId:self.currentRoomId]];
-    for (NSInteger i = 0; i < [result count]; i++) {
-        [self.historyMicListArr addObject:[result objectAtIndex:i]];
-    }
-    
-    /*
-    //在这个房间中被屏蔽的人的ID
-    NSMutableArray *shieldMutableArr = [[NSMutableArray alloc] initWithCapacity:10];
-    for (NSInteger x = 0; x < [(NSMutableArray *)[[NSUserDefaults standardUserDefaults] objectForKey:@"Shield"] count]; x++) {
-        if ([[[[[NSUserDefaults standardUserDefaults] objectForKey:@"Shield"] objectAtIndex:x] objectForKey:@"room_id"] isEqualToString:self.currentRoomId]) {
-            [shieldMutableArr addObject:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"Shield"] objectAtIndex:x] objectForKey:@"user_id"]];
+        if ([userInfomationData.refushStr isEqualToString:@"yes"]) {
+            userInfomationData.currentPage ++;
         }
-    }
-    
-    //根被屏蔽人的id，清除数据中包含该用户id的那一条数据
-    NSMutableIndexSet *indexSets = [[NSMutableIndexSet alloc] init];
-    for (NSInteger i = 0; i < [self.historyMicListArr count]; i++) {
-        for (NSInteger x = 0; x < [shieldMutableArr count]; x ++) {
-            Mic *mic = self.historyMicListArr[i];
-            if ([[shieldMutableArr objectAtIndex:x] isEqualToString:mic.userId]) {
-                [indexSets addIndex:i];
-                [self.myAppDelegate deleteShieldMessage:self.currentRoomId userId:mic.userId];
-            }
-        }
-    }
-    [self.historyMicListArr removeObjectsAtIndexes:indexSets];
-     */
-     
-    if ([self.historyMicListArr count] == 0 ) {
-        [MMProgressHUD dismiss];
-    }
-    [self.tableView reloadData];
-    if ([userInfomationData.refushStr isEqualToString:@"no"]) {
-        NSInteger i = [self.historyMicListArr count];
-        if (i>4) {
-            NSIndexPath *lastPath = [NSIndexPath indexPathForRow: i-1 inSection: 0 ];
-            [self.tableView scrollToRowAtIndexPath:lastPath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
-            [MMProgressHUD dismiss];
+        
+        self.historyMicListArr = [[NSMutableArray alloc] init];
+        //  查询数据
+        if ([CommonService isBlankString:userInfomationData.QRRoomId]) {
+            self.currentRoomId = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
         }
         else
         {
-            [MMProgressHUD dismiss];
+            self.currentRoomId = userInfomationData.QRRoomId;
+        }
+        NSArray *result = [[NSArray alloc] initWithArray:[self.myAppDelegate selectCoreDataroomId:self.currentRoomId]];
+        for (NSInteger i = 0; i < [result count]; i++) {
+            [self.historyMicListArr addObject:[result objectAtIndex:i]];
         }
         
-    }
-    else if ([userInfomationData.refushStr isEqualToString:@"yes"])
-    {
-        NSLog(@"-------x-x-x-x----  %lu-------%lu",20*userInfomationData.micMockListPageIndex,[self.historyMicListArr count]);
-        NSInteger i = [self.historyMicListArr count];
-        if ((20*userInfomationData.micMockListPageIndex) <= [self.historyMicListArr count] && [self.historyMicListArr count] > 4) {
-            NSLog(@"sdfsdfsd----------  %lu----%lu",i,i%20);
-            NSIndexPath *lastPath;
-            if (i%20 == 0) {
-                lastPath = [NSIndexPath indexPathForRow: i-(20*(userInfomationData.micMockListPageIndex-1))-1+3 inSection: 0 ];
+        if ([self.historyMicListArr count] == 0 ) {
+            [MMProgressHUD dismiss];
+        }
+        [self.tableView reloadData];
+        if ([userInfomationData.refushStr isEqualToString:@"no"]) {
+            NSInteger i = [self.historyMicListArr count];
+            if (i>4) {
+                NSIndexPath *lastPath = [NSIndexPath indexPathForRow: i-1 inSection: 0 ];
+                [self.tableView scrollToRowAtIndexPath:lastPath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+                [MMProgressHUD dismiss];
             }
             else
             {
-                lastPath = [NSIndexPath indexPathForRow: i-(20*(userInfomationData.micMockListPageIndex-1))-1+(20-(i%20)) inSection: 0 ];
-            }
-            [self.tableView scrollToRowAtIndexPath:lastPath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
-        }
-        else if((20*userInfomationData.micMockListPageIndex) > [self.historyMicListArr count] && [self.historyMicListArr count] > 4)
-        {
-            if ((20*userInfomationData.micMockListPageIndex) - [self.historyMicListArr count] <= 20) {
-                NSLog(@"xxc*vx-c*v--*-----  %lu",(i%20)-1);
-                NSIndexPath *lastPath = [NSIndexPath indexPathForRow: (i%20)-1+3 inSection: 0 ];
-                [self.tableView scrollToRowAtIndexPath:lastPath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+                [MMProgressHUD dismiss];
             }
             
         }
-        
+        else if ([userInfomationData.refushStr isEqualToString:@"yes"])
+        {
+            NSLog(@"-------x-x-x-x----  %lu-------%lu",20*userInfomationData.micMockListPageIndex,[self.historyMicListArr count]);
+            NSInteger i = [self.historyMicListArr count];
+            if ((20*userInfomationData.micMockListPageIndex) <= [self.historyMicListArr count] && [self.historyMicListArr count] > 4) {
+                NSLog(@"sdfsdfsd----------  %lu----%lu",i,i%20);
+                NSIndexPath *lastPath;
+                if (i%20 == 0) {
+                    lastPath = [NSIndexPath indexPathForRow: i-(20*(userInfomationData.micMockListPageIndex-1))-1+3 inSection: 0 ];
+                }
+                if(userInfomationData.getApiMicCount < 20)
+                {
+                    lastPath = [NSIndexPath indexPathForRow: i-(20*(userInfomationData.micMockListPageIndex-1))-1+(20-(i%20)) inSection: 0 ];
+                }
+                [self.tableView scrollToRowAtIndexPath:lastPath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+            }
+            else if((20*userInfomationData.micMockListPageIndex) > [self.historyMicListArr count] && [self.historyMicListArr count] > 4)
+            {
+                if ((20*userInfomationData.micMockListPageIndex) - [self.historyMicListArr count] <= 20) {
+                    NSLog(@"xxc*vx-c*v--*-----  %lu",(i%20)-1);
+                    NSIndexPath *lastPath = [NSIndexPath indexPathForRow: (i%20)-1+3 inSection: 0 ];
+                    [self.tableView scrollToRowAtIndexPath:lastPath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+                }
+                
+            }
+            
+        }
     }
+    
+    
 }
 
 - (void)sendMessageScu

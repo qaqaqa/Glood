@@ -341,27 +341,27 @@
 
 - (void)willReconnect {
     [[NSUserDefaults standardUserDefaults] setObject:@"closedsocket" forKey:@"signlarStauts"];
-    SRLogConnectionDebug(@"connection will reconnect");
-    // Only allow the client to attempt to reconnect for a _disconectTimout TimeSpan which is set by
-    // the server during negotiation.
-    // If the client tries to reconnect for longer the server will likely have deleted its ConnectionId
-    // topic along with the contained disconnect message.
-    __weak __typeof(&*self)weakSelf = self;
-    self.disconnectTimeoutOperation = [NSBlockOperation blockOperationWithBlock:^{
-        __strong __typeof(&*weakSelf)strongSelf = weakSelf;
-        SRLogConnectionWarn(@"connection failed to reconnect");
-        [strongSelf stopButDoNotCallServer];
-    }];
-    SRLogConnectionDebug(@"connection will disconnect if reconnect is not performed in %@",_disconnectTimeout);
-    [self.disconnectTimeoutOperation performSelector:@selector(start) withObject:nil afterDelay:[_disconnectTimeout integerValue]];
-    
-    if (self.reconnecting != nil) {
-        self.reconnecting();
-    }
-    
-    if (self.delegate && [self.delegate respondsToSelector:@selector(SRConnectionWillReconnect:)]) {
-        [self.delegate SRConnectionWillReconnect:self];
-    }
+//    SRLogConnectionDebug(@"connection will reconnect");
+//    // Only allow the client to attempt to reconnect for a _disconectTimout TimeSpan which is set by
+//    // the server during negotiation.
+//    // If the client tries to reconnect for longer the server will likely have deleted its ConnectionId
+//    // topic along with the contained disconnect message.
+//    __weak __typeof(&*self)weakSelf = self;
+//    self.disconnectTimeoutOperation = [NSBlockOperation blockOperationWithBlock:^{
+//        __strong __typeof(&*weakSelf)strongSelf = weakSelf;
+//        SRLogConnectionWarn(@"connection failed to reconnect");
+//        [strongSelf stopButDoNotCallServer];
+//    }];
+//    SRLogConnectionDebug(@"connection will disconnect if reconnect is not performed in %@",_disconnectTimeout);
+//    [self.disconnectTimeoutOperation performSelector:@selector(start) withObject:nil afterDelay:[_disconnectTimeout integerValue]];
+//    
+//    if (self.reconnecting != nil) {
+//        self.reconnecting();
+//    }
+//    
+//    if (self.delegate && [self.delegate respondsToSelector:@selector(SRConnectionWillReconnect:)]) {
+//        [self.delegate SRConnectionWillReconnect:self];
+//    }
 }
 
 - (void)didReconnect {
