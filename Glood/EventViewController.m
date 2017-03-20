@@ -942,7 +942,7 @@
         case 1:
                 {
                     [UIView animateWithDuration:1.5 animations:^{
-                        self.soundingRecoringButton.transform = CGAffineTransformMakeScale(1.1,1.1);
+                        self.soundingRecoringButton.transform = CGAffineTransformMakeScale(1.2,1.2);
                         self.soundingRecoringButton.backgroundColor = [UIColor colorWithRed:27/255.0 green:127/255.0 blue:254/255.0 alpha:1.0];
                     } completion:^(BOOL finished) {
                     }];
@@ -960,7 +960,7 @@
         case 3:
                 {
                     [UIView animateWithDuration:1.5 animations:^{
-                        self.soundingRecoringButton.transform = CGAffineTransformMakeScale(1.1,1.1);
+                        self.soundingRecoringButton.transform = CGAffineTransformMakeScale(1.2,1.2);
                         self.soundingRecoringButton.backgroundColor = [UIColor greenColor];
                     } completion:^(BOOL finished) {
                     }];
@@ -1204,6 +1204,10 @@
 {
 //    [self.soundingRecoringButton setImage:[UIImage imageNamed:@"voice.png"] forState:UIControlStateNormal];
     self.soundingRecoringButton.backgroundColor = [UIColor colorWithRed:27/255.0 green:127/255.0 blue:254/255.0 alpha:1.0];
+    [UIView animateWithDuration:0.1 animations:^{
+        self.soundingRecoringButton.transform = CGAffineTransformMakeScale(1.0,1.0);
+    } completion:^(BOOL finished) {
+    }];
     if (_timer != nil) {
         dispatch_source_cancel(_timer);
 //        [self.myAppDelegate deletePreLoadingMessage];
@@ -1240,6 +1244,10 @@
         UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
 //        [self.soundingRecoringButton setImage:[UIImage imageNamed:@"voice.png"] forState:UIControlStateNormal];
         self.soundingRecoringButton.backgroundColor = [UIColor colorWithRed:27/255.0 green:127/255.0 blue:254/255.0 alpha:1.0];
+        [UIView animateWithDuration:0.1 animations:^{
+            self.soundingRecoringButton.transform = CGAffineTransformMakeScale(1.0,1.0);
+        } completion:^(BOOL finished) {
+        }];
         dispatch_source_cancel(_timer);
         [userInfomationData.recordAudio stopRecoringCancel];
     }

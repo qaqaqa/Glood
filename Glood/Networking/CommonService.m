@@ -856,7 +856,7 @@
                 return;
             }
             userInfomationData.getApiMicCount = [response count];
-            if ([response count]>=3) {
+            if ([response count] >= 0) {
                 for (NSInteger i = 0;i < [response count] ; i ++) {
                     NSArray *arr = [[NSArray alloc] init];
                     arr = [[[(NSArray *)response objectAtIndex:i] objectForKey:@"content"] componentsSeparatedByString:@","];
@@ -886,10 +886,10 @@
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
                 }
             }
-            else {
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryList" object:self];
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
-            }
+//            else {
+//                [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryList" object:self];
+//                [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
+//            }
             [MMProgressHUD dismiss];
             
         }];

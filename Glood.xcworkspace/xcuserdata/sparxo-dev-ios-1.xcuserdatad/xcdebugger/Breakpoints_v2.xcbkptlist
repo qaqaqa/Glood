@@ -122,11 +122,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Glood/EventViewController.m"
-            timestampString = "511676628.676514"
+            timestampString = "511692647.582732"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1334"
-            endingLineNumber = "1334"
+            startingLineNumber = "1342"
+            endingLineNumber = "1342"
             landmarkName = "-waitingSendMessageQunenMutableDic:messageId:message:"
             landmarkType = "7">
          </BreakpointContent>
@@ -138,11 +138,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Glood/EventViewController.m"
-            timestampString = "511676631.590505"
+            timestampString = "511692647.582732"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1462"
-            endingLineNumber = "1462"
+            startingLineNumber = "1470"
+            endingLineNumber = "1470"
             landmarkName = "-pushChatRoom"
             landmarkType = "7">
          </BreakpointContent>
