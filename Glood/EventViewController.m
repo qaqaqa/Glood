@@ -449,7 +449,7 @@
         dispatch_async(dispatch_get_global_queue(0,0), ^{
             UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
             [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
-            [MMProgressHUD showWithTitle:@"get chat history" status:NSLocalizedString(@"Please wating", nil)];
+//            [MMProgressHUD showWithTitle:@"get chat history" status:NSLocalizedString(@"Please wating", nil)];
             [self performSelectorInBackground:@selector(onGetMessageInRoom:) withObject:nil];
             dispatch_queue_t queue2 = dispatch_queue_create("com.wxhl.gcd.Queue3", DISPATCH_QUEUE_CONCURRENT);
             dispatch_async(queue2, ^{
@@ -761,8 +761,7 @@
 #pragma mark ========= Ming ===========
 - (void)onMing
 {
-//    self.leftButton.userInteractionEnabled = YES;
-//    self.largeLeftButton.userInteractionEnabled = YES;
+    
     [self navigatorButton];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"recordOrExchangeChatRoomStopAnimation" object:self];
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
@@ -772,7 +771,7 @@
     if ([userInfomationData.isEnterMicList isEqualToString:@"true"]) {
 //        userInfomationData.historyMicArr = [[NSMutableArray alloc] initWithCapacity:10];
         [userInfomationData.recordAudio stopPlay];
-        [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:@"currentIndex"];
+//        [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:@"currentIndex"];
         NSString *roomId;
         if ([userInfomationData.pushEventVCTypeStr isEqualToString:@"QR"]) {
             roomId = userInfomationData.QRRoomId;
@@ -820,6 +819,10 @@
             self.hFlowView.minimumPageScale = 0.9;
             [self.view addSubview:self.hFlowView];
             
+            NSInteger ix = [[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue];
+            [self.hFlowView.scrollView scrollRectToVisible:CGRectMake(self.hFlowView.scrollView.frame.size.width*0.8125 * ix, 0, self.hFlowView.scrollView.frame.size.width , self.hFlowView.scrollView.frame.size.height) animated:NO];
+            NSLog(@"fada-fa/---*-*----- %f---- %f",self.hFlowView.scrollView.frame.size.width,self.hFlowView.scrollView.frame.size.height);
+            
             self.soundingRecoringButton = [[UIButton alloc] initWithFrame:CGRectMake((SCREEN_WIDTH-(SCREEN_WIDTH*75/320))/2, SCREEN_HEIGHT-(SCREEN_WIDTH*80/320), SCREEN_WIDTH*75/320, SCREEN_WIDTH*75/320)];
             self.soundingRecoringButton.layer.masksToBounds = YES;
             self.soundingRecoringButton.layer.cornerRadius = self.soundingRecoringButton.frame.size.height/2;
@@ -853,13 +856,19 @@
         }];
         
     }
+    else
+    {
+        [UIView animateWithDuration:0.5 animations:^{
+            self.cehuaView.frame = CGRectMake(-SCREEN_WIDTH, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+            self.eventListView.frame = CGRectMake(0, -SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT);
+            self.leftButton.userInteractionEnabled = YES;
+            self.largeLeftButton.userInteractionEnabled = YES;
+            
+        } completion:^(BOOL finished) {
+        }];
+    }
     
-    [UIView animateWithDuration:0.5 animations:^{
-        self.cehuaView.frame = CGRectMake(-SCREEN_WIDTH, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-        self.eventListView.frame = CGRectMake(0, -SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT);
-        
-    } completion:^(BOOL finished) {
-    }];
+    
 }
 
 #pragma mark ========= onSetting ===========

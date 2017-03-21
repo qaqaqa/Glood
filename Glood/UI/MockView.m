@@ -353,15 +353,23 @@
 //    // 启动
 //    [thread start];
     
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        // 处理耗时操作的代码块...
-        [self onGetMessageInRoom];
-        //通知主线程刷新
-        dispatch_async(dispatch_get_main_queue(), ^{
-            //回调或者说是通知主线程刷新， 
-        }); 
-        
-    });
+    if ([self.myAppDelegate.networkStatus isEqualToString:@"lost"]) {
+        userInfomationData.micMockListPageIndex ++;
+        [self getMicHistoryListMock];
+    }
+    else
+    {
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            // 处理耗时操作的代码块...
+            [self onGetMessageInRoom];
+            //通知主线程刷新
+            dispatch_async(dispatch_get_main_queue(), ^{
+                //回调或者说是通知主线程刷新，
+            });
+            
+        });
+    }
+    
     
 }
 
