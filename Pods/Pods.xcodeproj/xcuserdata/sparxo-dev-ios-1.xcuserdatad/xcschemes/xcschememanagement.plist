@@ -9,6 +9,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>AvoidCrash.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>BFKit.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -52,22 +57,22 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>25F50A46E6EF434ED284AB3B1104E84B</key>
+		<key>3B69DDF98F3C25F2CEAE46048A3CF5D9</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>2A343B7EF982132CF36E21136A4E2959</key>
+		<key>3F447FB61C817C3F58D3378A0F0DE028</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>5374C73517795C05995350E88B9CE3F9</key>
+		<key>4624B75293C707AEDF5F279857A22579</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>6279C411EA52A7BA03B53BD7F71F02E7</key>
+		<key>60CEEC2112CA35D79AC340FF43B5ACEE</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -83,6 +88,11 @@
 			<true/>
 		</dict>
 		<key>AFAFB55453D161D2BB5CFB30C68A54D5</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>F90A72D8D667DC13BA5564C8CB6F59BF</key>
 		<dict>
 			<key>primary</key>
 			<true/>

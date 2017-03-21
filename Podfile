@@ -10,5 +10,6 @@ pod 'Firebase'
 pod 'Firebase/Messaging'
 pod 'Firebase/Core'
 pod 'Firebase/RemoteConfig'
+pod 'AvoidCrash'
 
 end

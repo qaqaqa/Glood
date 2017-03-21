@@ -15,6 +15,7 @@
 #import "Define.h"
 #import <Bugly/Bugly.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <AvoidCrash.h>
 @import Firebase;
 @import FirebaseMessaging;
 @import UserNotifications;
@@ -37,6 +38,7 @@
     
     // Override point for customization after application launch.
     [Bugly startWithAppId:@"900016269"];
+    [AvoidCrash becomeEffective];
 //    [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"signlarStauts"];
     
     [[FBSDKApplicationDelegate sharedInstance] application:application
