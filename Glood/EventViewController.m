@@ -515,7 +515,9 @@
     }
     NSArray *result = [[NSArray alloc] initWithArray:[self.myAppDelegate selectCoreDataroomId:roomIdStr]];
     //  给数据源数组中添加数据
-    
+    if ([[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue] == 0) {
+        NSLog(@"-*-*-a-*fa-d*f-a*f-a*-------- %d",[result count]);
+    }
     
     
     find_eventCoverFlowView.historyMicListArr = [[NSMutableArray alloc] init];

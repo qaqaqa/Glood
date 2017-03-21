@@ -127,7 +127,6 @@
         [bgView addSubview:self.checkInButton];
         
         //  查询数据
-//        dispatch_async(dispatch_get_global_queue(0, 0), ^{
             NSString *roomId = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"eventIndex"] integerValue]] objectForKey:@"id"];
             NSArray *result = [[NSArray alloc] initWithArray:[self.myAppDelegate selectCoreDataroomId:roomId]];
             NSLog(@"sffsdfsd--sdf-sd-----  %@",roomId);
@@ -137,28 +136,31 @@
             for (NSInteger i = 0; i < [result count]; i++) {
                 [self.historyMicListArr addObject:[result objectAtIndex:i]];
             }
-//             dispatch_async(dispatch_get_main_queue(), ^{
                  if ([self.historyMicListArr count] > 0) {
-                     [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryList" object:self];
+                     if ([[[NSUserDefaults standardUserDefaults]objectForKey:@"eventIndex"] integerValue] == 0) {
+                         [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryList" object:self];
+                     }
+                     else
+                     {
+                         [self.tableView reloadData];
+                     }
                  }
-//             });
-//        });
         
         
-//        UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
-//        
-//        NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"SELF == %@", roomId];
-//        NSArray *results1 = [userInfomationData.isGetMicListMutableArr filteredArrayUsingPredicate:predicate1];
-//        if([results1 count] == 0)
-//        {
-////            [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
-////            [MMProgressHUD showWithTitle:@"拉取历史聊天记录" status:NSLocalizedString(@"Please wating", nil)];
-//            dispatch_async(dispatch_get_global_queue(0,0), ^{
-//                [userInfomationData.commonService getMessageInRoom:@"" roomId:roomId];
-//            });
-//            
-//            [userInfomationData.isGetMicListMutableArr addObject:roomId];
-//        }
+        UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+        
+        NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"SELF == %@", roomId];
+        NSArray *results1 = [userInfomationData.isGetMicListMutableArr filteredArrayUsingPredicate:predicate1];
+        if([results1 count] == 0)
+        {
+//            [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
+//            [MMProgressHUD showWithTitle:@"拉取历史聊天记录" status:NSLocalizedString(@"Please wating", nil)];
+            dispatch_async(dispatch_get_global_queue(0,0), ^{
+                [userInfomationData.commonService getMessageInRoom:@"" roomId:roomId];
+            });
+            
+            [userInfomationData.isGetMicListMutableArr addObject:roomId];
+        }
         self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0,self.infoButton.frame.size.height+self.infoButton.frame.origin.y+SCREEN_HEIGHT*30/568,bgView.frame.size.width,SCREEN_HEIGHT*235/568)];
         self.tableView.dataSource = self;
         self.tableView.delegate = self;

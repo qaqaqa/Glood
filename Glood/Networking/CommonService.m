@@ -480,6 +480,7 @@
 //        [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
         [MMProgressHUD showWithTitle:@"connecting" status:NSLocalizedString(@"Please wating", nil)];
         [userInfomationData.timer invalidate];
+        userInfomationData.timer = nil;
         userInfomationData.hubConnection = nil;
         [self connectionSignlar];
         self.reConnectionTag = @"reConnetion";
@@ -896,7 +897,7 @@
     }
     else
     {
-        [ShowMessage showMessage:@"disconnect chatroom"];
+//        [ShowMessage showMessage:@"disconnect chatroom"];
     }
     
 }

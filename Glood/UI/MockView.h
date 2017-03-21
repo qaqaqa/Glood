@@ -46,5 +46,6 @@
 - (void)addNSNotificationCenter;
 - (void)deallocNSNotificationCenter;
 
++ (NSNull *)null;
 
 @end

@@ -431,124 +431,128 @@
 #define likeButtonTag 90001
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    self.micTableViewCell = [tableView dequeueReusableCellWithIdentifier:@"MicTableViewCell"];
-//    if (self.micTableViewCell == nil)
-//    {
+    if (self.historyMicListArr != nil && ![self.historyMicListArr isKindOfClass:[NSNull class]] && self.historyMicListArr.count != 0) {
+        self.micTableViewCell = [tableView dequeueReusableCellWithIdentifier:@"MicTableViewCell"];
+        //    if (self.micTableViewCell == nil)
+        //    {
         self.micTableViewCell = [[MicTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"MicTableViewCell" index:indexPath.row];
         [self.micTableViewCell setSelectionStyle:UITableViewCellSelectionStyleNone];
-//    }
-    //语音时间计算
-    Mic *mic = self.historyMicListArr[[self.historyMicListArr count] - indexPath.row-1];
-    __block float timeF = [mic.time floatValue];
-    
-    if (timeF <= 4 && timeF > 0) {
-        timeF = 2.0;
-    }
-    if (timeF>4 && timeF < 20) {
-        timeF = 2+timeF/5;
-    }
-    if (timeF>=20) {
-        timeF = 6.5;
-    }
-    if (timeF == 0) {
-        timeF = 1.2;
-    }
-    self.micTableViewCell.bgImageView.layer.cornerRadius = (SCREEN_WIDTH*35/320)/2;
-    self.micTableViewCell.bgImageView.layer.masksToBounds = YES;
-    self.micTableViewCell.bgImageView.tag = bgImageViewTag+indexPath.row;
-    
-    
-    self.micTableViewCell.headImageButton.frame = CGRectMake((SCREEN_WIDTH*260/320-(SCREEN_WIDTH*35/320))/2, 0, SCREEN_WIDTH*35/320, SCREEN_WIDTH*35/320);
-    self.micTableViewCell.headImageButton.tag = headImageButtonTag+indexPath.row;
-    self.micTableViewCell.headImageButton.layer.cornerRadius = (SCREEN_WIDTH*35/320)/2;
-    self.micTableViewCell.headImageButton.layer.masksToBounds = YES;
-    //    [self.micTableViewCell.headImageButton setImage:[UIImage imageNamed:@"171604419.jpg"] forState:UIControlStateNormal];
-    [self.micTableViewCell.headImageButton addTarget:self action:@selector(onHeadBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-    
-    self.micTableViewCell.nameLabel.frame = CGRectMake(0, SCREEN_WIDTH*35/320-8, SCREEN_WIDTH*260/320, 35);
-    self.micTableViewCell.nameLabel.tag = nameLabelTag+indexPath.row;
-    UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
-    if ([userInfomationData.mockViewNameLabelIsHiddenStr isEqualToString:@"no"]) {
-        self.micTableViewCell.nameLabel.alpha = 0;
-    }
-    else
-    {
-        self.micTableViewCell.nameLabel.alpha = 1;
-    }
-
-    self.micTableViewCell.nameLabel.font = [UIFont fontWithName:@"ProximaNova-Light" size:10];
-    //    self.micTableViewCell.nameLabel.text = @"Li Lei";
-    
-    self.micTableViewCell.circleOneImageView.frame = self.micTableViewCell.headImageButton.frame;
-    self.micTableViewCell.circleOneImageView.tag = circleOneImageViewTag+indexPath.row;
-    self.micTableViewCell.circleOneImageView.layer.cornerRadius = (SCREEN_WIDTH*35/320)/2;
-    self.micTableViewCell.circleOneImageView.layer.masksToBounds = YES;
-    
-    self.micTableViewCell.circleTwoImageView.frame = self.micTableViewCell.headImageButton.frame;
-    self.micTableViewCell.circleTwoImageView.tag = circleTwoImageViewTag+indexPath.row;
-    self.micTableViewCell.circleTwoImageView.layer.cornerRadius = (SCREEN_WIDTH*35/320)/2;
-    self.micTableViewCell.circleTwoImageView.layer.masksToBounds = YES;
-    self.micTableViewCell.bgImageView.frame = CGRectMake((SCREEN_WIDTH*260/320-(SCREEN_WIDTH*30/320*timeF))/2, 0, SCREEN_WIDTH*30/320*timeF, SCREEN_WIDTH*35/320);
-    if ([mic.message isEqualToString:@"100"])
-    {
-        __block  int yuLoadTime;
-        if ((60-[userInfomationData.yuLoadMessageTimeStr intValue])<=20) {
-            yuLoadTime = 60-[userInfomationData.yuLoadMessageTimeStr intValue];
+        //    }
+        //语音时间计算
+        Mic *mic = self.historyMicListArr[[self.historyMicListArr count] - indexPath.row-1];
+        __block float timeF = [mic.time floatValue];
+        
+        if (timeF <= 4 && timeF > 0) {
+            timeF = 2.0;
         }
-        if (yuLoadTime>4 && yuLoadTime < 20) {
-            yuLoadTime = 2+yuLoadTime/5;
+        if (timeF>4 && timeF < 20) {
+            timeF = 2+timeF/5;
         }
-        if (yuLoadTime>=20) {
-            yuLoadTime = 6.5;
+        if (timeF>=20) {
+            timeF = 6.5;
         }
-        if (yuLoadTime == 1) {
-            yuLoadTime = 2;
+        if (timeF == 0) {
+            timeF = 1.2;
+        }
+        self.micTableViewCell.bgImageView.layer.cornerRadius = (SCREEN_WIDTH*35/320)/2;
+        self.micTableViewCell.bgImageView.layer.masksToBounds = YES;
+        self.micTableViewCell.bgImageView.tag = bgImageViewTag+indexPath.row;
+        
+        
+        self.micTableViewCell.headImageButton.frame = CGRectMake((SCREEN_WIDTH*260/320-(SCREEN_WIDTH*35/320))/2, 0, SCREEN_WIDTH*35/320, SCREEN_WIDTH*35/320);
+        self.micTableViewCell.headImageButton.tag = headImageButtonTag+indexPath.row;
+        self.micTableViewCell.headImageButton.layer.cornerRadius = (SCREEN_WIDTH*35/320)/2;
+        self.micTableViewCell.headImageButton.layer.masksToBounds = YES;
+        //    [self.micTableViewCell.headImageButton setImage:[UIImage imageNamed:@"171604419.jpg"] forState:UIControlStateNormal];
+        [self.micTableViewCell.headImageButton addTarget:self action:@selector(onHeadBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+        
+        self.micTableViewCell.nameLabel.frame = CGRectMake(0, SCREEN_WIDTH*35/320-8, SCREEN_WIDTH*260/320, 35);
+        self.micTableViewCell.nameLabel.tag = nameLabelTag+indexPath.row;
+        UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+        if ([userInfomationData.mockViewNameLabelIsHiddenStr isEqualToString:@"no"]) {
+            self.micTableViewCell.nameLabel.alpha = 0;
+        }
+        else
+        {
+            self.micTableViewCell.nameLabel.alpha = 1;
         }
         
-        NSLog(@"hahahixixixixixiihah-------------%d--- %@",yuLoadTime,userInfomationData.yuLoadMessageTimeStr);
+        self.micTableViewCell.nameLabel.font = [UIFont fontWithName:@"ProximaNova-Light" size:10];
+        //    self.micTableViewCell.nameLabel.text = @"Li Lei";
         
-        self.micTableViewCell.bgImageView.frame = CGRectMake((SCREEN_WIDTH*260/320-(SCREEN_WIDTH*30/320*yuLoadTime))/2, 0, SCREEN_WIDTH*30/320*yuLoadTime, SCREEN_WIDTH*35/320);
-        [UIView animateWithDuration:20-(60-[userInfomationData.yuLoadMessageTimeStr intValue]) animations:^{
-            self.micTableViewCell.bgImageView.frame = CGRectMake((SCREEN_WIDTH*260/320-(SCREEN_WIDTH*30/320*6.5))/2, 0, SCREEN_WIDTH*30/320*6.5, SCREEN_WIDTH*35/320);
-        } completion:^(BOOL finished) {
-        }];
+        self.micTableViewCell.circleOneImageView.frame = self.micTableViewCell.headImageButton.frame;
+        self.micTableViewCell.circleOneImageView.tag = circleOneImageViewTag+indexPath.row;
+        self.micTableViewCell.circleOneImageView.layer.cornerRadius = (SCREEN_WIDTH*35/320)/2;
+        self.micTableViewCell.circleOneImageView.layer.masksToBounds = YES;
         
+        self.micTableViewCell.circleTwoImageView.frame = self.micTableViewCell.headImageButton.frame;
+        self.micTableViewCell.circleTwoImageView.tag = circleTwoImageViewTag+indexPath.row;
+        self.micTableViewCell.circleTwoImageView.layer.cornerRadius = (SCREEN_WIDTH*35/320)/2;
+        self.micTableViewCell.circleTwoImageView.layer.masksToBounds = YES;
+        self.micTableViewCell.bgImageView.frame = CGRectMake((SCREEN_WIDTH*260/320-(SCREEN_WIDTH*30/320*timeF))/2, 0, SCREEN_WIDTH*30/320*timeF, SCREEN_WIDTH*35/320);
+        if ([mic.message isEqualToString:@"100"])
+        {
+            __block  int yuLoadTime;
+            if ((60-[userInfomationData.yuLoadMessageTimeStr intValue])<=20) {
+                yuLoadTime = 60-[userInfomationData.yuLoadMessageTimeStr intValue];
+            }
+            if (yuLoadTime>4 && yuLoadTime < 20) {
+                yuLoadTime = 2+yuLoadTime/5;
+            }
+            if (yuLoadTime>=20) {
+                yuLoadTime = 6.5;
+            }
+            if (yuLoadTime == 1) {
+                yuLoadTime = 2;
+            }
+            
+            NSLog(@"hahahixixixixixiihah-------------%d--- %@",yuLoadTime,userInfomationData.yuLoadMessageTimeStr);
+            
+            self.micTableViewCell.bgImageView.frame = CGRectMake((SCREEN_WIDTH*260/320-(SCREEN_WIDTH*30/320*yuLoadTime))/2, 0, SCREEN_WIDTH*30/320*yuLoadTime, SCREEN_WIDTH*35/320);
+            [UIView animateWithDuration:20-(60-[userInfomationData.yuLoadMessageTimeStr intValue]) animations:^{
+                self.micTableViewCell.bgImageView.frame = CGRectMake((SCREEN_WIDTH*260/320-(SCREEN_WIDTH*30/320*6.5))/2, 0, SCREEN_WIDTH*30/320*6.5, SCREEN_WIDTH*35/320);
+            } completion:^(BOOL finished) {
+            }];
+            
+        }
+        
+        [self.micTableViewCell.headImageButton sd_setImageWithURL:mic.avatarImage forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"171604419.jpg"]];
+        self.micTableViewCell.nameLabel.text = mic.fromUserName;
+        
+        self.micTableViewCell.userIdLabel.tag = userIdLabelTag+indexPath.row;
+        self.micTableViewCell.roomIdLabel.tag = roomIdLabelTag+indexPath.row;
+        self.micTableViewCell.messageIdLabel.tag = messageIdLabelTag+indexPath.row;
+        self.micTableViewCell.userIdLabel.text = mic.userId;
+        self.micTableViewCell.roomIdLabel.text = mic.roomId;
+        self.micTableViewCell.messageIdLabel.text = mic.messageId;
+        
+        self.micTableViewCell.likeButton.frame = CGRectMake(self.micTableViewCell.bgImageView.frame.origin.x+self.micTableViewCell.bgImageView.frame.size.width-(SCREEN_WIDTH*15/320), self.micTableViewCell.bgImageView.frame.origin.y-(SCREEN_HEIGHT*4/568), SCREEN_WIDTH*25/320, SCREEN_WIDTH*25/320);
+        self.micTableViewCell.likeButton.tag = likeButtonTag+indexPath.row;
+        [self.micTableViewCell.likeButton setImage:[UIImage imageNamed:@"app_img_like2"] forState:UIControlStateNormal];
+        //这条消息是否被喜欢过
+        if ([mic.isRead integerValue] == 1) {
+            [self.micTableViewCell.likeButton setHidden:NO];
+        }
+        else
+        {
+            [self.micTableViewCell.likeButton setHidden:YES];
+        }
+        //这条消息是否被读过
+        if (([mic.isReadReady integerValue] == 1)) {
+            self.micTableViewCell.bgImageView.backgroundColor = [UIColor whiteColor];
+            self.micTableViewCell.bgImageView.alpha = 0.5;
+            [self.micTableViewCell.bgImageView setImage:[UIImage imageNamed:@""]];
+        }
+        else
+        {
+            [self.micTableViewCell.bgImageView setImage:[UIImage imageNamed:@"background.png"]];
+            self.micTableViewCell.bgImageView.alpha = 1;
+        }
+        
+        return self.micTableViewCell;
     }
+    return nil;
     
-    [self.micTableViewCell.headImageButton sd_setImageWithURL:mic.avatarImage forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"171604419.jpg"]];
-    self.micTableViewCell.nameLabel.text = mic.fromUserName;
-    
-    self.micTableViewCell.userIdLabel.tag = userIdLabelTag+indexPath.row;
-    self.micTableViewCell.roomIdLabel.tag = roomIdLabelTag+indexPath.row;
-    self.micTableViewCell.messageIdLabel.tag = messageIdLabelTag+indexPath.row;
-    self.micTableViewCell.userIdLabel.text = mic.userId;
-    self.micTableViewCell.roomIdLabel.text = mic.roomId;
-    self.micTableViewCell.messageIdLabel.text = mic.messageId;
-    
-    self.micTableViewCell.likeButton.frame = CGRectMake(self.micTableViewCell.bgImageView.frame.origin.x+self.micTableViewCell.bgImageView.frame.size.width-(SCREEN_WIDTH*15/320), self.micTableViewCell.bgImageView.frame.origin.y-(SCREEN_HEIGHT*4/568), SCREEN_WIDTH*25/320, SCREEN_WIDTH*25/320);
-    self.micTableViewCell.likeButton.tag = likeButtonTag+indexPath.row;
-    [self.micTableViewCell.likeButton setImage:[UIImage imageNamed:@"app_img_like2"] forState:UIControlStateNormal];
-    //这条消息是否被喜欢过
-    if ([mic.isRead integerValue] == 1) {
-        [self.micTableViewCell.likeButton setHidden:NO];
-    }
-    else
-    {
-        [self.micTableViewCell.likeButton setHidden:YES];
-    }
-    //这条消息是否被读过
-    if (([mic.isReadReady integerValue] == 1)) {
-        self.micTableViewCell.bgImageView.backgroundColor = [UIColor whiteColor];
-        self.micTableViewCell.bgImageView.alpha = 0.5;
-        [self.micTableViewCell.bgImageView setImage:[UIImage imageNamed:@""]];
-    }
-    else
-    {
-        [self.micTableViewCell.bgImageView setImage:[UIImage imageNamed:@"background.png"]];
-        self.micTableViewCell.bgImageView.alpha = 1;
-    }
-    
-    return self.micTableViewCell;
 }
 
 - (void)onCancelBtnClick
