@@ -287,6 +287,7 @@
                 return value;
             } error:^id(NSError *error) {
                 NSLog(@"拉取活动失败--- %@",error);
+                [MMProgressHUD dismissWithError:@"join chatroom error,try again!" afterDelay:2.0f];
                 //拉取活动失败，继续拉取
 //                [MMProgressHUD dismissWithError:@"get event info error,try again!" afterDelay:2.0f];
 //                if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"open"]) {

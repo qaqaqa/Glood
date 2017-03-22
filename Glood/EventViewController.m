@@ -1421,7 +1421,7 @@
     self.soundingRecoringVoiceButton.userInteractionEnabled = YES;
     //每次进入聊天室页面检查麦克风权限是否开启
     AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeAudio];
-    NSLog(@"*-*-*--*hahhah--- %ld",(long)authStatus);
+    NSLog(@"*-*-*--*hahhah---想休息休息休息 %ld",(long)authStatus);
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
     userInfomationData.refushStr = @"no";
     if ((authStatus ==AVAuthorizationStatusRestricted || authStatus ==AVAuthorizationStatusDenied)) {

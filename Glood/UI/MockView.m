@@ -911,7 +911,6 @@ float lastContentOffset;
     if (scrollView == self.tableView) {
         CGFloat y = scrollView.contentOffset.y;
         lastContentOffset = y;
-        NSLog(@"*-fsa*d-f*a-df*-as*df-a*sd-f----- %f",y);
     }
 }
 
@@ -988,6 +987,10 @@ float lastContentOffset;
                 if(userInfomationData.getApiMicCount < 20)
                 {
                     lastPath = [NSIndexPath indexPathForRow: i-(20*(userInfomationData.micMockListPageIndex-1))-1+(20-(i%20)) inSection: 0 ];
+                }
+                NSLog(@"adf*a-dfa-*f-*-*f-a*--------- %ld",(long)lastPath.row);
+                if (lastPath.row > [self.historyMicListArr count]) {
+                    lastPath = [NSIndexPath indexPathForRow: [self.historyMicListArr count]-1 inSection: 0 ];
                 }
                 [self.tableView scrollToRowAtIndexPath:lastPath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
             }

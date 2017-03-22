@@ -341,7 +341,7 @@
 
 - (void)willReconnect {
     [[NSUserDefaults standardUserDefaults] setObject:@"closedsocket" forKey:@"signlarStauts"];
-//    SRLogConnectionDebug(@"connection will reconnect");
+    SRLogConnectionDebug(@"connection will reconnect");
 //    // Only allow the client to attempt to reconnect for a _disconectTimout TimeSpan which is set by
 //    // the server during negotiation.
 //    // If the client tries to reconnect for longer the server will likely have deleted its ConnectionId
