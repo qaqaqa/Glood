@@ -1475,6 +1475,10 @@
     NSString *dayStr = [currentDateStr substringWithRange:NSMakeRange(8,2)];
     self.mockView.monthLabel.text = monthStr;
     self.mockView.dayLabel.text = dayStr;
+//    self.mockView.upOrDownStr = @"down";
+//    self.mockView.lastIndexPathRow = 0;
+//    self.mockView.bottomCellIndexPathRow = 0;
+    self.mockView.listScrollToTottom = @"yes";
     
     userInfomationData.isEnterMicList = @"true";
     self.mockView.alpha = 1;
@@ -1580,6 +1584,10 @@
     userInfomationData.isEnterMicList = @"true";
     self.mockView.alpha = 1;
     self.hFlowView.alpha = 0;
+//    self.mockView.upOrDownStr = @"down";
+//    self.mockView.lastIndexPathRow = 0;
+//    self.mockView.bottomCellIndexPathRow = 0;
+    self.mockView.listScrollToTottom = @"yes";
     
     //消除活动列表后面未读消息的小红掉标记
     userInfomationData.currtentRoomIdStr = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];

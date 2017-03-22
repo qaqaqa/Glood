@@ -39,6 +39,11 @@
 
 @property (retain, nonatomic) UIImageView *micBottomImageView; //test test
 
+//@property (strong, nonatomic) NSString *upOrDownStr; //列表向上还是向下滚动
+//@property (assign, nonatomic) NSInteger lastIndexPathRow;
+//@property (assign, nonatomic) NSInteger bottomCellIndexPathRow; //计算当前屏幕最底部那个cell的row
+@property (strong, nonatomic) NSString *listScrollToTottom; //列表是否滚动到最底部
+
 
 - (void)getMicHistoryListMock;
 + (BOOL) isBlankString:(NSString *)string;

@@ -26,6 +26,10 @@
 @property (assign, nonatomic) float time;
 @property (strong, nonatomic) NSString *currentIsYuLoadStr;
 @property (strong, nonatomic) NSString *playingVoiceMessageIdStr; //正在播放的语音
+@property (strong, nonatomic) NSString *upOrDownStr; //列表向上还是向下滚动
+@property (assign, nonatomic) NSInteger lastIndexPathRow;
+@property (assign, nonatomic) NSInteger bottomCellIndexPathRow; //计算当前屏幕最底部那个cell的row
+
 
 @end
 
@@ -40,6 +44,7 @@
         self.myAppDelegate = [UIApplication sharedApplication].delegate;
         self.upHeadButtonTag = 0;
         self.playingVoiceMessageIdStr = @"";
+        self.listScrollToTottom = @"yes";
         //拉取该房间的消息
         UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
 //        NSString *roomId;
@@ -58,7 +63,9 @@
 //        });
         
         
-        
+        _upOrDownStr = @"down";
+        _lastIndexPathRow = 0;
+        _bottomCellIndexPathRow = 0;
         self.lastBgView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
         self.lastBgView.backgroundColor = [UIColor clearColor];
         [self addSubview:self.lastBgView];
@@ -640,11 +647,40 @@
     //如果是用户自己发的信息，则跳转到底部
     userInfomationData.refushStr = @"no";
     self.currentIsYuLoadStr = @"yuLoad";
+    self.listScrollToTottom = @"yes";
     [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (_lastIndexPathRow < indexPath.row) {
+        NSLog(@"向上滚动");
+        _upOrDownStr = @"up";
+        _bottomCellIndexPathRow = indexPath.row;
+        
+    }else{
+        _upOrDownStr = @"down";
+        if (indexPath.row >= 4) {
+            _bottomCellIndexPathRow = indexPath.row+4;
+        }
+        NSLog(@"向下滚动");
+    }
+    if ([self.historyMicListArr count] >= 5) {
+        NSLog(@"ad-*-*---*-*-*--------  %lu-+------ %ld",(unsigned long)[self.historyMicListArr count],(long)_bottomCellIndexPathRow);
+        if ([self.historyMicListArr count] - _bottomCellIndexPathRow >= 6) {
+            self.listScrollToTottom = @"no";
+        }
+        else
+        {
+            self.listScrollToTottom = @"yes";
+        }
+    }
+    else
+    {
+        self.listScrollToTottom = @"yes";
+    }
+    _lastIndexPathRow = indexPath.row;
+    NSLog(@"xx-x-x-x-x-----x-x-------  %ld",(long)indexPath.row);
     Mic *mic = self.historyMicListArr[[self.historyMicListArr count] - indexPath.row-1];
     if ([self.playingVoiceMessageIdStr isEqualToString:mic.messageId]) {
         self.upHeadButtonTag =indexPath.row+headImageButtonTag;
@@ -695,6 +731,8 @@
             NSLog(@"点击头像播放------%ld----- %@--- %@",(long)button.tag,mic.messageId,mic.fromUserName);
             self.upHeadButtonTag = button.tag;
             self.playingVoiceMessageIdStr = mic.messageId;
+            self.listScrollToTottom = @"no";
+            [self.myAppDelegate updateIsReadMessageId:mic.messageId isReadReady:@"1"];
             UIImageView *find_bgImageView = (UIImageView *)[self.micBottomImageView viewWithTag:button.tag-headImageButtonTag+bgImageViewTag];
             find_bgImageView.alpha = 1.0;
             UIImageView *find_circleOneImageView = (UIImageView *)[self.micBottomImageView viewWithTag:button.tag-headImageButtonTag+circleOneImageViewTag];
@@ -828,13 +866,31 @@
         find_circleOneImageView.alpha=0.5;
         find_circleOneImageView.transform = CGAffineTransformIdentity;
     } completion:^(BOOL finished) {
-        Mic *mic = self.historyMicListArr[[self.historyMicListArr count] -1- (self.upHeadButtonTag-headImageButtonTag)];
-        [self.myAppDelegate updateIsReadMessageId:mic.messageId isReadReady:@"1"];
-        find_bgImageView.backgroundColor = [UIColor whiteColor];
-        find_bgImageView.alpha = 0.5;
-        self.upHeadButtonTag = 0;
-        self.playingVoiceMessageIdStr = @"";
-        //                    [self.tableView reloadData];
+        if ([self.historyMicListArr count] >= 5) {
+            for (NSInteger i = 0; i < [self.historyMicListArr count]; i ++) {
+                Mic *mic = self.historyMicListArr[[self.historyMicListArr count] -1- (self.upHeadButtonTag-headImageButtonTag)-i];
+                if ([self.playingVoiceMessageIdStr isEqualToString:mic.messageId]) {
+                    [self.myAppDelegate updateIsReadMessageId:mic.messageId isReadReady:@"1"];
+                    find_bgImageView.backgroundColor = [UIColor whiteColor];
+                    find_bgImageView.alpha = 0.5;
+                    self.upHeadButtonTag = 0;
+                    self.playingVoiceMessageIdStr = @"";
+                }
+                
+            }
+            
+        }
+        else
+        {
+            Mic *mic = self.historyMicListArr[[self.historyMicListArr count] -1- (self.upHeadButtonTag-headImageButtonTag)];
+            [self.myAppDelegate updateIsReadMessageId:mic.messageId isReadReady:@"1"];
+            find_bgImageView.backgroundColor = [UIColor whiteColor];
+            find_bgImageView.alpha = 0.5;
+            self.upHeadButtonTag = 0;
+            self.playingVoiceMessageIdStr = @"";
+        }
+        self.listScrollToTottom = @"yes";
+        //[self.tableView reloadData];
         
     }];
 }
@@ -847,6 +903,16 @@
 - (void)onCheckInClick:(id)sender
 {
     NSLog(@"check-in");
+}
+
+float lastContentOffset;
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    
+    if (scrollView == self.tableView) {
+        CGFloat y = scrollView.contentOffset.y;
+        lastContentOffset = y;
+        NSLog(@"*-fsa*d-f*a-df*-as*df-a*sd-f----- %f",y);
+    }
 }
 
 - (void)getMicHistoryListMock
@@ -884,9 +950,9 @@
             [MMProgressHUD dismiss];
         }
         [self.tableView reloadData];
-        if ([userInfomationData.refushStr isEqualToString:@"no"]) {
+        if ([self.listScrollToTottom isEqualToString:@"yes"]) {
             NSInteger i = [self.historyMicListArr count];
-            if (i>4) {
+            if (i>=4) {
                 NSIndexPath *lastPath = [NSIndexPath indexPathForRow: i-1 inSection: 0 ];
                 [self.tableView scrollToRowAtIndexPath:lastPath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
                 [MMProgressHUD dismiss];
@@ -897,7 +963,19 @@
             }
             
         }
-        else if ([userInfomationData.refushStr isEqualToString:@"yes"])
+        else
+        {
+            NSInteger i = [self.historyMicListArr count];
+            if (i>=4) {
+                
+                [self.tableView setContentOffset:CGPointMake(0.0, lastContentOffset-55) animated:NO];
+//                NSIndexPath *lastPath = [NSIndexPath indexPathForRow: _bottomCellIndexPathRow-1 inSection: 0 ];
+//                [self.tableView scrollToRowAtIndexPath:lastPath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+            }
+            
+            
+        }
+        if ([userInfomationData.refushStr isEqualToString:@"yes"])
         {
             NSLog(@"-------x-x-x-x----  %lu-------%lu",20*userInfomationData.micMockListPageIndex,[self.historyMicListArr count]);
             NSInteger i = [self.historyMicListArr count];
@@ -940,6 +1018,7 @@
         userInfomationData.refushStr = @"no";
     }
 }
+
 
 
 

@@ -856,37 +856,41 @@
             if (response == NULL) {
                 return;
             }
-            userInfomationData.getApiMicCount = [response count];
-            if ([response count] > 0) {
-                for (NSInteger i = 0;i < [response count] ; i ++) {
-                    NSArray *arr = [[NSArray alloc] init];
-                    arr = [[[(NSArray *)response objectAtIndex:i] objectForKey:@"content"] componentsSeparatedByString:@","];
-                    if ([[[response objectAtIndex:i] objectForKey:@"message_type"] isEqualToString:@"Audio"] && [arr count]==2) {
-                        NSString *nameStr;
-                        if ([CommonService isBlankString:[[response objectAtIndex:i] objectForKey:@"name"]] || [CommonService isBlankString:[[response objectAtIndex:i] objectForKey:@"surname"]]) {
-                            nameStr = [[response objectAtIndex:i] objectForKey:@"user_name"];
+            if ([response isKindOfClass:[NSArray class]])
+            {
+                userInfomationData.getApiMicCount = [response count];
+                if ([response count] > 0) {
+                    for (NSInteger i = 0;i < [response count] ; i ++) {
+                        NSArray *arr = [[NSArray alloc] init];
+                        arr = [[[(NSArray *)response objectAtIndex:i] objectForKey:@"content"] componentsSeparatedByString:@","];
+                        if ([[[response objectAtIndex:i] objectForKey:@"message_type"] isEqualToString:@"Audio"] && [arr count]==2) {
+                            NSString *nameStr;
+                            if ([CommonService isBlankString:[[response objectAtIndex:i] objectForKey:@"name"]] || [CommonService isBlankString:[[response objectAtIndex:i] objectForKey:@"surname"]]) {
+                                nameStr = [[response objectAtIndex:i] objectForKey:@"user_name"];
+                                
+                            }
+                            else
+                            {
+                                nameStr = [NSString stringWithFormat:@"%@ %@.",[[response objectAtIndex:i] objectForKey:@"name"],[[[response objectAtIndex:i] objectForKey:@"surname"] substringToIndex:1].uppercaseString];
+                            }
+                            [self.myAppDelegate insertCoreData:[[response objectAtIndex:i] objectForKey:@"user_id"] avatarImage:[[response objectAtIndex:i] objectForKey:@"user_avatar"] roomId:[[response objectAtIndex:i] objectForKey:@"room_id"] time:[NSNumber numberWithFloat:[[arr objectAtIndex:0] floatValue]] message:[arr objectAtIndex:1] messageId:[[response objectAtIndex:i] objectForKey:@"id"] fromUserName:nameStr like:[[response objectAtIndex:i] objectForKey:@"like"]];
+                            [self.myAppDelegate insertCoraData:[[response objectAtIndex:i] objectForKey:@"room_id"] lastMessageId:[[response objectAtIndex:[response count]-1] objectForKey:@"id"] beginMessageId:[[response objectAtIndex:0] objectForKey:@"id"]];
+                            userInfomationData.inRoomMessageForRoomIdStr = [[response objectAtIndex:i] objectForKey:@"room_id"];
                             
                         }
-                        else
-                        {
-                            nameStr = [NSString stringWithFormat:@"%@ %@.",[[response objectAtIndex:i] objectForKey:@"name"],[[[response objectAtIndex:i] objectForKey:@"surname"] substringToIndex:1].uppercaseString];
-                        }
-                        [self.myAppDelegate insertCoreData:[[response objectAtIndex:i] objectForKey:@"user_id"] avatarImage:[[response objectAtIndex:i] objectForKey:@"user_avatar"] roomId:[[response objectAtIndex:i] objectForKey:@"room_id"] time:[NSNumber numberWithFloat:[[arr objectAtIndex:0] floatValue]] message:[arr objectAtIndex:1] messageId:[[response objectAtIndex:i] objectForKey:@"id"] fromUserName:nameStr like:[[response objectAtIndex:i] objectForKey:@"like"]];
-                        [self.myAppDelegate insertCoraData:[[response objectAtIndex:i] objectForKey:@"room_id"] lastMessageId:[[response objectAtIndex:[response count]-1] objectForKey:@"id"] beginMessageId:[[response objectAtIndex:0] objectForKey:@"id"]];
-                        userInfomationData.inRoomMessageForRoomIdStr = [[response objectAtIndex:i] objectForKey:@"room_id"];
-                        
+                    }
+                    
+                    if ([userInfomationData.isEnterMicList isEqualToString:@"true"] && [userInfomationData.currtentRoomIdStr isEqualToString:userInfomationData.apiRoomIdStr]) {
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
+                    }
+                    else
+                    {
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryList" object:self];
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
                     }
                 }
-                
-                if ([userInfomationData.isEnterMicList isEqualToString:@"true"] && [userInfomationData.currtentRoomIdStr isEqualToString:userInfomationData.apiRoomIdStr]) {
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
-                }
-                else
-                {
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryList" object:self];
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
-                }
             }
+            
 //            else {
 //                [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryList" object:self];
 //                [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
