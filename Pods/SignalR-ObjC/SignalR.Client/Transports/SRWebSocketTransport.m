@@ -98,6 +98,7 @@ typedef void (^SRWebSocketStartBlock)(id response, NSError *error);
 }
 
 - (void)stopWebsocket {
+    [[NSUserDefaults standardUserDefaults] setObject:@"closedsocket" forKey:@"signlarStauts"];
     [_webSocket setDelegate:nil];
     [_webSocket close];
     _webSocket = nil;
@@ -177,7 +178,7 @@ typedef void (^SRWebSocketStartBlock)(id response, NSError *error);
 
 - (void)webSocketDidOpen:(SRWebSocket *)webSocket {
     SRLogWSInfo(@"websocket did open");
-    [[NSUserDefaults standardUserDefaults] setObject:@"open" forKey:@"signlarStauts"];
+//    [[NSUserDefaults standardUserDefaults] setObject:@"open" forKey:@"signlarStauts"];
     
     // This will noop if we're not in the reconnecting state
     if ([[_connectionInfo connection] changeState:reconnecting toState:connected]) {
@@ -211,7 +212,7 @@ typedef void (^SRWebSocketStartBlock)(id response, NSError *error);
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error {
-    [[NSUserDefaults standardUserDefaults] setObject:@"closedsocket" forKey:@"signlarStauts"];
+//    [[NSUserDefaults standardUserDefaults] setObject:@"closedsocket" forKey:@"signlarStauts"];
     SRLogWSError(@"websocket did fail with error %@, %@", [[_connectionInfo connection] connectionId], error);
     
     if (self.startBlock) {

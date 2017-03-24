@@ -316,7 +316,7 @@
         
     }];
     [hubConnection setConnectionSlow:^{
-        [[NSUserDefaults standardUserDefaults] setObject:@"open" forKey:@"signlarStauts"];
+//        [[NSUserDefaults standardUserDefaults] setObject:@"open" forKey:@"signlarStauts"];
         NSLog(@"Connection Slow");
     }];
     [hubConnection setReconnecting:^{
@@ -324,7 +324,7 @@
     }];
     [hubConnection setReconnected:^{
         NSLog(@"Connection Reconnected");
-        [[NSUserDefaults standardUserDefaults] setObject:@"open" forKey:@"signlarStauts"];
+//        [[NSUserDefaults standardUserDefaults] setObject:@"open" forKey:@"signlarStauts"];
     }];
     [hubConnection setClosed:^{
         NSLog(@"Connection Closed");
@@ -414,9 +414,12 @@
                             }
                             else
                             {
-                                userInfomationData.micMockListPageIndex = 1; //每次重新进入聊天室，当前分页置为0
-                                userInfomationData.currentPage = 1;
-                                [self getMessageInRoom:@"" roomId:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"]];
+                                dispatch_async(dispatch_get_main_queue(), ^{
+                                    userInfomationData.micMockListPageIndex = 1; //每次重新进入聊天室，当前分页置为0
+                                    userInfomationData.currentPage = 1;
+                                    [self getMessageInRoom:@"" roomId:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"id"]];
+                                });
+                                
                             }
                             
                         }
@@ -424,7 +427,6 @@
                     }
                     
                 });
-                
                 
                 self.reConnectionTag = @"";
             }
@@ -1064,8 +1066,12 @@
                 return;
             }
             NSLog(@"ahhahahhadfasdf-*-----  %@",response);
-            userInfomationData.getUsersLikesCountInRoom = response;
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"onGetLikesCountInRoom" object:self];
+            if ([response isKindOfClass:[NSString class]])
+            {
+                userInfomationData.getUsersLikesCountInRoom = response;
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"onGetLikesCountInRoom" object:self];
+            }
+            
             
         }];
     }
@@ -1091,10 +1097,14 @@
                 return;
             }
             NSLog(@"ahhahahhadfasdfxxxxxx-*-----  %@",response);
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"onGetLikesInRoom" object:self];
-            for (NSInteger i = 0; i < [response count]; i ++) {
-                [userInfomationData.getUsersLikesInRoomMutableArr addObject:[response objectAtIndex:i]];
+            if ([response isKindOfClass:[NSArray class]])
+            {
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"onGetLikesInRoom" object:self];
+                for (NSInteger i = 0; i < [response count]; i ++) {
+                    [userInfomationData.getUsersLikesInRoomMutableArr addObject:[response objectAtIndex:i]];
+                }
             }
+            
             
         }];
     }

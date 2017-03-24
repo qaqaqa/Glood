@@ -360,12 +360,12 @@
 //    // 启动
 //    [thread start];
     
-    if ([self.myAppDelegate.networkStatus isEqualToString:@"lost"]) {
-        userInfomationData.micMockListPageIndex ++;
-        [self getMicHistoryListMock];
-    }
-    else
-    {
+//    if ([self.myAppDelegate.networkStatus isEqualToString:@"lost"]) {
+//        userInfomationData.micMockListPageIndex ++;
+//        [self getMicHistoryListMock];
+//    }
+//    else
+//    {
         dispatch_async(dispatch_get_global_queue(0, 0), ^{
             // 处理耗时操作的代码块...
             [self onGetMessageInRoom];
@@ -375,7 +375,7 @@
             });
             
         });
-    }
+//    }
     
     
 }
@@ -654,7 +654,6 @@
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (_lastIndexPathRow < indexPath.row) {
-        NSLog(@"向上滚动");
         _upOrDownStr = @"up";
         _bottomCellIndexPathRow = indexPath.row;
         
@@ -663,10 +662,8 @@
         if (indexPath.row >= 4) {
             _bottomCellIndexPathRow = indexPath.row+4;
         }
-        NSLog(@"向下滚动");
     }
     if ([self.historyMicListArr count] >= 5) {
-        NSLog(@"ad-*-*---*-*-*--------  %lu-+------ %ld",(unsigned long)[self.historyMicListArr count],(long)_bottomCellIndexPathRow);
         if ([self.historyMicListArr count] - _bottomCellIndexPathRow >= 6) {
             self.listScrollToTottom = @"no";
         }
@@ -680,7 +677,6 @@
         self.listScrollToTottom = @"yes";
     }
     _lastIndexPathRow = indexPath.row;
-    NSLog(@"xx-x-x-x-x-----x-x-------  %ld",(long)indexPath.row);
     Mic *mic = self.historyMicListArr[[self.historyMicListArr count] - indexPath.row-1];
     if ([self.playingVoiceMessageIdStr isEqualToString:mic.messageId]) {
         self.upHeadButtonTag =indexPath.row+headImageButtonTag;
@@ -910,6 +906,10 @@ float lastContentOffset;
     
     if (scrollView == self.tableView) {
         CGFloat y = scrollView.contentOffset.y;
+        if (y > scrollView.contentSize.height) {
+            NSLog(@"fadfa-*d-*-*-*---x-x-x-x---111111  %f",scrollView.contentSize.height);
+            y = scrollView.contentSize.height;
+        }
         lastContentOffset = y;
     }
 }
@@ -966,10 +966,13 @@ float lastContentOffset;
         {
             NSInteger i = [self.historyMicListArr count];
             if (i>=4) {
-                
-                [self.tableView setContentOffset:CGPointMake(0.0, lastContentOffset-55) animated:NO];
-//                NSIndexPath *lastPath = [NSIndexPath indexPathForRow: _bottomCellIndexPathRow-1 inSection: 0 ];
-//                [self.tableView scrollToRowAtIndexPath:lastPath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+                if (lastContentOffset <= -32) {
+                    [self.tableView setContentOffset:CGPointMake(0.0, 0.0) animated:NO];
+                }
+                else
+                {
+                    [self.tableView setContentOffset:CGPointMake(0.0, lastContentOffset-55) animated:NO];
+                }
             }
             
             
@@ -992,14 +995,20 @@ float lastContentOffset;
                 if (lastPath.row > [self.historyMicListArr count]) {
                     lastPath = [NSIndexPath indexPathForRow: [self.historyMicListArr count]-1 inSection: 0 ];
                 }
-                [self.tableView scrollToRowAtIndexPath:lastPath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+                if ((i%20)-1 < 99999999) {
+                    [self.tableView scrollToRowAtIndexPath:lastPath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+                }
+                
             }
             else if((20*userInfomationData.micMockListPageIndex) > [self.historyMicListArr count] && [self.historyMicListArr count] > 4)
             {
                 if ((20*userInfomationData.micMockListPageIndex) - [self.historyMicListArr count] <= 20) {
                     NSLog(@"xxc*vx-c*v--*-----  %lu",(i%20)-1);
-                    NSIndexPath *lastPath = [NSIndexPath indexPathForRow: (i%20)-1+3 inSection: 0 ];
-                    [self.tableView scrollToRowAtIndexPath:lastPath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+                    if ((i%20)-1 < 99999999) {
+                        NSIndexPath *lastPath = [NSIndexPath indexPathForRow: (i%20)-1+3 inSection: 0 ];
+                        [self.tableView scrollToRowAtIndexPath:lastPath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+                    }
+                    
                 }
                 
             }

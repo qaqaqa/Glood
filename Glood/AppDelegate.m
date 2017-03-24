@@ -172,7 +172,7 @@
 - (void)subscribeToTopic:(NSDictionary*)dic
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [[NSUserDefaults standardUserDefaults] setObject:@"open" forKey:@"signlarStauts"];
+//        [[NSUserDefaults standardUserDefaults] setObject:@"open" forKey:@"signlarStauts"];
         for (NSInteger i = 0; i < [[dic objectForKey:@"result"] count]; i ++) {
             [[FIRMessaging messaging] subscribeToTopic:[NSString stringWithFormat:@"/topics/events-%@",[[[dic objectForKey:@"result"] objectAtIndex:i] objectForKey:@"id"]]];
             NSLog(@"Subscribed to news topic");

@@ -234,7 +234,7 @@
     }
     
     self.gcdView = [[UIView alloc] init];
-    self.gcdView.frame = CGRectMake((SCREEN_WIDTH-(SCREEN_WIDTH*200/320))/2, (SCREEN_HEIGHT-(SCREEN_WIDTH*200/320))/2, SCREEN_WIDTH*200/320, SCREEN_WIDTH*200/320);
+    self.gcdView.frame = CGRectMake((SCREEN_WIDTH-(SCREEN_WIDTH*120/320))/2, (SCREEN_HEIGHT-(SCREEN_WIDTH*120/320))/2, SCREEN_WIDTH*120/320, SCREEN_WIDTH*120/320);
     self.gcdView.backgroundColor = [UIColor whiteColor];
     self.gcdView.layer.cornerRadius = 8;
     self.gcdView.layer.masksToBounds = YES;
@@ -242,7 +242,7 @@
     [self.view addSubview:self.gcdView];
     
     self.gcdLabel = [[UILabel alloc] init];
-    self.gcdLabel.frame = CGRectMake((SCREEN_WIDTH-(SCREEN_WIDTH*200/320))/2, (SCREEN_HEIGHT-(SCREEN_WIDTH*200/320))/2, self.gcdView.frame.size.width, self.gcdView.frame.size.height);
+    self.gcdLabel.frame = CGRectMake((SCREEN_WIDTH-(SCREEN_WIDTH*120/320))/2, (SCREEN_HEIGHT-(SCREEN_WIDTH*120/320))/2, self.gcdView.frame.size.width, self.gcdView.frame.size.height);
     self.gcdLabel.textAlignment = NSTextAlignmentCenter;
     self.gcdLabel.font = [UIFont boldSystemFontOfSize:50];
     [self.gcdLabel setHidden:YES];
@@ -993,7 +993,6 @@
         default:
             break;
     }
-    NSLog(@"sdfasdf*a-sd*f-asd*f-asd*f-*---------- %ld",self.timerCount);
     
     //    [UIView animateWithDuration:1.5 animations:^{
     //        self.soundingRecoringButton.transform = CGAffineTransformMakeScale(1.1,1.1);
@@ -1234,6 +1233,8 @@
 - (void)onCancelSoundRecoringBtnClick:(id)sender
 {
     [self.animationtTimer invalidate];
+    [self.gcdView setHidden:YES];
+    [self.gcdLabel setHidden:YES];
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
     AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeAudio];
     if ([userInfomationData.isEnterMicList isEqualToString:@"true"] && (authStatus ==AVAuthorizationStatusNotDetermined || authStatus ==AVAuthorizationStatusAuthorized)) {
@@ -1312,7 +1313,7 @@
         }else{
             //找到语音列表里tag值最大的，也就是预加载的那条语音
             
-            NSString *strTime = [NSString stringWithFormat:@"%d秒",timeout];
+            NSString *strTime = [NSString stringWithFormat:@"%d",timeout];
             dispatch_async(dispatch_get_main_queue(), ^{
                 //设置界面的按钮显示 根据自己需求设置
                 if (timeout < 10) {
@@ -1421,7 +1422,6 @@
     self.soundingRecoringVoiceButton.userInteractionEnabled = YES;
     //每次进入聊天室页面检查麦克风权限是否开启
     AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeAudio];
-    NSLog(@"*-*-*--*hahhah---想休息休息休息 %ld",(long)authStatus);
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
     userInfomationData.refushStr = @"no";
     if ((authStatus ==AVAuthorizationStatusRestricted || authStatus ==AVAuthorizationStatusDenied)) {

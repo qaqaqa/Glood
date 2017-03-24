@@ -217,7 +217,7 @@ typedef void (^SRCompletionHandler)(id response, NSError *error);
         else if ([strongSelf tryCompleteAbort]) {
         }
         else {
-            [strongSelf reconnect:strongConnection data:connectionData];
+//            [strongSelf reconnect:strongConnection data:connectionData];
         }
     };
     [_eventSource start];
@@ -229,7 +229,7 @@ typedef void (^SRCompletionHandler)(id response, NSError *error);
             [strongSelf completeAbort];
         } else if ([strongSelf tryCompleteAbort]) {
         } else {
-            [strongSelf reconnect:strongConnection data:connectionData];
+//            [strongSelf reconnect:strongConnection data:connectionData];
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         SRLogSSEError(@"serverSentEvents did fail with error %@", error);

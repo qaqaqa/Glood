@@ -84,7 +84,6 @@
 #pragma mark LongPolling
 
 - (void)poll:(id<SRConnectionInterface>)connection connectionData:(NSString *)connectionData completionHandler:(void (^)(id response, NSError *error))block {
-    
     __block NSNumber *canReconnect = @(YES);
 
     NSString *url = connection.url;
@@ -212,6 +211,7 @@
             
         }] performSelector:@selector(start) withObject:nil afterDelay:[self.reconnectDelay integerValue]];
     }
+    
 }
 
 - (void)connectionReconnect:(id<SRConnectionInterface>)connection canReconnect:(NSNumber *)canReconnect {
