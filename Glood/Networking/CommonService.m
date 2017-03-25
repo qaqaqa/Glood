@@ -845,7 +845,7 @@
 - (void)getMessageInRoomReconnection:(NSString *)lastMessageId roomId:(NSString *)roomIdContent
 {
     
-    [MMProgressHUD showWithTitle:@"Synchronous chat log" status:NSLocalizedString(@"Please wating", nil)];
+    
     
     if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"open"] && ![CommonService isBlankString:roomIdContent]) {
         
@@ -853,6 +853,7 @@
         userInfomationData.apiRoomIdStr = roomIdContent;
         NSLog(@"***-------  %@",roomIdContent);
         [userInfomationData.chat invoke:@"getMessagesInRoom" withArgs:@[roomIdContent,@"Audio",lastMessageId,@"20"] completionHandler:^(id response, NSError *error) {
+            [MMProgressHUD showWithTitle:@"Synchronous chat log" status:NSLocalizedString(@"Please wating", nil)];
             self.reconnectionGetChatHistoryCount ++;
                 if (error) {
                     NSLog(@"xxxxxxxxxxx----%@",error.description);
