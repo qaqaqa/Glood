@@ -26,6 +26,7 @@
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (strong, nonatomic) EventViewController *eventVC;
 @property (strong, nonatomic) AppDelegate *myAppDelegate;
+@property (assign, nonatomic) NSInteger reconnectionGetChatHistoryCount;
 @end
 @implementation CommonService
 
@@ -311,7 +312,7 @@
         }
         else
         {
-            [ShowMessage showMessage:@"disconnect chatroom"];
+//            [ShowMessage showMessage:@"disconnect chatroom"];
         }
         
     }];
@@ -403,12 +404,16 @@
 //                [thread start];
                 userInfomationData.micMockListPageIndex = 1; //每次重新进入聊天室，当前分页置为0
                 userInfomationData.currentPage = 1;
+                self.reconnectionGetChatHistoryCount = 0;
                 [self getMessageInRoom:@"" roomId:userInfomationData.currtentRoomIdStr];
                 dispatch_queue_t q = dispatch_queue_create("fs", DISPATCH_QUEUE_SERIAL);
                 dispatch_async(q, ^{
+                    
+                    [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
                     for (NSInteger i = 0; i < [[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] count]; i ++) {
                         if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"open"]) {
                             if (![userInfomationData.currtentRoomIdStr isEqualToString:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"id"]]) {
+                                
                                 [self getMessageInRoomReconnection:@"" roomId:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"id"]];
 //                                if (i == [[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] count]-1) {
 //                                    UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
@@ -459,7 +464,7 @@
     }
     else
     {
-        [ShowMessage showMessage:@"disconnect chatroom"];
+//        [ShowMessage showMessage:@"disconnect chatroom"];
     }
     
 }
@@ -755,7 +760,7 @@
     }
     else
     {
-        [ShowMessage showMessage:@"disconnect chatroom"];
+//        [ShowMessage showMessage:@"disconnect chatroom"];
     }
     
 }
@@ -832,7 +837,7 @@
     }
     else
     {
-        [ShowMessage showMessage:@"disconnect chatroom"];
+//        [ShowMessage showMessage:@"disconnect chatroom"];
     }
     
 }
@@ -840,13 +845,15 @@
 - (void)getMessageInRoomReconnection:(NSString *)lastMessageId roomId:(NSString *)roomIdContent
 {
     
+    [MMProgressHUD showWithTitle:@"Synchronous chat log" status:NSLocalizedString(@"Please wating", nil)];
+    
     if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"open"] && ![CommonService isBlankString:roomIdContent]) {
         
         UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
         userInfomationData.apiRoomIdStr = roomIdContent;
         NSLog(@"***-------  %@",roomIdContent);
         [userInfomationData.chat invoke:@"getMessagesInRoom" withArgs:@[roomIdContent,@"Audio",lastMessageId,@"20"] completionHandler:^(id response, NSError *error) {
-            
+            self.reconnectionGetChatHistoryCount ++;
                 if (error) {
                     NSLog(@"xxxxxxxxxxx----%@",error.description);
                     [MMProgressHUD dismissWithError:@"Error"];
@@ -902,7 +909,11 @@
                 //                [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryList" object:self];
                 //                [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
                 //            }
+            NSLog(@"asdfaadfadf*a-f*-a*-fas--------- %ld---%lu",(long)self.reconnectionGetChatHistoryCount,[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] count]);
+            if (self.reconnectionGetChatHistoryCount/2 == [[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] count]) {
                 [MMProgressHUD dismiss];
+            }
+            
 //            });
             
             
@@ -1117,7 +1128,7 @@
                     [userInfomationData.blockUsersMutableArr addObject:[[[NSUserDefaults standardUserDefaults] objectForKey:@"blockUsersList"] objectAtIndex:i]];
                 }
                 if ([isShowMessage isEqualToString:@"yes"]) {
-                    [ShowMessage showMessage:@"getBlockUsers successfully"];
+//                    [ShowMessage showMessage:@"getBlockUsers successfully"];
                 }
                 else
                 {
@@ -1160,7 +1171,7 @@
     }
     else
     {
-        [ShowMessage showMessage:@"disconnect chatroom"];
+//        [ShowMessage showMessage:@"disconnect chatroom"];
     }
 }
 
@@ -1193,7 +1204,7 @@
     }
     else
     {
-        [ShowMessage showMessage:@"disconnect chatroom"];
+//        [ShowMessage showMessage:@"disconnect chatroom"];
     }
 }
 

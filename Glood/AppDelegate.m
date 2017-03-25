@@ -459,16 +459,16 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
 {
     //查询数据库，如果当前需要插入的messageid在数据库不存在，则
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Mic"];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"accountId = %@ AND roomId = %@ AND messageId = %@",[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID],roomIdx,messageIdx]];
+//    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"accountId = %@ AND roomId = %@ AND messageId = %@",[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID],roomIdx,messageIdx]];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"accountId = %@ AND messageId = %@",[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID],messageIdx]];
     request.predicate = predicate;
     
-    NSFetchRequest *requestxx = [[NSFetchRequest alloc] initWithEntityName:@"Mic"];
-    NSPredicate *predicatexx = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"accountId = %@ AND roomId = %@",[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID],roomIdx]];
-    requestxx.predicate = predicatexx;
+//    NSFetchRequest *requestxx = [[NSFetchRequest alloc] initWithEntityName:@"Mic"];
+//    NSPredicate *predicatexx = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"accountId = %@ AND roomId = %@",[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID],roomIdx]];
+//    requestxx.predicate = predicatexx;
     //  执行这个查询请求
     NSError *error = nil;
     NSArray *result = [self.managedObjectContext executeFetchRequest:request error:&error];
-    
     
     if ([result count] == 0) {
         UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
