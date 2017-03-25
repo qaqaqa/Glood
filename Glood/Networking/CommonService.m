@@ -88,6 +88,9 @@
         NSLog(@"JSON: %@", responseObject);
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Error: %@", error);
+        NSData *errorData = error.userInfo[AFNetworkingOperationFailingURLResponseDataErrorKey];
+        NSDictionary *serializedData = [NSJSONSerialization JSONObjectWithData: errorData options:kNilOptions error:nil];
+        [MMProgressHUD dismissWithError:[[serializedData objectForKey:@"error"] objectForKey:@"message"] afterDelay:2.0f];
         [requestDeferred rejectWithError:error];
     }];
     
@@ -130,7 +133,7 @@
                 return value;
             } error:^id(NSError *error) {
                 NSLog(@"调用外部注册失败--- %@",error);
-                [MMProgressHUD dismissWithError:@"register error" afterDelay:2.0f];
+//                [MMProgressHUD dismissWithError:@"register error" afterDelay:2.0f];
                 return error;
             }];
         }
@@ -910,7 +913,6 @@
                 //                [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryList" object:self];
                 //                [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
                 //            }
-            NSLog(@"asdfaadfadf*a-f*-a*-fas--------- %ld---%lu",(long)self.reconnectionGetChatHistoryCount,[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] count]);
             if (self.reconnectionGetChatHistoryCount/2 == [[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] count]) {
                 [MMProgressHUD dismiss];
             }
