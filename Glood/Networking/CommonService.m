@@ -405,7 +405,7 @@
 //                userInfomationData.micMockListPageIndex = 1; //每次重新进入聊天室，当前分页置为0
 //                userInfomationData.currentPage = 1;
 //                [self getMessageInRoom:@"" roomId:userInfomationData.currtentRoomIdStr];
-                
+
                     for (NSInteger i = 0; i < [[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] count]; i ++) {
                         if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"signlarStauts"] isEqualToString:@"open"]) {
                             if (![userInfomationData.currtentRoomIdStr isEqualToString:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"id"]]) {
@@ -419,6 +419,7 @@
                             }
                             else
                             {
+                                
                                 dispatch_async(dispatch_get_main_queue(), ^{
                                     userInfomationData.micMockListPageIndex = 1; //每次重新进入聊天室，当前分页置为0
                                     userInfomationData.currentPage = 1;

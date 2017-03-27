@@ -641,7 +641,15 @@
 {
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
     userInfomationData.yuMessageId ++;
-    NSString *roomId = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
+    NSString *roomId;
+    if ([CommonService isBlankString:userInfomationData.QRRoomId]) {
+        roomId = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
+    }
+    else
+    {
+        roomId = userInfomationData.QRRoomId;
+    }
+//    NSString *roomId = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
     [self.myAppDelegate insertCoreDataxx:[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID] avatarImage:[[NSUserDefaults standardUserDefaults] objectForKey:USER_AVATAR_URL] roomId:roomId time:@0 message:@"100" messageId:[NSString stringWithFormat:@"%lld",userInfomationData.yuMessageId] fromUserName:[[NSUserDefaults standardUserDefaults] objectForKey:USER_NAME] like:0];
     NSLog(@"xxxxcx---mockview-%@===%@--- %lld",roomId,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID],userInfomationData.yuMessageId);
     //如果是用户自己发的信息，则跳转到底部
@@ -1004,8 +1012,12 @@ float lastContentOffset;
             {
                 if ((20*userInfomationData.micMockListPageIndex) - [self.historyMicListArr count] <= 20) {
                     NSLog(@"xxc*vx-c*v--*-----  %lu",(i%20)-1);
-                    if ((i%20)-1 < 99999999) {
+                    if ((i%20)-1 < 99999999 && (i%20)-1 >= 20) {
                         NSIndexPath *lastPath = [NSIndexPath indexPathForRow: (i%20)-1+3 inSection: 0 ];
+                        [self.tableView scrollToRowAtIndexPath:lastPath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+                    }
+                    if (i < 20 ) {
+                        NSIndexPath *lastPath = [NSIndexPath indexPathForRow: [self.historyMicListArr count]-1 inSection: 0 ];
                         [self.tableView scrollToRowAtIndexPath:lastPath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
                     }
                     
