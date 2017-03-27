@@ -82,5 +82,7 @@
 
 @property (strong, nonatomic) NSString *apiRoomIdStr; //当前通过api正在请求的roomId,目前主要用于断线重连后拉取所有活动的聊天信息
 
+//@property (strong, nonatomic) NSString *isReconnectionGetMessageInRoomStr; //是否断线重连并且重新拉取了当前聊天室的聊天记录
+
 
 @end

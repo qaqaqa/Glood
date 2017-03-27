@@ -74,7 +74,14 @@
 - (void)belike
 {
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
-    self.heartCountLabel.text = [NSString stringWithFormat:@"%@",userInfomationData.getUsersLikesCountInRoom];
+    if ([CommonService isBlankString:userInfomationData.getUsersLikesCountInRoom]) {
+        self.heartCountLabel.text = @"0";
+    }
+    else
+    {
+        self.heartCountLabel.text = [NSString stringWithFormat:@"%@",userInfomationData.getUsersLikesCountInRoom];
+    }
+    
 }
 
 - (void)setupFooter

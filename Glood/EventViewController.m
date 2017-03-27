@@ -354,11 +354,21 @@
 - (void)onShowLikeView
 {
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        userInfomationData.getUsersLikesInRoomMutableArr = [[NSMutableArray alloc] initWithCapacity:10];
-        userInfomationData.getUsersLikesInRoomId = self.currentRroomIdStr;
-        [userInfomationData.commonService getUserLikesInRoom:self.currentRroomIdStr lastLikeId:@"" count:@"10"];
-    });
+    if ([CommonService isBlankString:userInfomationData.getUsersLikesCountInRoom]) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [userInfomationData.commonService getUserLikesCountInRoom:self.currentRroomIdStr];
+        });
+    }
+    else
+    {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            userInfomationData.getUsersLikesInRoomMutableArr = [[NSMutableArray alloc] initWithCapacity:10];
+            userInfomationData.getUsersLikesInRoomId = self.currentRroomIdStr;
+            [userInfomationData.commonService getUserLikesInRoom:self.currentRroomIdStr lastLikeId:@"" count:@"10"];
+        });
+    }
+    
+    
     self.largrLikeLeftBottomButton.userInteractionEnabled = NO;
     self.likeLeftBottomButton.userInteractionEnabled = NO;
     [self performSelector:@selector(largrLikeLeftBottomButtonCanTouch) withObject:nil afterDelay:1.0f];
@@ -373,6 +383,7 @@
 
 - (void)onGetLikesInRoom
 {
+    [self.likeView removeFromSuperview];
     self.likeView = [[LikeView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
     [self.view addSubview:self.likeView];
 }
@@ -1536,11 +1547,11 @@
         [self.mockView.lastBgView setHidden:YES];
         
         //获取在一个房间中被喜欢的数量
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            [userInfomationData.commonService getUserLikesCountInRoom:self.currentRroomIdStr];
-            self.likeLfetBottomLabel.text = userInfomationData.getUsersLikesCountInRoom;
-        });
+        
     }];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [userInfomationData.commonService getUserLikesCountInRoom:self.currentRroomIdStr];
+    });
     
 }
 

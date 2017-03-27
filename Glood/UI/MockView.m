@@ -1014,6 +1014,11 @@ float lastContentOffset;
             }
             
         }
+//        if ([userInfomationData.isReconnectionGetMessageInRoomStr isEqualToString:@"yes"]) {
+//            [self.tableView setContentOffset:CGPointMake(0.0, lastContentOffset) animated:NO];
+//            
+//            userInfomationData.isReconnectionGetMessageInRoomStr = @"";
+//        }
     }
     
     
