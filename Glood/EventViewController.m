@@ -1551,6 +1551,7 @@
     }];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [userInfomationData.commonService getUserLikesCountInRoom:self.currentRroomIdStr];
+        userInfomationData.getUsersLikesCountInRoom = @"";
     });
     
 }
@@ -1608,6 +1609,7 @@
     self.currentRroomIdStr = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [userInfomationData.commonService getUserLikesCountInRoom:self.currentRroomIdStr];
+        userInfomationData.getUsersLikesCountInRoom = @"";
     });
     
 }
