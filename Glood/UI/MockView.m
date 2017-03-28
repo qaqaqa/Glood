@@ -523,7 +523,7 @@
             
         }
         
-        [self.micTableViewCell.headImageButton sd_setImageWithURL:mic.avatarImage forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"171604419.jpg"]];
+        [self.micTableViewCell.headImageButton sd_setImageWithURL:[NSURL URLWithString:mic.avatarImage] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"171604419.jpg"]];
         self.micTableViewCell.nameLabel.text = mic.fromUserName;
         
         self.micTableViewCell.userIdLabel.tag = userIdLabelTag+indexPath.row;
@@ -625,7 +625,7 @@
         find_headImageButtonView1.transform = CGAffineTransformIdentity;
         Mic *mic = self.historyMicListArr[[self.historyMicListArr count] -1- (self.upHeadButtonTag-headImageButtonTag)];
         [self.myAppDelegate updateIsReadMessageId:mic.messageId isReadReady:@"1"];
-        NSLog(@"sdfsd*--*-*-*------  %ld----%ld=====%u----%@",(long)self.upHeadButtonTag,(unsigned long)[self.historyMicListArr count],[self.historyMicListArr count] -1- (self.upHeadButtonTag-headImageButtonTag),mic.messageId);
+        NSLog(@"sdfsd*--*-*-*------  %ld----%ld=====%lu----%@",(long)self.upHeadButtonTag,(unsigned long)[self.historyMicListArr count],[self.historyMicListArr count] -1- (self.upHeadButtonTag-headImageButtonTag),mic.messageId);
         find_bgImageView1.backgroundColor = [UIColor whiteColor];
         find_bgImageView1.alpha = 0.5;
 //        [self.tableView reloadData];

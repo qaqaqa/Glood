@@ -83,7 +83,7 @@ static const char *kScanQRCodeQueueName = "ScanQRCodeQueue";
         
         [self startReading];
         //启动定时器
-        [self createTimer];
+//        [self createTimer];
     }
     else
     {
@@ -114,7 +114,7 @@ static const char *kScanQRCodeQueueName = "ScanQRCodeQueue";
     [super viewWillDisappear:animated];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"onAddTicketsFail" object:nil];
     
-    [self stopTimer];
+//    [self stopTimer];
     _captureSession = nil;
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"joinRoom" object:nil];
@@ -341,7 +341,7 @@ static const char *kScanQRCodeQueueName = "ScanQRCodeQueue";
 //    [_scanView addSubview:downView];
     
     //画中间的基准线
-    _QrCodeline = [[UIImageView alloc] initWithFrame:CGRectMake(10, SCANVIEW_EdgeTop, VIEW_WIDTH-20, 4)];
+    _QrCodeline = [[UIImageView alloc] initWithFrame:CGRectMake(0, SCANVIEW_EdgeTop-5, VIEW_WIDTH, 6)];
     [_QrCodeline setImage:[UIImage imageNamed:@"lineqr"]];
 //    _QrCodeline.backgroundColor = [UIColor greenColor];
     [_scanView addSubview:_QrCodeline];
@@ -362,11 +362,18 @@ static const char *kScanQRCodeQueueName = "ScanQRCodeQueue";
     [self.view addSubview:cancelButton];
     
     // 先让第二根线运动一次,避免定时器执行的时差,让用户感到启动App后,横线就开始移动
-    [UIView animateWithDuration:2.2 animations:^{
-        _QrCodeline.frame = CGRectMake(10, VIEW_HEIGHT*410/568, VIEW_WIDTH-20, 4);
-    } completion:^(BOOL finished) {
-        _QrCodeline.frame = CGRectMake(10, SCANVIEW_EdgeTop, VIEW_WIDTH-20, 4);
-    }];
+    
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDuration:2.2f];
+    UIView.animationRepeatCount =HUGE_VALF;
+    _QrCodeline.frame = CGRectMake(10, VIEW_HEIGHT*410/568, VIEW_WIDTH-20, 6);
+    [UIView commitAnimations];
+
+//    [UIView animateWithDuration:2.2 animations:^{
+//        _QrCodeline.frame = CGRectMake(10, VIEW_HEIGHT*410/568, VIEW_WIDTH-20, 4);
+//    } completion:^(BOOL finished) {
+//        _QrCodeline.frame = CGRectMake(10, SCANVIEW_EdgeTop, VIEW_WIDTH-20, 4);
+//    }];
     
 }
 

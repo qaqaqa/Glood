@@ -487,7 +487,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark PagedFlowView Datasource
-//返回显示View的个数
+//返回显示View的 个数
 - (NSInteger)numberOfPagesInFlowView:(PagedFlowView *)flowView{
     return [self.dataArr count];
 }
@@ -495,12 +495,15 @@
 //返回给某列使用的View
 
 - (UIView *)flowView:(PagedFlowView *)flowView cellForPageAtIndex:(NSInteger)index{
+    
     [[NSUserDefaults standardUserDefaults] setInteger:index forKey:@"eventIndex"];
     EventCoverFlowView *eventCoverFlowView = (EventCoverFlowView *)[flowView dequeueReusableCell];
-        eventCoverFlowView = [[EventCoverFlowView alloc] init];
-        eventCoverFlowView.tag = eventCoverFlowTag+index;
-        [eventCoverFlowView.infoButton addTarget:self action:@selector(onInfoClick:) forControlEvents:UIControlEventTouchUpInside];
-        [eventCoverFlowView.checkInButton addTarget:self action:@selector(onCheckInClick:) forControlEvents:UIControlEventTouchUpInside];
+    eventCoverFlowView = [[EventCoverFlowView alloc] init];
+    eventCoverFlowView.tag = eventCoverFlowTag+index;
+    [eventCoverFlowView.infoButton addTarget:self action:@selector(onInfoClick:) forControlEvents:UIControlEventTouchUpInside];
+    [eventCoverFlowView.checkInButton addTarget:self action:@selector(onCheckInClick:) forControlEvents:UIControlEventTouchUpInside];
+    
+    
     UISwipeGestureRecognizer *recognizerUp = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipePushChatRoom:)];
     recognizerUp.direction = UISwipeGestureRecognizerDirectionUp;
     [eventCoverFlowView addGestureRecognizer:recognizerUp];
