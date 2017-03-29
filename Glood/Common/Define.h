@@ -24,6 +24,7 @@
 #define USER_NAME @"user_name"
 #define USER_CLIENT_ID @"user_client_id"
 
-#define SIGNLAR_URL @"https://event-chat.sparxo.com/"
+//#define SIGNLAR_URL @"https://event-chat.sparxo.com/"
+#define SIGNLAR_URL @"https://dev-event-chat.sparxo.com/"
 
 #define NULL_TO_NIL(obj) ({ __typeof__ (obj) __obj = (obj); __obj == [NSNull null] ? nil : obj; })

@@ -930,6 +930,7 @@
             if (response == NULL) {
                 return;
             }
+            NSLog(@"--*-*-*-*-*sa-d*f-a*-*-------  %@",response);
             if ([response isKindOfClass:[NSArray class]])
             {
                 userInfomationData.getApiMicCount = [response count];
@@ -947,11 +948,12 @@
                             {
                                 nameStr = [NSString stringWithFormat:@"%@ %@.",[[response objectAtIndex:i] objectForKey:@"name"],[[[response objectAtIndex:i] objectForKey:@"surname"] substringToIndex:1].uppercaseString];
                             }
-                            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
-                            {
+                            
+//                            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
+//                            {
                                 [self.myAppDelegate insertCoreData:[[response objectAtIndex:i] objectForKey:@"user_id"] avatarImage:[NSString stringWithFormat:@"%@?%@",[[response objectAtIndex:i] objectForKey:@"user_avatar"],@"width=300&height=300"] roomId:[[response objectAtIndex:i] objectForKey:@"room_id"] time:[NSNumber numberWithFloat:[[arr objectAtIndex:0] floatValue]] message:[arr objectAtIndex:1] messageId:[[response objectAtIndex:i] objectForKey:@"id"] fromUserName:nameStr like:[[response objectAtIndex:i] objectForKey:@"like"]];
 //                                [self.myAppDelegate insertCoraData:[[response objectAtIndex:i] objectForKey:@"room_id"] lastMessageId:[[response objectAtIndex:[response count]-1] objectForKey:@"id"] beginMessageId:[[response objectAtIndex:0] objectForKey:@"id"]];
-                            });
+//                            });
                             
                             userInfomationData.inRoomMessageForRoomIdStr = [[response objectAtIndex:i] objectForKey:@"room_id"];
                             
@@ -1190,6 +1192,42 @@
     {
 //        [ShowMessage showMessage:@"disconnect chatroom"];
     }
+}
+
+#pragma mark ======== 下载语音 =========
+- (void)downVideo:(NSString *)url save:(NSString *)path filename:(NSString *)fileName
+{
+    UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+    BOOL isDir = NO;
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    BOOL existed = [fileManager fileExistsAtPath:path isDirectory:&isDir];
+    if ( !(isDir == YES && existed == YES) )
+    {
+        //文件不存在，去下载
+        NSLog(@"sdfasf*-a-*-*----  %@----%@-----%@",url,path,fileName);
+        
+        AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]]];
+        operation.inputStream = [NSInputStream inputStreamWithURL:[NSURL URLWithString:url]];
+        operation.outputStream = [NSOutputStream outputStreamToFileAtPath:path append:NO];
+        //下载进度控制
+        //    [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
+        //          NSLog(@"invokeAsyncronousSTREAMING - Received %lld of %lld bytes", totalBytesRead, totalBytesExpectedToRead);
+        //    }];
+        //已完成下载
+        [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject){
+            NSLog(@"下载完成!!!");
+            [userInfomationData.recordAudio arm:path fileName:fileName];
+        }failure:^(AFHTTPRequestOperation *operation, NSError *error)
+         {
+             NSLog(@"下载失败!!!-- %@",error);
+         }];
+        [operation start];
+    }
+    else
+    {
+        [userInfomationData.recordAudio arm:path fileName:fileName];
+    }
+    
 }
 
 #pragma mark - Fetched results controller

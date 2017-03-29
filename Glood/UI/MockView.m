@@ -17,6 +17,7 @@
 #import "Mic.h"
 #import "AppDelegate.h"
 
+
 @interface MockView ()
 @property (assign, nonatomic) NSInteger upHeadButtonTag;
 @property (strong, nonatomic) AppDelegate *myAppDelegate;
@@ -29,6 +30,7 @@
 @property (strong, nonatomic) NSString *upOrDownStr; //列表向上还是向下滚动
 @property (assign, nonatomic) NSInteger lastIndexPathRow;
 @property (assign, nonatomic) NSInteger bottomCellIndexPathRow; //计算当前屏幕最底部那个cell的row
+@property (assign, nonatomic) NSInteger buttontag;
 
 
 @end
@@ -228,6 +230,7 @@
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(onLikeResultSucess)name:@"likeResultSucess"object:nil];
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(onLikeResultFaile)name:@"likeResultFaile"object:nil];
     [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(onBlockUserSucess)name:@"blockUserSucess"object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver: self selector:@selector(onConvertVoiceSucess)name:@"convertVoiceSucess"object:nil];
 }
 
 - (void)deallocNSNotificationCenter
@@ -244,6 +247,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"likeResultSucess" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"likeResultFaile" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"blockUserSucess" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"convertVoiceSucess" object:nil];
 }
 
 #pragma mark ==========  屏蔽 ===========
@@ -721,6 +725,7 @@
 {
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
     UIButton *button = (UIButton *)sender;
+    self.buttontag = button.tag;
 //    float time;
     Mic *mic = self.historyMicListArr[[self.historyMicListArr count] -1- (button.tag-headImageButtonTag)];
     self.time = [mic.time floatValue];
@@ -730,74 +735,17 @@
 //            self.userInteractionEnabled = NO;
             //在播放之前，暂停所有的播放
             [self recordOrExchangeChatRoomStopAnimation];
-            [userInfomationData.recordAudio saveRecord:mic.message messageId:mic.messageId];
-            [userInfomationData.recordAudio palyRecord:mic.messageId];
-            NSLog(@"点击头像播放------%ld----- %@--- %@",(long)button.tag,mic.messageId,mic.fromUserName);
-            self.upHeadButtonTag = button.tag;
-            self.playingVoiceMessageIdStr = mic.messageId;
-            self.listScrollToTottom = @"no";
-            [self.myAppDelegate updateIsReadMessageId:mic.messageId isReadReady:@"1"];
-            UIImageView *find_bgImageView = (UIImageView *)[self.micBottomImageView viewWithTag:button.tag-headImageButtonTag+bgImageViewTag];
-            find_bgImageView.alpha = 1.0;
-            UIImageView *find_circleOneImageView = (UIImageView *)[self.micBottomImageView viewWithTag:button.tag-headImageButtonTag+circleOneImageViewTag];
-            UIImageView *find_circleTwoImageView = (UIImageView *)[self.micBottomImageView viewWithTag:button.tag-headImageButtonTag+circleTwoImageViewTag];
-            UIButton *find_headImageButtonView = (UIButton *)[self.micBottomImageView viewWithTag:button.tag-headImageButtonTag+headImageButtonTag];
-            [find_bgImageView setImage:[UIImage imageNamed:@"background2.png"]];
-            [UIView animateWithDuration:0.5 animations:^{
-                find_headImageButtonView.transform = CGAffineTransformMakeScale(1.1,1.1);
-            } completion:^(BOOL finished) {
-                self.userInteractionEnabled = YES;
-            }];
-//            find_circleOneImageView.alpha = 1.0;
-//            [UIView beginAnimations:nil context:NULL];
-//            [UIView setAnimationDuration:1.0f];
-//            UIView.animationRepeatCount =HUGE_VALF;
-//            find_circleOneImageView.alpha=0.1;
-//            find_circleOneImageView.transform = CGAffineTransformMakeScale(1.8,1.8);
-//            [UIView commitAnimations];
-            self.circleOneAnimationTimer = [NSTimer scheduledTimerWithTimeInterval:0.0f
-                                                                            target:self
-                                                                          selector:@selector(circleOneAnimationed)
-                                                                          userInfo:nil
-                                                                           repeats:NO];
-            self.circleTwoAnimationTimer = [NSTimer scheduledTimerWithTimeInterval:0.5f
-                                                                         target:self
-                                                                       selector:@selector(circleTwoAnimationed)
-                                                                       userInfo:nil
-                                                                        repeats:NO];
             
+            if ([mic.message rangeOfString:@"https://"].location !=NSNotFound) {
+                //需要下载amr语音
+                [userInfomationData.recordAudio saveRecordAmr:mic.message messageId:mic.messageId];
+            }
+            else
+            {
+                [userInfomationData.recordAudio saveRecord:mic.message messageId:mic.messageId];
+                
+            }
             
-            
-            
-            //播放完毕
-            NSLog(@"当前语音时间-------------------  %f",self.time);
-            self.animationTimer = [NSTimer scheduledTimerWithTimeInterval:self.time
-                                                                   target:self
-                                                                 selector:@selector(resetAnimationed)
-                                                                 userInfo:nil
-                                                                  repeats:NO];
-//            dispatch_time_t popTime1 = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(time * NSEC_PER_SEC));
-//            dispatch_after(popTime1, dispatch_get_main_queue(), ^(void){
-//                [UIView animateWithDuration:0.5 animations:^{
-//                    find_headImageButtonView.transform = CGAffineTransformIdentity;
-//                } completion:^(BOOL finished) {
-//                    self.userInteractionEnabled = YES;
-//                }];
-//                [UIView animateWithDuration:0.0 animations:^{
-//                    [find_bgImageView setImage:[UIImage imageNamed:@""]];
-//                    find_circleTwoImageView.alpha=0.5;
-//                    find_circleTwoImageView.transform = CGAffineTransformIdentity;
-//                    find_circleOneImageView.alpha=0.5;
-//                    find_circleOneImageView.transform = CGAffineTransformIdentity;
-//                } completion:^(BOOL finished) {
-//                    
-//                    [self.myAppDelegate updateIsReadMessageId:mic.messageId isReadReady:@"1"];
-//                    find_bgImageView.backgroundColor = [UIColor whiteColor];
-//                    find_bgImageView.alpha = 0.5;
-////                    [self.tableView reloadData];
-//                    
-//                }];
-//            });
         }
         
     }
@@ -822,6 +770,80 @@
         
     }
     
+}
+
+- (void)onConvertVoiceSucess
+{
+    Mic *mic = self.historyMicListArr[[self.historyMicListArr count] -1- (self.buttontag-headImageButtonTag)];
+    self.time = [mic.time floatValue];
+    UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+    [userInfomationData.recordAudio palyRecord:mic.messageId];
+    NSLog(@"点击头像播放------%ld----- %@--- %@",(long)self.buttontag,mic.messageId,mic.fromUserName);
+    self.upHeadButtonTag = self.buttontag;
+    self.playingVoiceMessageIdStr = mic.messageId;
+    self.listScrollToTottom = @"no";
+    [self.myAppDelegate updateIsReadMessageId:mic.messageId isReadReady:@"1"];
+    UIImageView *find_bgImageView = (UIImageView *)[self.micBottomImageView viewWithTag:self.buttontag-headImageButtonTag+bgImageViewTag];
+    find_bgImageView.alpha = 1.0;
+    UIImageView *find_circleOneImageView = (UIImageView *)[self.micBottomImageView viewWithTag:self.buttontag-headImageButtonTag+circleOneImageViewTag];
+    UIImageView *find_circleTwoImageView = (UIImageView *)[self.micBottomImageView viewWithTag:self.buttontag-headImageButtonTag+circleTwoImageViewTag];
+    UIButton *find_headImageButtonView = (UIButton *)[self.micBottomImageView viewWithTag:self.buttontag-headImageButtonTag+headImageButtonTag];
+    [find_bgImageView setImage:[UIImage imageNamed:@"background2.png"]];
+    [UIView animateWithDuration:0.5 animations:^{
+        find_headImageButtonView.transform = CGAffineTransformMakeScale(1.1,1.1);
+    } completion:^(BOOL finished) {
+        self.userInteractionEnabled = YES;
+    }];
+    //            find_circleOneImageView.alpha = 1.0;
+    //            [UIView beginAnimations:nil context:NULL];
+    //            [UIView setAnimationDuration:1.0f];
+    //            UIView.animationRepeatCount =HUGE_VALF;
+    //            find_circleOneImageView.alpha=0.1;
+    //            find_circleOneImageView.transform = CGAffineTransformMakeScale(1.8,1.8);
+    //            [UIView commitAnimations];
+    self.circleOneAnimationTimer = [NSTimer scheduledTimerWithTimeInterval:0.0f
+                                                                    target:self
+                                                                  selector:@selector(circleOneAnimationed)
+                                                                  userInfo:nil
+                                                                   repeats:NO];
+    self.circleTwoAnimationTimer = [NSTimer scheduledTimerWithTimeInterval:0.5f
+                                                                    target:self
+                                                                  selector:@selector(circleTwoAnimationed)
+                                                                  userInfo:nil
+                                                                   repeats:NO];
+    
+    
+    
+    
+    //播放完毕
+    NSLog(@"当前语音时间-------------------  %f",self.time);
+    self.animationTimer = [NSTimer scheduledTimerWithTimeInterval:self.time
+                                                           target:self
+                                                         selector:@selector(resetAnimationed)
+                                                         userInfo:nil
+                                                          repeats:NO];
+    //            dispatch_time_t popTime1 = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(time * NSEC_PER_SEC));
+    //            dispatch_after(popTime1, dispatch_get_main_queue(), ^(void){
+    //                [UIView animateWithDuration:0.5 animations:^{
+    //                    find_headImageButtonView.transform = CGAffineTransformIdentity;
+    //                } completion:^(BOOL finished) {
+    //                    self.userInteractionEnabled = YES;
+    //                }];
+    //                [UIView animateWithDuration:0.0 animations:^{
+    //                    [find_bgImageView setImage:[UIImage imageNamed:@""]];
+    //                    find_circleTwoImageView.alpha=0.5;
+    //                    find_circleTwoImageView.transform = CGAffineTransformIdentity;
+    //                    find_circleOneImageView.alpha=0.5;
+    //                    find_circleOneImageView.transform = CGAffineTransformIdentity;
+    //                } completion:^(BOOL finished) {
+    //
+    //                    [self.myAppDelegate updateIsReadMessageId:mic.messageId isReadReady:@"1"];
+    //                    find_bgImageView.backgroundColor = [UIColor whiteColor];
+    //                    find_bgImageView.alpha = 0.5;
+    ////                    [self.tableView reloadData];
+    //
+    //                }];
+    //            });
 }
 
 - (void)circleOneAnimationed

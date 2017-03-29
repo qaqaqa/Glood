@@ -187,7 +187,60 @@
     audioPlayer = nil;
 }
 
-#pragma mark ======= 保存语音 ==========
+#pragma mark ======= 保存语音 amr化成wav格式语音==========
+- (void)saveRecordAmr:(NSString *)amrDateUrl messageId:(NSString *)messageIdx
+{
+    UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+    NSLog(@"sdf-*-*-*---------  %@---%@",amrDateUrl,messageIdx);
+    NSString *fileName = [NSString stringWithFormat:@"%@",messageIdx];
+    NSString *cachePath = [self getCachePath];
+    NSString *convertedPath = [self GetPathByFileName:fileName ofType:@"amr"];
+    [userInfomationData.commonService downVideo:amrDateUrl save:convertedPath filename:fileName];
+    
+}
+//语音下载成功后，开始转化
+- (void)arm:(NSString *)convertedPath fileName:(NSString *)fileName
+{
+    BOOL isDir = NO;
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    BOOL existed = [fileManager fileExistsAtPath:convertedPath isDirectory:&isDir];
+    if ( !(isDir == YES && existed == YES) )
+    {
+        NSLog(@"----sdfsf--sdf-sd---- 文件bu存在");
+        [fileManager createDirectoryAtPath:convertedPath withIntermediateDirectories:YES attributes:nil error:nil];
+        pathForFile = [NSString stringWithFormat:@"%@/%@", convertedPath, fileName];
+        //        NSData *sData   = [[NSData alloc] initWithBase64Encoding:base64];
+        //        BOOL ss = [sData writeToFile:pathForFile atomically:YES];
+        self.recordFilePath = [self GetPathByFileName:fileName ofType:@"wav"];
+        NSLog(@"ad-fad-*fa-*f-*das-*-*-------11111  %@---- %@",pathForFile,self.recordFilePath);
+#warning amr转wav
+        if ([VoiceConverter ConvertAmrToWav:convertedPath wavSavePath:self.recordFilePath]){
+            NSLog(@"amr转wav成功");
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"convertVoiceSucess" object:self];
+        }else
+        {
+            [fileManager removeItemAtPath:convertedPath error:nil];
+            [fileManager removeItemAtPath:self.recordFilePath error:nil];
+            NSLog(@"amr转wav失败");
+        }
+        
+        
+        NSURL *audioFileURL = [NSURL fileURLWithPath:self.recordFilePath];
+        AVURLAsset* audioAsset =[AVURLAsset URLAssetWithURL:audioFileURL options:nil];
+        
+        CMTime audioDuration = audioAsset.duration;
+        
+        float audioDurationSeconds =CMTimeGetSeconds(audioDuration);
+        NSString *timeStr = [NSString stringWithFormat:@"%.1f",audioDurationSeconds];
+    }
+    else
+    {
+        NSLog(@"----sdfsf--sdf-sd---- 文件存在");
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"convertVoiceSucess" object:self];
+    }
+}
+
+#pragma mark ======= 保存语音 base64转化成arm，再转化成wav格式语音==========
 - (void)saveRecord:(NSString *)base64 messageId:(NSString *)messageIdx
 {
     NSLog(@"sdf-*-*-*---------  %@---%@",base64,messageIdx);
@@ -206,9 +259,11 @@
             NSData *sData   = [[NSData alloc] initWithBase64Encoding:base64];
             BOOL ss = [sData writeToFile:pathForFile atomically:YES];
             self.recordFilePath = [self GetPathByFileName:fileName ofType:@"wav"];
+            NSLog(@"ad-fad-*fa-*f-*das-*-*-------  %@---- %@",pathForFile,self.recordFilePath);
 #warning amr转wav
             if ([VoiceConverter ConvertAmrToWav:pathForFile wavSavePath:self.recordFilePath]){
                 NSLog(@"amr转wav成功");
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"convertVoiceSucess" object:self];
             }else
             {
                 NSLog(@"amr转wav失败");
@@ -226,6 +281,7 @@
     else
     {
         NSLog(@"----sdfsf--sdf-sd---- 文件存在");
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"convertVoiceSucess" object:self];
     }
 //    });
     
