@@ -233,7 +233,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
 
     // Print full message.
     NSLog(@"hahahah---收到消息：%@---- %@", [userInfo objectForKey:@"topic"], userInfo);
-    if ([[userInfo objectForKey:@"from"] rangeOfString:@"/topics/events-"].location !=NSNotFound) {
+    if ([[userInfo objectForKey:@"topic"] rangeOfString:@"/topics/events-"].location !=NSNotFound) {
         UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
         NSDictionary *msg = [[NSDictionary alloc] init];
         msg = [self dictionaryWithJsonString:[userInfo objectForKey:@"message"]];
@@ -405,8 +405,8 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
 //        NSLog(@"Message ID: %@", userInfo[@"com.aton.MyPushNotifications"]);
 //    }
 //    // Print full message.
-//    NSLog(@"xxxxxxxxxx----收到消息：%@---- %@", userInfo,[userInfo objectForKey:@"from"]);
-//    if ([[userInfo objectForKey:@"from"] rangeOfString:@"/topics/events-"].location !=NSNotFound) {
+//    NSLog(@"xxxxxxxxxx----收到消息：%@---- %@", userInfo,[userInfo objectForKey:@"topic"]);
+//    if ([[userInfo objectForKey:@"topic"] rangeOfString:@"/topics/events-"].location !=NSNotFound) {
 //        
 //    }
 //    

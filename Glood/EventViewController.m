@@ -642,46 +642,53 @@
 - (void)becomeActive
 {
     if ((NSNull *)[[NSUserDefaults standardUserDefaults] objectForKey:@"pushUserInfo"] != [NSNull null]) {
-        for (NSInteger i = 0; i < [(NSMutableArray *)[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] count]; i ++) {
-            NSString *roomId;
-            if ([[[[NSUserDefaults standardUserDefaults] objectForKey:@"pushUserInfo"] objectForKey:@"from"] rangeOfString:@"/topics/events-"].location !=NSNotFound) {
-                roomId = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"pushUserInfo"] objectForKey:@"message"] objectForKey:@"RoomId"];
-            }
-            else if ([[[[NSUserDefaults standardUserDefaults] objectForKey:@"pushUserInfo"] objectForKey:@"from"] rangeOfString:@"/topics/users-"].location !=NSNotFound)
-            {
-                roomId = [[[NSUserDefaults standardUserDefaults] objectForKey:@"pushUserInfo"] objectForKey:@"RoomId"];
-            }
-            if ([roomId isEqualToString:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"id"]]) {
-                NSLog(@"*--*---*--*--xx-----  %@-+--%@",roomId,[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"id"]);
-                [[NSUserDefaults standardUserDefaults] setObject:nil forKey:@"pushUserInfo"];
-                [[NSUserDefaults standardUserDefaults] setInteger:i forKey:@"currentIndex"];
-                self.eventListView.frame = CGRectMake(0, -SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT);
-                UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
-                if ([userInfomationData.isEnterMicList isEqualToString:@"false"])
-                {
-                    [self pushChatRoom];
-                }
-                else
-                {
-                    [self exchangeChatRoom];
-                    NSString *roomId = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
-                    NSArray *result = [[NSArray alloc] initWithArray:[self.myAppDelegate selectCoreDataroomId:roomId]];
-                    //  给数据源数组中添加数据
-                    
-                    if ([result count] > 0) {
-                        [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
+        NSDictionary *msg = [[NSDictionary alloc] init];
+        msg = [self.myAppDelegate dictionaryWithJsonString:[[[NSUserDefaults standardUserDefaults] objectForKey:@"pushUserInfo"] objectForKey:@"message"]];
+        NSLog(@"adfasd-f*as-f*-a*----  %@",msg);
+        if (msg != nil) {
+            for (NSInteger i = 0; i < [(NSMutableArray *)[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] count]; i ++) {
+                NSString *roomId;
+//                if ([[msg objectForKey:@"topic"] rangeOfString:@"/topics/events-"].location !=NSNotFound) {
+//                    roomId = [msg objectForKey:@"room_id"];
+//                }
+//                else if ([[msg objectForKey:@"topic"] rangeOfString:@"/topics/users-"].location !=NSNotFound)
+//                {
+//                    roomId = [msg objectForKey:@"room_id"];
+//                }
+                roomId = [msg objectForKey:@"room_id"];
+                if ([roomId isEqualToString:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"id"]]) {
+                    NSLog(@"*--*---*--*--xx-----  %@-+--%@",roomId,[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"id"]);
+                    [[NSUserDefaults standardUserDefaults] setObject:nil forKey:@"pushUserInfo"];
+                    [[NSUserDefaults standardUserDefaults] setInteger:i forKey:@"currentIndex"];
+                    self.eventListView.frame = CGRectMake(0, -SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT);
+                    UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+                    if ([userInfomationData.isEnterMicList isEqualToString:@"false"])
+                    {
+                        [self pushChatRoom];
                     }
                     else
                     {
-                        UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
-                        [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
-                        [MMProgressHUD showWithTitle:@"get chat history" status:NSLocalizedString(@"Please wating", nil)];
-                        [userInfomationData.commonService getMessageInRoom:@"" roomId:roomId];
+                        [self exchangeChatRoom];
+                        NSString *roomId = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
+                        NSArray *result = [[NSArray alloc] initWithArray:[self.myAppDelegate selectCoreDataroomId:roomId]];
+                        //  给数据源数组中添加数据
+                        
+                        if ([result count] > 0) {
+                            [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
+                        }
+                        else
+                        {
+                            UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+                            [MMProgressHUD setPresentationStyle:MMProgressHUDPresentationStyleShrink];
+                            [MMProgressHUD showWithTitle:@"get chat history" status:NSLocalizedString(@"Please wating", nil)];
+                            [userInfomationData.commonService getMessageInRoom:@"" roomId:roomId];
+                        }
                     }
+                    
                 }
-                
             }
         }
+        
         
     }
 }

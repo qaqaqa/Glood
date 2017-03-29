@@ -830,6 +830,10 @@
                         Mic *mic = result[0];
                         NSLog(@"xxxxxx-*-*-------  ^%@---- %@",mic.messageId,response);
                         mic.messageId = response;
+                        NSArray *arr = [[NSArray alloc] init];
+                        arr = [messgae componentsSeparatedByString:@","];
+                        mic.message = [arr objectAtIndex:1];
+                        mic.time = [arr objectAtIndex:0];
                         NSLog(@"xxxxxx-*-*------hahah-  ^%@----- %@",mic.messageId,response);
                         [self.myAppDelegate saveContext];
                     }
