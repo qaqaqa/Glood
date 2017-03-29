@@ -738,7 +738,7 @@
             
             if ([mic.message rangeOfString:@"https://"].location !=NSNotFound) {
                 //需要下载amr语音
-                [userInfomationData.recordAudio saveRecordAmr:mic.message messageId:mic.messageId];
+                [userInfomationData.recordAudio saveRecordAmr:mic.message messageId:mic.messageId isNotifiction:@"yes"];
             }
             else
             {

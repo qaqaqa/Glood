@@ -643,8 +643,16 @@
 {
     if ((NSNull *)[[NSUserDefaults standardUserDefaults] objectForKey:@"pushUserInfo"] != [NSNull null]) {
         for (NSInteger i = 0; i < [(NSMutableArray *)[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] count]; i ++) {
-            if ([[[[NSUserDefaults standardUserDefaults] objectForKey:@"pushUserInfo"] objectForKey:@"eventId"] isEqualToString:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"id"]]) {
-                NSLog(@"*--*---*--*--xx-----  %@-+--%@",[[[NSUserDefaults standardUserDefaults] objectForKey:@"pushUserInfo"] objectForKey:@"eventId"],[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"id"]);
+            NSString *roomId;
+            if ([[[[NSUserDefaults standardUserDefaults] objectForKey:@"pushUserInfo"] objectForKey:@"from"] rangeOfString:@"/topics/events-"].location !=NSNotFound) {
+                roomId = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"pushUserInfo"] objectForKey:@"message"] objectForKey:@"RoomId"];
+            }
+            else if ([[[[NSUserDefaults standardUserDefaults] objectForKey:@"pushUserInfo"] objectForKey:@"from"] rangeOfString:@"/topics/users-"].location !=NSNotFound)
+            {
+                roomId = [[[NSUserDefaults standardUserDefaults] objectForKey:@"pushUserInfo"] objectForKey:@"RoomId"];
+            }
+            if ([roomId isEqualToString:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"id"]]) {
+                NSLog(@"*--*---*--*--xx-----  %@-+--%@",roomId,[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:i] objectForKey:@"id"]);
                 [[NSUserDefaults standardUserDefaults] setObject:nil forKey:@"pushUserInfo"];
                 [[NSUserDefaults standardUserDefaults] setInteger:i forKey:@"currentIndex"];
                 self.eventListView.frame = CGRectMake(0, -SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT);

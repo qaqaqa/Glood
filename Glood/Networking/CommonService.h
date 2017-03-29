@@ -91,6 +91,6 @@
 - (void)getUserLikesInRoom:(NSString *)roomId lastLikeId:(NSString *)lastLikeIdContent count:(NSString *)countContent;
 
 //下载语音
-- (void)downVideo:(NSString *)url save:(NSString *)path filename:(NSString *)fileName ;
+- (void)downVideo:(NSString *)url save:(NSString *)path filename:(NSString *)fileName isNotifiction:(NSString *)isNotifictionx ;
 
 @end

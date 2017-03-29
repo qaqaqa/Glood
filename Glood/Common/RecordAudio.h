@@ -17,8 +17,8 @@
 @property (strong, nonatomic)   NSString         *recordFileName;
 @property (strong, nonatomic)   NSString         *recordFilePath;
 
-- (void)saveRecordAmr:(NSString *)amrDateUrl messageId:(NSString *)messageIdx;
-- (void)arm:(NSString *)convertedPath fileName:(NSString *)fileName;
+- (void)saveRecordAmr:(NSString *)amrDateUrl messageId:(NSString *)messageIdx isNotifiction:(NSString *)isNotifictionx;
+- (void)arm:(NSString *)convertedPath fileName:(NSString *)fileName isNotifiction:(NSString *)isNotifictionx;
 - (void)saveRecord:(NSString *)base64 messageId:(NSString *)messageIdx;
 - (void)palyRecord:(NSString *)playName;
 - (void)startRecoring:(NSString *)fileName;

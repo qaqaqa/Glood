@@ -16,6 +16,7 @@
 #import <Bugly/Bugly.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <AvoidCrash.h>
+#import "ShowMessage.h"
 @import Firebase;
 @import FirebaseMessaging;
 @import UserNotifications;
@@ -191,6 +192,36 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:@"becomeActive" object:self];
 }
 
+- (NSDictionary *)dictionaryWithJsonString:(NSString *)jsonString {
+    
+    if (jsonString == nil) {
+        
+        return nil;
+        
+    }
+    
+    NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+    
+    NSError *err;
+    
+    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData
+                         
+                                                        options:NSJSONReadingMutableContainers
+                         
+                                                          error:&err];
+    
+    if(err) {
+        
+        NSLog(@"json解析失败：%@",err);
+        
+        return nil;
+        
+    }
+    
+    return dic;
+    
+}
+
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     // If you are receiving a notification message while your app is in the background,
@@ -201,25 +232,188 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     NSLog(@"Message ID: %@", userInfo[@"gcm.message_id"]);
 
     // Print full message.
-    NSLog(@"hahahah---收到消息：%@", userInfo);
+    NSLog(@"hahahah---收到消息：%@---- %@", [userInfo objectForKey:@"topic"], userInfo);
+    if ([[userInfo objectForKey:@"from"] rangeOfString:@"/topics/events-"].location !=NSNotFound) {
+        UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
+        NSDictionary *msg = [[NSDictionary alloc] init];
+        msg = [self dictionaryWithJsonString:[userInfo objectForKey:@"message"]];
+        NSLog(@"adfasd-f*as-f*-a*----  %@",msg);
+        if (msg != nil) {
+            NSArray *arr = [[NSArray alloc] init];
+            arr = [[msg objectForKey:@"content"] componentsSeparatedByString:@","];
+            if ([[msg objectForKey:@"message_type"] isEqualToString:@"Audio"] && [arr count]==2) {
+                NSLog(@"收到消息----%@-%@---%@",[msg objectForKey:@"user_avatar"],[msg objectForKey:@"room_id"],[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"]);
+                
+                userInfomationData.inRoomMessageForRoomIdStr = [msg objectForKey:@"room_id"];
+                
+                if (![[msg objectForKey:@"client_id"] isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:USER_CLIENT_ID]]) {
+                    NSString *nameStr;
+                    if ([CommonService isBlankString:[msg objectForKey:@"name"]] || [CommonService isBlankString:[msg objectForKey:@"surname"]]) {
+                        
+                        nameStr = [msg objectForKey:@"user_name"];
+                    }
+                    else
+                    {
+                        nameStr = [NSString stringWithFormat:@"%@ %@.",[msg objectForKey:@"name"],[[msg objectForKey:@"surname"] substringToIndex:1].uppercaseString];
+                    }
+                    [self insertCoreData:[msg objectForKey:@"user_id"] avatarImage:[NSString stringWithFormat:@"%@?%@",[msg objectForKey:@"user_avatar"],@"width=300&height=300"] roomId:[msg objectForKey:@"room_id"] time:[NSNumber numberWithFloat:[[arr objectAtIndex:0] floatValue]] message:[arr objectAtIndex:1] messageId:[msg objectForKey:@"id"] fromUserName:nameStr like:[msg objectForKey:@"like"]];
+                    if ([[arr objectAtIndex:1] rangeOfString:@"https://"].location !=NSNotFound) {
+                        //需要下载amr语音
+                        [userInfomationData.recordAudio saveRecordAmr:[arr objectAtIndex:1] messageId:[msg objectForKey:@"id"]isNotifiction:@"no"];
+                    }
+                    
+                }
+                else
+                {
+                    //更新数据库一条消息
+                    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Mic"];
+                    //  2.设置排序
+                    //  2.1创建排序描述对象
+                    //            NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"messageId" ascending:NO];
+                    //            request.sortDescriptors = @[sortDescriptor];
+                    NSSortDescriptor *sortDescriptors = [NSSortDescriptor sortDescriptorWithKey:@"messageId" ascending:NO selector:@selector(localizedStandardCompare:)];
+                    request.sortDescriptors = @[sortDescriptors];
+                    NSString *roomId = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
+                    NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"roomId = %@ AND accountId = %@ AND messageId = %@",roomId,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID],[msg objectForKey:@"id"]]];
+                    request.fetchOffset=0;
+                    request.fetchLimit=1000;
+                    request.predicate = predicate;
+                    
+                    //  执行这个查询请求
+                    NSError *error = nil;
+                    
+                    NSArray *result = [self.managedObjectContext executeFetchRequest:request error:&error];
+                    NSLog(@"xxxxcx-hahah--commonservice-%@===%@ --%lu---",roomId,[msg objectForKey:@"id"],(unsigned long)[result count]);
+                    
+                    if ([result count] != 0) {
+                        for (NSInteger i = 0; i < [result count]; i ++) {
+                            NSString *nameStr;
+                            if ([CommonService isBlankString:[msg objectForKey:@"name"]] || [CommonService isBlankString:[msg objectForKey:@"surname"]]) {
+                                nameStr = [msg objectForKey:@"user_name"];
+                            }
+                            else
+                            {
+                                nameStr = [NSString stringWithFormat:@"%@ %@.",[msg objectForKey:@"name"],[[msg objectForKey:@"surname"] substringToIndex:1].uppercaseString];
+                            }
+                            Mic *mic = result[0];
+                            NSLog(@"xxxxxx-*-*-------  ^%@",mic.messageId);
+                            mic.accountId = [[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID];
+                            mic.userId = [msg objectForKey:@"user_id"];
+                            mic.avatarImage = NULL_TO_NIL([msg objectForKey:@"user_avatar"]);
+                            mic.roomId = [msg objectForKey:@"room_id"];
+                            mic.isRead = [msg objectForKey:@"like"];
+                            mic.isReadReady = 0;
+                            mic.time = [NSNumber numberWithFloat:[[arr objectAtIndex:0] floatValue]];
+                            mic.message = [arr objectAtIndex:1];
+                            mic.messageId = [msg objectForKey:@"id"];
+                            mic.fromUserName = nameStr;
+                            [self saveContext];
+                            if ([[arr objectAtIndex:1] rangeOfString:@"https://"].location !=NSNotFound) {
+                                //需要下载amr语音
+                                [userInfomationData.recordAudio saveRecordAmr:[arr objectAtIndex:1] messageId:[msg objectForKey:@"id"]isNotifiction:@"no"];
+                            }
+                        }
+                    }
+                    else
+                    {
+                        NSString *nameStr;
+                        if ([CommonService isBlankString:[msg objectForKey:@"name"]] || [CommonService isBlankString:[msg objectForKey:@"surname"]]) {
+                            nameStr = [msg objectForKey:@"user_name"];
+                        }
+                        else
+                        {
+                            nameStr = [NSString stringWithFormat:@"%@ %@.",[msg objectForKey:@"name"],[[msg objectForKey:@"surname"] substringToIndex:1].uppercaseString];
+                        }
+                        [self insertCoreData:[msg objectForKey:@"user_id"] avatarImage:[NSString stringWithFormat:@"%@?%@",[msg objectForKey:@"user_avatar"],@"width=300&height=300"] roomId:[msg objectForKey:@"room_id"] time:[NSNumber numberWithFloat:[[arr objectAtIndex:0] floatValue]] message:[arr objectAtIndex:1] messageId:[msg objectForKey:@"id"] fromUserName:nameStr like:[msg objectForKey:@"like"]];
+                        if ([[arr objectAtIndex:1] rangeOfString:@"https://"].location !=NSNotFound) {
+                            //需要下载amr语音
+                            [userInfomationData.recordAudio saveRecordAmr:[arr objectAtIndex:1] messageId:[msg objectForKey:@"id"]isNotifiction:@"no"];
+                        }
+                        for (NSInteger i = 0; i < 10; i++) {
+                            [self deletePreLoadingMessage:roomId message:[NSString stringWithFormat:@"%lld",userInfomationData.yuMessageId-i]];
+                        }
+                        
+                        //                NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Mic"];
+                        //                //  2.设置排序
+                        //                //  2.1创建排序描述对象
+                        //                NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"messageId" ascending:NO];
+                        //                request.sortDescriptors = @[sortDescriptor];
+                        //                NSString *roomId = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"];
+                        //                NSPredicate *predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"roomId = %@ AND accountId = %@ AND messageId = %@",roomId,[[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID],@"84113604084776960"]];
+                        //                request.fetchOffset=0;
+                        //                request.fetchLimit=1000;
+                        //                request.predicate = predicate;
+                        //                NSLog(@"789456465165456489466");
+                        //                //  执行这个查询请求
+                        //                NSError *error = nil;
+                        //
+                        //                NSArray *resultx = [self.myAppDelegate.managedObjectContext executeFetchRequest:request error:&error];
+                        //                NSLog(@"--*-*-*-*--fsdfsdfdf----  %@",result);
+                        //
+                        //                for (NSInteger i = 0; i < [resultx count]; i ++) {
+                        //
+                        //                    Mic *mic = resultx[0];
+                        //                    for (NSInteger i = 0; i < [userInfomationData.waitingSendMessageQunenMutableArr count]; i ++) {
+                        //                        if ([[[userInfomationData.waitingSendMessageQunenMutableArr objectAtIndex:i] objectForKey:@"message_id"] isEqualToString:mic.messageId] && [[[userInfomationData.waitingSendMessageQunenMutableArr objectAtIndex:i] objectForKey:@"room_id"] isEqualToString:[msg objectForKey:@"room_id"]]) {
+                        //                            [userInfomationData.waitingSendMessageQunenMutableArr removeObjectAtIndex:i];
+                        //                            return;
+                        //                        }
+                        //                    }
+                        //
+                        //
+                        //                    NSLog(@"xxxxxx-*-*-------  ^%@",mic.messageId);
+                        //                    mic.accountId = [[NSUserDefaults standardUserDefaults] objectForKey:FACEBOOK_OAUTH2_USERID];
+                        //                    mic.userId = [msg objectForKey:@"user_id"];
+                        //                    mic.avatarImage = NULL_TO_NIL([msg objectForKey:@"user_avatar"]);
+                        //                    mic.roomId = [msg objectForKey:@"room_id"];
+                        //                    mic.isRead = 0;
+                        //                    mic.time = [NSNumber numberWithFloat:[[arr objectAtIndex:0] floatValue]];
+                        //                    mic.message = [arr objectAtIndex:1];
+                        //                    mic.messageId = [msg objectForKey:@"id"];
+                        //                    mic.fromUserName = [msg objectForKey:@"user_name"];
+                        //                    [self.myAppDelegate saveContext];
+                        //                }
+                    }
+                    
+                    
+                }
+                
+                //活动列表后的未读消息小红点标记
+                
+                //        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:[NSString stringWithFormat:@"%@%@",@"red",[msg objectForKey:@"room_id"]]];
+                if ([userInfomationData.isEnterMicList isEqualToString:@"true"] && [[msg objectForKey:@"room_id"] isEqualToString:[[[[NSUserDefaults standardUserDefaults] objectForKey:@"eventList"] objectAtIndex:[[[NSUserDefaults standardUserDefaults]objectForKey:@"currentIndex"] integerValue]] objectForKey:@"id"]]) {
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
+                }
+                else
+                {
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryList" object:self];
+                    //            [[NSNotificationCenter defaultCenter] postNotificationName:@"getMicHistoryListMock" object:self];
+                }
+            }
+        }
+        
+    }
     
 }
 
-- (void)userNotificationCenter:(UNUserNotificationCenter *)center
-       willPresentNotification:(UNNotification *)notification
-         withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler {
-    // Print message ID.
-    NSDictionary *userInfo = notification.request.content.userInfo;
-    if (userInfo[@"com.aton.MyPushNotifications"]) {
-        NSLog(@"Message ID: %@", userInfo[@"com.aton.MyPushNotifications"]);
-    }
-    // Print full message.
-    NSLog(@"xxxxxxxxxx----收到消息：%@", userInfo);
-    
-    // Change this to your preferred presentation option
-    completionHandler(UNNotificationPresentationOptionNone);
-    
-}
+//- (void)userNotificationCenter:(UNUserNotificationCenter *)center
+//       willPresentNotification:(UNNotification *)notification
+//         withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler {
+//    // Print message ID.
+//    NSDictionary *userInfo = notification.request.content.userInfo;
+//    if (userInfo[@"com.aton.MyPushNotifications"]) {
+//        NSLog(@"Message ID: %@", userInfo[@"com.aton.MyPushNotifications"]);
+//    }
+//    // Print full message.
+//    NSLog(@"xxxxxxxxxx----收到消息：%@---- %@", userInfo,[userInfo objectForKey:@"from"]);
+//    if ([[userInfo objectForKey:@"from"] rangeOfString:@"/topics/events-"].location !=NSNotFound) {
+//        
+//    }
+//    
+//    // Change this to your preferred presentation option
+//    completionHandler(UNNotificationPresentationOptionNone);
+//    
+//}
 
 
 //- (void)applicationReceivedRemoteMessage:(FIRMessagingRemoteMessage *)remoteMessage {

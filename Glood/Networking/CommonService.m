@@ -535,6 +535,11 @@
                 nameStr = [NSString stringWithFormat:@"%@ %@.",[msg objectForKey:@"name"],[[msg objectForKey:@"surname"] substringToIndex:1].uppercaseString];
             }
             [self.myAppDelegate insertCoreData:[msg objectForKey:@"user_id"] avatarImage:[NSString stringWithFormat:@"%@?%@",[msg objectForKey:@"user_avatar"],@"width=300&height=300"] roomId:[msg objectForKey:@"room_id"] time:[NSNumber numberWithFloat:[[arr objectAtIndex:0] floatValue]] message:[arr objectAtIndex:1] messageId:[msg objectForKey:@"id"] fromUserName:nameStr like:[msg objectForKey:@"like"]];
+            if ([[arr objectAtIndex:1] rangeOfString:@"https://"].location !=NSNotFound) {
+                //需要下载amr语音
+                [userInfomationData.recordAudio saveRecordAmr:[arr objectAtIndex:1] messageId:[msg objectForKey:@"id"]isNotifiction:@"no"];
+            }
+            
         }
         else
         {
@@ -581,6 +586,10 @@
                     mic.messageId = [msg objectForKey:@"id"];
                     mic.fromUserName = nameStr;
                     [self.myAppDelegate saveContext];
+                    if ([[arr objectAtIndex:1] rangeOfString:@"https://"].location !=NSNotFound) {
+                        //需要下载amr语音
+                        [userInfomationData.recordAudio saveRecordAmr:[arr objectAtIndex:1] messageId:[msg objectForKey:@"id"]isNotifiction:@"no"];
+                    }
                 }
             }
             else
@@ -594,7 +603,10 @@
                     nameStr = [NSString stringWithFormat:@"%@ %@.",[msg objectForKey:@"name"],[[msg objectForKey:@"surname"] substringToIndex:1].uppercaseString];
                 }
                 [self.myAppDelegate insertCoreData:[msg objectForKey:@"user_id"] avatarImage:[NSString stringWithFormat:@"%@?%@",[msg objectForKey:@"user_avatar"],@"width=300&height=300"] roomId:[msg objectForKey:@"room_id"] time:[NSNumber numberWithFloat:[[arr objectAtIndex:0] floatValue]] message:[arr objectAtIndex:1] messageId:[msg objectForKey:@"id"] fromUserName:nameStr like:[msg objectForKey:@"like"]];
-                
+                if ([[arr objectAtIndex:1] rangeOfString:@"https://"].location !=NSNotFound) {
+                    //需要下载amr语音
+                    [userInfomationData.recordAudio saveRecordAmr:[arr objectAtIndex:1] messageId:[msg objectForKey:@"id"]isNotifiction:@"no"];
+                }
                 for (NSInteger i = 0; i < 10; i++) {
                     [self.myAppDelegate deletePreLoadingMessage:roomId message:[NSString stringWithFormat:@"%lld",userInfomationData.yuMessageId-i]];
                 }
@@ -878,6 +890,10 @@
                                 {
                                     nameStr = [NSString stringWithFormat:@"%@ %@.",[[response objectAtIndex:i] objectForKey:@"name"],[[[response objectAtIndex:i] objectForKey:@"surname"] substringToIndex:1].uppercaseString];
                                 }
+                                if ([[arr objectAtIndex:1] rangeOfString:@"https://"].location !=NSNotFound) {
+                                    //需要下载amr语音
+                                    [userInfomationData.recordAudio saveRecordAmr:[arr objectAtIndex:1] messageId:[[response objectAtIndex:i] objectForKey:@"id"]isNotifiction:@"no"];
+                                }
                                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
                                                
                                 {
@@ -951,6 +967,10 @@
                             
 //                            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
 //                            {
+                            if ([[arr objectAtIndex:1] rangeOfString:@"https://"].location !=NSNotFound) {
+                                //需要下载amr语音
+                                [userInfomationData.recordAudio saveRecordAmr:[arr objectAtIndex:1] messageId:[[response objectAtIndex:i] objectForKey:@"id"]isNotifiction:@"no"];
+                            }
                                 [self.myAppDelegate insertCoreData:[[response objectAtIndex:i] objectForKey:@"user_id"] avatarImage:[NSString stringWithFormat:@"%@?%@",[[response objectAtIndex:i] objectForKey:@"user_avatar"],@"width=300&height=300"] roomId:[[response objectAtIndex:i] objectForKey:@"room_id"] time:[NSNumber numberWithFloat:[[arr objectAtIndex:0] floatValue]] message:[arr objectAtIndex:1] messageId:[[response objectAtIndex:i] objectForKey:@"id"] fromUserName:nameStr like:[[response objectAtIndex:i] objectForKey:@"like"]];
 //                                [self.myAppDelegate insertCoraData:[[response objectAtIndex:i] objectForKey:@"room_id"] lastMessageId:[[response objectAtIndex:[response count]-1] objectForKey:@"id"] beginMessageId:[[response objectAtIndex:0] objectForKey:@"id"]];
 //                            });
@@ -1195,14 +1215,11 @@
 }
 
 #pragma mark ======== 下载语音 =========
-- (void)downVideo:(NSString *)url save:(NSString *)path filename:(NSString *)fileName
+- (void)downVideo:(NSString *)url save:(NSString *)path filename:(NSString *)fileName isNotifiction:(NSString *)isNotifictionx
 {
     UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
-    BOOL isDir = NO;
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    BOOL existed = [fileManager fileExistsAtPath:path isDirectory:&isDir];
-    if ( !(isDir == YES && existed == YES) )
-    {
+    NSFileManager *fileManage = [NSFileManager defaultManager];
+    if (![fileManage fileExistsAtPath:path]) {
         //文件不存在，去下载
         NSLog(@"sdfasf*-a-*-*----  %@----%@-----%@",url,path,fileName);
         
@@ -1216,7 +1233,7 @@
         //已完成下载
         [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject){
             NSLog(@"下载完成!!!");
-            [userInfomationData.recordAudio arm:path fileName:fileName];
+            [userInfomationData.recordAudio arm:path fileName:fileName isNotifiction:isNotifictionx];
         }failure:^(AFHTTPRequestOperation *operation, NSError *error)
          {
              NSLog(@"下载失败!!!-- %@",error);
@@ -1225,7 +1242,7 @@
     }
     else
     {
-        [userInfomationData.recordAudio arm:path fileName:fileName];
+        [userInfomationData.recordAudio arm:path fileName:fileName isNotifiction:isNotifictionx];
     }
     
 }

@@ -32,6 +32,8 @@
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;
 
+- (NSDictionary *)dictionaryWithJsonString:(NSString *)jsonString;
+
 //通知，订阅主题 推送消息
 - (void)subscribeToTopic:(NSDictionary*)dic;
 
