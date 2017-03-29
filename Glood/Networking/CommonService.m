@@ -878,10 +878,16 @@
                                 {
                                     nameStr = [NSString stringWithFormat:@"%@ %@.",[[response objectAtIndex:i] objectForKey:@"name"],[[[response objectAtIndex:i] objectForKey:@"surname"] substringToIndex:1].uppercaseString];
                                 }
+                                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
+                                               
+                                {
+                                    [self.myAppDelegate insertCoreData:[[response objectAtIndex:i] objectForKey:@"user_id"] avatarImage:[NSString stringWithFormat:@"%@?%@",[[response objectAtIndex:i] objectForKey:@"user_avatar"],@"width=300&height=300"] roomId:[[response objectAtIndex:i] objectForKey:@"room_id"] time:[NSNumber numberWithFloat:[[arr objectAtIndex:0] floatValue]] message:[arr objectAtIndex:1] messageId:[[response objectAtIndex:i] objectForKey:@"id"] fromUserName:nameStr like:[[response objectAtIndex:i] objectForKey:@"like"]];
+                                    
+//                                    [self.myAppDelegate insertCoraData:[[response objectAtIndex:i] objectForKey:@"room_id"] lastMessageId:[[response objectAtIndex:[response count]-1] objectForKey:@"id"] beginMessageId:[[response objectAtIndex:0] objectForKey:@"id"]];
+//                                    userInfomationData.inRoomMessageForRoomIdStr = [[response objectAtIndex:i] objectForKey:@"room_id"];
+                                });
                                 
-                                [self.myAppDelegate insertCoreData:[[response objectAtIndex:i] objectForKey:@"user_id"] avatarImage:[NSString stringWithFormat:@"%@?%@",[[response objectAtIndex:i] objectForKey:@"user_avatar"],@"width=300&height=300"] roomId:[[response objectAtIndex:i] objectForKey:@"room_id"] time:[NSNumber numberWithFloat:[[arr objectAtIndex:0] floatValue]] message:[arr objectAtIndex:1] messageId:[[response objectAtIndex:i] objectForKey:@"id"] fromUserName:nameStr like:[[response objectAtIndex:i] objectForKey:@"like"]];
-                                [self.myAppDelegate insertCoraData:[[response objectAtIndex:i] objectForKey:@"room_id"] lastMessageId:[[response objectAtIndex:[response count]-1] objectForKey:@"id"] beginMessageId:[[response objectAtIndex:0] objectForKey:@"id"]];
-                                userInfomationData.inRoomMessageForRoomIdStr = [[response objectAtIndex:i] objectForKey:@"room_id"];
+                                
                                 
                             }
                         }
@@ -941,8 +947,12 @@
                             {
                                 nameStr = [NSString stringWithFormat:@"%@ %@.",[[response objectAtIndex:i] objectForKey:@"name"],[[[response objectAtIndex:i] objectForKey:@"surname"] substringToIndex:1].uppercaseString];
                             }
-                            [self.myAppDelegate insertCoreData:[[response objectAtIndex:i] objectForKey:@"user_id"] avatarImage:[NSString stringWithFormat:@"%@?%@",[[response objectAtIndex:i] objectForKey:@"user_avatar"],@"width=300&height=300"] roomId:[[response objectAtIndex:i] objectForKey:@"room_id"] time:[NSNumber numberWithFloat:[[arr objectAtIndex:0] floatValue]] message:[arr objectAtIndex:1] messageId:[[response objectAtIndex:i] objectForKey:@"id"] fromUserName:nameStr like:[[response objectAtIndex:i] objectForKey:@"like"]];
-                            [self.myAppDelegate insertCoraData:[[response objectAtIndex:i] objectForKey:@"room_id"] lastMessageId:[[response objectAtIndex:[response count]-1] objectForKey:@"id"] beginMessageId:[[response objectAtIndex:0] objectForKey:@"id"]];
+                            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
+                            {
+                                [self.myAppDelegate insertCoreData:[[response objectAtIndex:i] objectForKey:@"user_id"] avatarImage:[NSString stringWithFormat:@"%@?%@",[[response objectAtIndex:i] objectForKey:@"user_avatar"],@"width=300&height=300"] roomId:[[response objectAtIndex:i] objectForKey:@"room_id"] time:[NSNumber numberWithFloat:[[arr objectAtIndex:0] floatValue]] message:[arr objectAtIndex:1] messageId:[[response objectAtIndex:i] objectForKey:@"id"] fromUserName:nameStr like:[[response objectAtIndex:i] objectForKey:@"like"]];
+//                                [self.myAppDelegate insertCoraData:[[response objectAtIndex:i] objectForKey:@"room_id"] lastMessageId:[[response objectAtIndex:[response count]-1] objectForKey:@"id"] beginMessageId:[[response objectAtIndex:0] objectForKey:@"id"]];
+                            });
+                            
                             userInfomationData.inRoomMessageForRoomIdStr = [[response objectAtIndex:i] objectForKey:@"room_id"];
                             
                         }
