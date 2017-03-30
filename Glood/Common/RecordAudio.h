@@ -19,7 +19,7 @@
 
 - (void)saveRecordAmr:(NSString *)amrDateUrl messageId:(NSString *)messageIdx isNotifiction:(NSString *)isNotifictionx;
 - (void)arm:(NSString *)convertedPath fileName:(NSString *)fileName isNotifiction:(NSString *)isNotifictionx;
-- (void)saveRecord:(NSString *)base64 messageId:(NSString *)messageIdx;
+- (void)saveRecord:(NSString *)base64 messageId:(NSString *)messageIdx isNotifiction:(NSString *)isNotifictionx;
 - (void)palyRecord:(NSString *)playName;
 - (void)startRecoring:(NSString *)fileName;
 - (NSString *)stopRecoring;

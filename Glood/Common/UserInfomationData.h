@@ -84,7 +84,7 @@
 
 //@property (strong, nonatomic) NSString *isReconnectionGetMessageInRoomStr; //是否断线重连并且重新拉取了当前聊天室的聊天记录
 
-//@property (strong, nonatomic) NSString *currentPlayMessageIdStr; //当前正在播放的语音Id
+@property (strong, nonatomic) NSString *currentClickPlayMessageIdStr; //当前正在点击准备播放的语音Id
 
 
 @end

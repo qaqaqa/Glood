@@ -201,6 +201,7 @@
 //语音下载成功后，开始转化
 - (void)arm:(NSString *)convertedPath fileName:(NSString *)fileName isNotifiction:(NSString *)isNotifictionx
 {
+    UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
     BOOL isDir = NO;
     NSFileManager *fileManager = [NSFileManager defaultManager];
     [fileManager createDirectoryAtPath:convertedPath withIntermediateDirectories:YES attributes:nil error:nil];
@@ -217,7 +218,10 @@
         if ([VoiceConverter ConvertAmrToWav:convertedPath wavSavePath:self.recordFilePath]){
             NSLog(@"amr转wav成功");
             if ([isNotifictionx isEqualToString:@"yes"]) {
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"convertVoiceSucess" object:self];
+                if ([userInfomationData.currentClickPlayMessageIdStr isEqualToString:fileName]) {
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"convertVoiceSucess" object:self];
+                }
+                
             }
             
         }else
@@ -240,15 +244,18 @@
     {
         NSLog(@"----sdfsf--sdf-sd---- 文件存在");
         if ([isNotifictionx isEqualToString:@"yes"]) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"convertVoiceSucess" object:self];
+            if ([userInfomationData.currentClickPlayMessageIdStr isEqualToString:fileName]) {
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"convertVoiceSucess" object:self];
+            }
         }
     }
 }
 
 #pragma mark ======= 保存语音 base64转化成arm，再转化成wav格式语音==========
-- (void)saveRecord:(NSString *)base64 messageId:(NSString *)messageIdx
+- (void)saveRecord:(NSString *)base64 messageId:(NSString *)messageIdx isNotifiction:(NSString *)isNotifictionx
 {
     NSLog(@"sdf-*-*-*---------  %@---%@",base64,messageIdx);
+    UserInfomationData *userInfomationData = [UserInfomationData shareInstance];
 //    dispatch_async(dispatch_get_global_queue(0,0), ^{
         NSString *fileName = [NSString stringWithFormat:@"%@",messageIdx];
         NSString *cachePath = [self getCachePath];
@@ -268,7 +275,11 @@
 #warning amr转wav
             if ([VoiceConverter ConvertAmrToWav:pathForFile wavSavePath:self.recordFilePath]){
                 NSLog(@"amr转wav成功");
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"convertVoiceSucess" object:self];
+                if ([isNotifictionx isEqualToString:@"yes"]) {
+                    if ([userInfomationData.currentClickPlayMessageIdStr isEqualToString:fileName]) {
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"convertVoiceSucess" object:self];
+                    }
+                }
             }else
             {
                 NSLog(@"amr转wav失败");
@@ -286,7 +297,11 @@
     else
     {
         NSLog(@"----sdfsf--sdf-sd---- 文件存在");
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"convertVoiceSucess" object:self];
+        if ([isNotifictionx isEqualToString:@"yes"]) {
+            if ([userInfomationData.currentClickPlayMessageIdStr isEqualToString:fileName]) {
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"convertVoiceSucess" object:self];
+            }
+        }
     }
 //    });
     
